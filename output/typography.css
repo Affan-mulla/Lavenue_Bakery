@@ -1,0 +1,267 @@
+/*
+Tailwind config extension (reference)
+
+theme: {
+  extend: {
+    fontFamily: {
+      display: ['Cormorant Garamond', 'serif'],
+      body: ['Manrope', 'sans-serif'],
+    },
+    fontSize: {
+      xs: ['0.75rem', { lineHeight: '1.4' }],
+      sm: ['0.875rem', { lineHeight: '1.4' }],
+      base: ['1rem', { lineHeight: '1.65' }],
+      md: ['1.25rem', { lineHeight: '1.5' }],
+      lg: ['1.5rem', { lineHeight: '1.2' }],
+      xl: ['2rem', { lineHeight: '1.1' }],
+      '2xl': ['2.5rem', { lineHeight: '1.1' }],
+      '3xl': ['3.5rem', { lineHeight: '1.1' }],
+      '4xl': ['5rem', { lineHeight: '0.92' }],
+      '5xl': ['7rem', { lineHeight: '0.92' }],
+    },
+  },
+}
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap");
+
+:root {
+  --palette-espresso-950: #12100e;
+  --palette-espresso-900: #1e1a16;
+  --palette-parchment-50: #f4eee4;
+  --palette-parchment-200: #d7c9b2;
+  --palette-gold-500: #b78a3b;
+  --palette-border-700: #3b3127;
+
+  --color-bg: var(--palette-espresso-950);
+  --color-surface: var(--palette-espresso-900);
+  --color-text: var(--palette-parchment-50);
+  --color-text-muted: var(--palette-parchment-200);
+  --color-accent: var(--palette-gold-500);
+  --color-border: var(--palette-border-700);
+
+  --font-display: "Cormorant Garamond", serif;
+  --font-body: "Manrope", sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5rem;
+  --text-xl: 2rem;
+  --text-2xl: 2.5rem;
+  --text-3xl: 3.5rem;
+  --text-4xl: 5rem;
+  --text-5xl: 7rem;
+
+  --lh-display: 0.92;
+  --lh-heading: 1.1;
+  --lh-subheading: 1.2;
+  --lh-body: 1.65;
+  --lh-small: 1.4;
+
+  --ls-eyebrow: 0.12em;
+  --ls-display: -0.03em;
+  --ls-body: 0;
+  --ls-label: 0.02em;
+
+  --measure-ideal: 68ch;
+  --measure-max: 85ch;
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 4rem;
+  --space-7: 5rem;
+  --space-8: 6rem;
+  --space-9: 8rem;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.type-display {
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  font-weight: 700;
+}
+
+.type-h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  line-height: var(--lh-display);
+  letter-spacing: var(--ls-display);
+  font-weight: 700;
+}
+
+.type-h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.type-h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+.type-h4 {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  line-height: var(--lh-subheading);
+  font-weight: 600;
+}
+
+.type-body-lg {
+  font-family: var(--font-body);
+  font-size: var(--text-md);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+.type-body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+.type-meta {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  line-height: var(--lh-small);
+  letter-spacing: var(--ls-body);
+}
+
+.type-caption {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: var(--lh-small);
+  letter-spacing: var(--ls-label);
+}
+
+.type-eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  line-height: var(--lh-small);
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.lh-display { line-height: var(--lh-display); }
+.lh-heading { line-height: var(--lh-heading); }
+.lh-subheading { line-height: var(--lh-subheading); }
+.lh-body { line-height: var(--lh-body); }
+.lh-small { line-height: var(--lh-small); }
+
+.track-display { letter-spacing: var(--ls-display); }
+.track-body { letter-spacing: var(--ls-body); }
+.track-label { letter-spacing: var(--ls-label); }
+.track-eyebrow { letter-spacing: var(--ls-eyebrow); }
+
+.reading-measure {
+  max-width: var(--measure-ideal);
+}
+
+.reading-measure-max {
+  max-width: var(--measure-max);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.flow {
+  --flow-space: var(--space-3);
+}
+
+.flow > * + * {
+  margin-top: var(--flow-space);
+}
+
+.flow-tight {
+  --flow-space: var(--space-2);
+}
+
+.flow-relaxed {
+  --flow-space: var(--space-4);
+}
+
+.rhythm-card {
+  padding: var(--space-3);
+}
+
+.rhythm-card-lg {
+  padding: var(--space-4);
+}
+
+.rhythm-section {
+  padding-block: var(--space-6);
+}
+
+.rhythm-section-xl {
+  padding-block: var(--space-7);
+}
+
+@media (min-width: 1024px) {
+  .rhythm-section {
+    padding-block: var(--space-8);
+  }
+
+  .rhythm-section-xl {
+    padding-block: var(--space-9);
+  }
+}
+
+@media (max-width: 768px) {
+  :root {
+    --text-4xl: 2.5rem;
+    --text-3xl: 2rem;
+    --text-2xl: 1.75rem;
+  }
+
+  .type-display {
+    font-size: var(--text-4xl);
+  }
+
+  .type-h1 {
+    font-size: var(--text-3xl);
+  }
+
+  .type-h2 {
+    font-size: var(--text-2xl);
+  }
+
+  .reading-measure,
+  .reading-measure-max {
+    max-width: 60ch;
+  }
+}

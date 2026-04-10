@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>L'Avenue Boulangerie | Yorkville Bakery and Cafe</title>
+    <meta
+      name="description"
+      content="Elegant royal bakery and cafe in Yorkville. Explore signature pastries, artisan breads, weekly oven schedule, and visit details."
+    />
+    <link rel="stylesheet" href="./colors.css" />
+    <link rel="stylesheet" href="./typography.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/ScrollTrigger.min.js"></script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: var(--font-body);
+        background: radial-gradient(circle at 15% 10%, #2d241b 0%, var(--color-bg) 52%) fixed;
+      }
+
+      [data-gsap="sticky-header"] {
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      [data-gsap="sticky-header"].header--scrolled > div > div {
+        margin-top: 0;
+        background: rgba(var(--bg-rgb), 0.92);
+        border-color: rgba(var(--border-rgb), 0.25);
+        box-shadow: var(--shadow-overlay);
+      }
+
+      .clip-mask {
+        display: inline-block;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body class="bg-canvas text-foreground antialiased">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[120] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-canvas"
+      data-framer="focus-reveal"
+    >
+      Skip to content
+    </a>
+
+    <div
+      class="fixed left-0 top-0 z-[110] h-1 w-full bg-transparent"
+      aria-hidden="true"
+      data-gsap="scroll-progress"
+      data-scroll-progress
+      data-framer="progress-shell"
+    >
+      <span
+        class="block h-full w-0 origin-left bg-accent"
+        id="scroll-progress-bar"
+      ></span>
+    </div>
+
+    <header
+      class="fixed inset-x-0 top-0 z-[100] transition-all duration-300"
+      id="site-header"
+      data-gsap="sticky-header"
+      data-header
+      data-framer="header-state"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+        <div
+          class="mt-4 flex min-h-16 items-center justify-between rounded-2xl border border-border/60 bg-surface/80 px-4 py-4 backdrop-blur-md lg:px-8"
+        >
+          <a
+            href="#hero"
+            class="text-sm font-semibold uppercase tracking-widest text-accent"
+            data-cursor-expand
+            data-framer="brand-hover"
+          >
+            L'Avenue Boulangerie
+          </a>
+
+          <nav aria-label="Primary" class="hidden lg:block">
+            <ul class="flex items-center gap-8 text-sm">
+              <li><a href="#menu-highlights" class="hover:text-accent" data-cursor-expand data-scroll-highlight>Highlights</a></li>
+              <li><a href="#full-menu" class="hover:text-accent" data-cursor-expand data-scroll-highlight>Menu</a></li>
+              <li><a href="#weekly-schedule" class="hover:text-accent" data-cursor-expand data-scroll-highlight>Schedule</a></li>
+              <li><a href="#craftsmanship-story" class="hover:text-accent" data-cursor-expand data-scroll-highlight>Craft</a></li>
+              <li><a href="#testimonials" class="hover:text-accent" data-cursor-expand data-scroll-highlight>Reviews</a></li>
+              <li><a href="#visit-contact" class="hover:text-accent" data-cursor-expand data-scroll-highlight>Visit</a></li>
+            </ul>
+          </nav>
+
+          <div class="flex items-center gap-4">
+            <a
+              href="#visit-contact"
+              id="primary-cta-target"
+              class="inline-flex min-h-12 items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-semibold text-canvas"
+              data-magnetic
+              data-cursor-expand
+              data-gsap="magnetic-cta"
+              data-framer="cta-primary"
+            >
+              Reserve a Table
+            </a>
+            <button
+              type="button"
+              class="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border border-border lg:hidden"
+              aria-label="Open menu"
+              data-cursor-expand
+              data-framer="mobile-nav-toggle"
+            >
+              <span aria-hidden="true">Menu</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="pt-28 lg:pt-32">
+      <section
+        id="hero"
+        aria-labelledby="hero-heading"
+        class="section-hero relative min-h-screen overflow-hidden py-20 lg:py-32"
+        data-scroll-highlight
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <div class="grid items-center gap-16 lg:grid-cols-2">
+            <div>
+              <p
+                class="mb-4 text-xs font-medium uppercase tracking-widest text-accent"
+                data-reveal="fade-up"
+              >
+                Yorkville Artisan Bakery
+              </p>
+
+              <h1
+                id="hero-heading"
+                class="mb-8 font-display text-5xl font-bold leading-tight lg:text-7xl"
+                data-reveal="split-words"
+              >
+                <span class="block overflow-hidden"><span class="inline-block">Royal mornings,</span></span>
+                <span class="block overflow-hidden"><span class="inline-block">crafted by hand.</span></span>
+              </h1>
+
+              <p
+                class="mb-10 max-w-2xl text-base leading-7 text-foreground/80 lg:text-xl lg:leading-8"
+                data-reveal="fade-up"
+              >
+                L'Avenue Boulangerie serves laminated pastries, slow-fermented breads, and refined desserts with old-world technique and modern Yorkville warmth.
+              </p>
+
+              <div class="flex flex-col gap-4 sm:flex-row" data-reveal="fade-up">
+                <a
+                  href="#full-menu"
+                  class="inline-flex min-h-12 items-center justify-center rounded-full bg-accent px-8 py-4 text-sm font-semibold text-canvas"
+                  data-cursor-expand
+                  data-framer="hero-primary"
+                >
+                  View the Full Menu
+                </a>
+                <a
+                  href="#weekly-schedule"
+                  class="inline-flex min-h-12 items-center justify-center rounded-full border border-border px-8 py-4 text-sm font-semibold"
+                  data-cursor-expand
+                  data-framer="hero-secondary"
+                >
+                  See This Week's Oven Schedule
+                </a>
+              </div>
+            </div>
+
+            <div
+              class="relative"
+              data-reveal="fade-up"
+              data-parallax="0.3"
+              data-gsap="hero-visual"
+            >
+              <img
+                src="/images/hero-signature-pastry.jpg"
+                alt="Signature viennoiserie arranged on a marble pastry counter"
+                width="960"
+                height="1200"
+                fetchpriority="high"
+                class="w-full rounded-3xl object-cover shadow-2xl"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="trust-strip"
+        aria-labelledby="trust-strip-heading"
+        class="section-trust-strip bg-surface-2 py-20 lg:py-32"
+        data-scroll-highlight
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <p class="mb-4 text-xs font-medium uppercase tracking-widest text-accent" data-reveal="fade-up">
+            Why Locals Return
+          </p>
+          <h2
+            id="trust-strip-heading"
+            class="mb-6 font-display text-4xl font-bold leading-tight lg:text-5xl"
+            data-reveal="clip"
+          >
+            Crafted fresh, every single day.
+          </h2>
+
+          <ul class="grid gap-8 md:grid-cols-3" role="list" data-reveal="stagger">
+            <li class="rounded-2xl border border-border p-8">
+              <p class="mb-2 font-display text-5xl font-bold text-accent" data-reveal="counter" data-target="28" data-suffix="+">0</p>
+              <p class="text-sm uppercase tracking-widest text-foreground/70">Years in Yorkville</p>
+            </li>
+            <li class="rounded-2xl border border-border p-8">
+              <p class="mb-2 font-display text-5xl font-bold text-accent" data-reveal="counter" data-target="42" data-suffix="+">0</p>
+              <p class="text-sm uppercase tracking-widest text-foreground/70">Signature Recipes</p>
+            </li>
+            <li class="rounded-2xl border border-border p-8">
+              <p class="mb-2 font-display text-5xl font-bold text-accent" data-reveal="counter" data-target="7" data-suffix="/7">0</p>
+              <p class="text-sm uppercase tracking-widest text-foreground/70">Daily Fresh Bake</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section
+        id="menu-highlights"
+        aria-labelledby="menu-highlights-heading"
+        class="section-menu-highlights py-20 lg:py-32"
+        data-scroll-highlight
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <p class="mb-4 text-xs font-medium uppercase tracking-widest text-accent" data-reveal="fade-up">
+            Signature Selection
+          </p>
+          <h2
+            id="menu-highlights-heading"
+            class="mb-6 font-display text-4xl font-bold leading-tight lg:text-5xl"
+            data-reveal="clip"
+          >
+            Menu highlights for your first visit.
+          </h2>
+
+          <ul class="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3" role="list" data-reveal="stagger">
+            <li class="overflow-hidden rounded-2xl border border-border bg-surface p-6">
+              <img src="/images/highlight-croissant.jpg" alt="Butter croissant with glossy laminated layers" width="640" height="480" loading="lazy" class="mb-6 h-56 w-full rounded-xl object-cover" />
+              <h3 class="mb-3 text-2xl font-semibold">Royal Butter Croissant</h3>
+              <p class="mb-4 text-foreground/75">Cultured butter, 72-hour fermentation, crisp shell, honeyed finish.</p>
+              <p class="text-accent">$6</p>
+            </li>
+            <li class="overflow-hidden rounded-2xl border border-border bg-surface p-6">
+              <img src="/images/highlight-choux.jpg" alt="Hazelnut praline choux dusted with cocoa" width="640" height="480" loading="lazy" class="mb-6 h-56 w-full rounded-xl object-cover" />
+              <h3 class="mb-3 text-2xl font-semibold">Hazelnut Praline Choux</h3>
+              <p class="mb-4 text-foreground/75">Toasted praline cremeux, cocoa craquelin, sea-salt caramel core.</p>
+              <p class="text-accent">$9</p>
+            </li>
+            <li class="overflow-hidden rounded-2xl border border-border bg-surface p-6">
+              <img src="/images/highlight-sourdough.jpg" alt="Country sourdough loaf sliced on a wooden board" width="640" height="480" loading="lazy" class="mb-6 h-56 w-full rounded-xl object-cover" />
+              <h3 class="mb-3 text-2xl font-semibold">Yorkville Country Sourdough</h3>
+              <p class="mb-4 text-foreground/75">Stone-milled flour blend, open crumb, naturally leavened and baked at dawn.</p>
+              <p class="text-accent">$12</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section
+        id="full-menu"
+        aria-labelledby="full-menu-heading"
+        class="section-full-menu bg-surface-2 py-20 lg:py-32"
+        data-scroll-highlight
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <p class="mb-4 text-xs font-medium uppercase tracking-widest text-accent" data-reveal="fade-up">
+            Full Menu
+          </p>
+          <h2 id="full-menu-heading" class="mb-6 font-display text-4xl font-bold leading-tight lg:text-5xl" data-reveal="clip">
+            Bread, pastry, and dessert.
+          </h2>
+
+          <div class="grid gap-8 lg:grid-cols-3" data-reveal="stagger">
+            <article class="rounded-2xl border border-border bg-canvas p-8">
+              <h3 class="mb-6 text-2xl font-semibold">Breads</h3>
+              <ul class="space-y-4">
+                <li class="flex items-start justify-between gap-4"><span>Country Sourdough</span><span class="text-accent">$12</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Sesame Levain</span><span class="text-accent">$13</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Brioche Loaf</span><span class="text-accent">$11</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Rye Walnut Boule</span><span class="text-accent">$14</span></li>
+              </ul>
+            </article>
+
+            <article class="rounded-2xl border border-border bg-canvas p-8">
+              <h3 class="mb-6 text-2xl font-semibold">Pastries</h3>
+              <ul class="space-y-4">
+                <li class="flex items-start justify-between gap-4"><span>Butter Croissant</span><span class="text-accent">$6</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Pain au Chocolat</span><span class="text-accent">$7</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Almond Danish</span><span class="text-accent">$8</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Lemon Mille-Feuille</span><span class="text-accent">$10</span></li>
+              </ul>
+            </article>
+
+            <article class="rounded-2xl border border-border bg-canvas p-8">
+              <h3 class="mb-6 text-2xl font-semibold">Desserts</h3>
+              <ul class="space-y-4">
+                <li class="flex items-start justify-between gap-4"><span>Chocolate Opera Slice</span><span class="text-accent">$11</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Vanilla Saint-Honore</span><span class="text-accent">$12</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Pear Frangipane Tart</span><span class="text-accent">$10</span></li>
+                <li class="flex items-start justify-between gap-4"><span>Pistachio Eclair</span><span class="text-accent">$9</span></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="weekly-schedule"
+        aria-labelledby="weekly-schedule-heading"
+        class="section-weekly-schedule py-20 lg:py-32"
+        data-scroll-highlight
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <p class="mb-4 text-xs font-medium uppercase tracking-widest text-accent" data-reveal="fade-up">
+            Weekly Oven Schedule
+          </p>
+          <h2 id="weekly-schedule-heading" class="mb-6 font-display text-4xl font-bold leading-tight lg:text-5xl" data-reveal="clip">
+            Know what comes out of the oven, and when.
+          </h2>
+
+          <ul class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" role="list" data-reveal="stagger">
+            <li class="rounded-2xl border border-border p-6"><p class="mb-2 text-sm uppercase tracking-widest text-accent">Monday</p><p class="text-foreground/80">Country sourdough, brioche, cinnamon knots</p></li>
+            <li class="rounded-2xl border border-border p-6"><p class="mb-2 text-sm uppercase tracking-widest text-accent">Tuesday</p><p class="text-foreground/80">Sesame levain, almond danish, citrus tartlets</p></li>
+            <li class="rounded-2xl border border-border p-6"><p class="mb-2 text-sm uppercase tracking-widest text-accent">Wednesday</p><p class="text-foreground/80">Rye walnut, pain suisse, hazelnut choux</p></li>
+            <li class="rounded-2xl border border-border p-6"><p class="mb-2 text-sm uppercase tracking-widest text-accent">Thursday</p><p class="text-foreground/80">Baguette tradition, kouign-amann, opera slices</p></li>
+            <li class="rounded-2xl border border-border p-6"><p class="mb-2 text-sm uppercase tracking-widest text-accent">Friday</p><p class="text-foreground/80">Sourdough miche, pistachio eclair, fruit tarts</p></li>
+            <li class="rounded-2xl border border-border p-6"><p class="mb-2 text-sm uppercase tracking-widest text-accent">Saturday</p><p class="text-foreground/80">Full viennoiserie line and weekend celebration cakes</p></li>
+            <li class="rounded-2xl border border-border p-6"><p class="mb-2 text-sm uppercase tracking-widest text-accent">Sunday</p><p class="text-foreground/80">Brunch pastries, focaccia slabs, seasonal entremets</p></li>
+          </ul>
+        </div>
+      </section>
+
+      <section
+        id="craftsmanship-story"
+        aria-labelledby="craftsmanship-story-heading"
+        class="section-craftsmanship-story bg-surface-2 py-20 lg:py-32"
+        data-scroll-highlight
+        data-gsap="pinned-story"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <p class="mb-4 text-xs font-medium uppercase tracking-widest text-accent" data-reveal="fade-up">
+            Craftsmanship Story
+          </p>
+          <h2 id="craftsmanship-story-heading" class="mb-6 font-display text-4xl font-bold leading-tight lg:text-5xl" data-reveal="clip">
+            A disciplined ritual from flour to finish.
+          </h2>
+
+          <div class="grid items-start gap-12 lg:grid-cols-2">
+            <div data-reveal="fade-up" data-parallax="-0.1">
+              <img
+                src="/images/craft-bench.jpg"
+                alt="Baker shaping dough by hand on a floured bench"
+                width="960"
+                height="1100"
+                loading="lazy"
+                class="w-full rounded-3xl object-cover"
+              />
+            </div>
+
+            <ol class="space-y-8" data-reveal="stagger" data-gsap="story-timeline">
+              <li class="rounded-2xl border border-border bg-canvas p-8">
+                <p class="mb-2 text-xs uppercase tracking-widest text-accent">01</p>
+                <h3 class="mb-3 text-2xl font-semibold">Slow Fermentation</h3>
+                <p class="text-foreground/75">We rest every dough overnight for depth, digestibility, and refined flavor structure.</p>
+              </li>
+              <li class="rounded-2xl border border-border bg-canvas p-8">
+                <p class="mb-2 text-xs uppercase tracking-widest text-accent">02</p>
+                <h3 class="mb-3 text-2xl font-semibold">Hand Lamination</h3>
+                <p class="text-foreground/75">Butter and dough are folded with precision to create airy layers and crisp edges.</p>
+              </li>
+              <li class="rounded-2xl border border-border bg-canvas p-8">
+                <p class="mb-2 text-xs uppercase tracking-widest text-accent">03</p>
+                <h3 class="mb-3 text-2xl font-semibold">Final Finish</h3>
+                <p class="text-foreground/75">Each piece is glazed, dusted, or bruleed to order for peak texture and aroma.</p>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="testimonials"
+        aria-labelledby="testimonials-heading"
+        class="section-testimonials py-20 lg:py-32"
+        data-scroll-highlight
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <p class="mb-4 text-xs font-medium uppercase tracking-widest text-accent" data-reveal="fade-up">
+            Community Notes
+          </p>
+          <h2 id="testimonials-heading" class="mb-6 font-display text-4xl font-bold leading-tight lg:text-5xl" data-reveal="clip">
+            What our guests say.
+          </h2>
+
+          <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3" role="list" data-reveal="stagger">
+            <li class="rounded-2xl border border-border p-8">
+              <p class="mb-6 text-foreground/80">"The croissant shatters perfectly and the coffee service feels like a boutique hotel lounge."</p>
+              <p class="text-sm uppercase tracking-widest text-accent">Sofia M. - Yorkville</p>
+            </li>
+            <li class="rounded-2xl border border-border p-8">
+              <p class="mb-6 text-foreground/80">"Their weekend sourdough has become our family ritual. Consistent, fragrant, and deeply flavorful."</p>
+              <p class="text-sm uppercase tracking-widest text-accent">Daniel R. - Midtown</p>
+            </li>
+            <li class="rounded-2xl border border-border p-8">
+              <p class="mb-6 text-foreground/80">"Elegant atmosphere, warm staff, and desserts that feel truly Parisian without pretense."</p>
+              <p class="text-sm uppercase tracking-widest text-accent">Amina K. - Toronto</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section
+        id="visit-contact"
+        aria-labelledby="visit-contact-heading"
+        class="section-visit-contact bg-surface-2 py-20 lg:py-32"
+        data-scroll-highlight
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <p class="mb-4 text-xs font-medium uppercase tracking-widest text-accent" data-reveal="fade-up">
+            Visit and Contact
+          </p>
+          <h2 id="visit-contact-heading" class="mb-6 font-display text-4xl font-bold leading-tight lg:text-5xl" data-reveal="clip">
+            Find us in the heart of Yorkville.
+          </h2>
+
+          <div class="grid gap-10 lg:grid-cols-2">
+            <article class="rounded-2xl border border-border bg-canvas p-8" data-reveal="fade-up">
+              <h3 class="mb-6 text-2xl font-semibold">Bakery Details</h3>
+              <ul class="space-y-4">
+                <li><strong>Address:</strong> 1850 Avenue Road, Toronto, ON M5M 3Z5</li>
+                <li><strong>Phone:</strong> <a href="tel:+14163334455" class="text-accent" data-cursor-expand>(416) 333-4455</a></li>
+                <li><strong>Email:</strong> <a href="mailto:info@lavenuebakery.com" class="text-accent" data-cursor-expand>info@lavenuebakery.com</a></li>
+                <li><strong>Hours:</strong> Mon-Fri 7:00-19:00, Sat-Sun 8:00-20:00</li>
+              </ul>
+            </article>
+
+            <article class="rounded-2xl border border-border bg-canvas p-8" data-reveal="fade-up" data-framer="map-card">
+              <h3 class="mb-6 text-2xl font-semibold">Neighborhood Map</h3>
+              <img
+                src="/images/map-yorkville.jpg"
+                alt="Map preview showing L'Avenue Boulangerie in Yorkville"
+                width="960"
+                height="720"
+                loading="lazy"
+                class="w-full rounded-xl object-cover"
+              />
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="final-cta"
+        aria-labelledby="final-cta-heading"
+        class="section-final-cta py-20 lg:py-32"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+          <div class="rounded-3xl border border-border bg-accent p-12 text-canvas">
+            <p class="mb-4 text-xs font-medium uppercase tracking-widest" data-reveal="fade-up">
+              Ready for Tomorrow Morning
+            </p>
+            <h2 id="final-cta-heading" class="mb-6 font-display text-4xl font-bold leading-tight lg:text-5xl" data-reveal="clip">
+              Pre-order today, pick up fresh at first bake.
+            </h2>
+            <p class="mb-8 max-w-2xl text-base leading-7 text-canvas/85" data-reveal="fade-up">
+              Reserve your pastries and artisan loaves now. Small-batch quantities sell out quickly on weekends.
+            </p>
+            <a
+              href="#visit-contact"
+              class="inline-flex min-h-12 items-center justify-center rounded-full bg-canvas px-8 py-4 text-sm font-semibold text-accent"
+              data-cursor-expand
+              data-framer="final-cta"
+            >
+              Reserve Your Selection
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-border bg-footer py-20" aria-label="Site footer">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-20">
+        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <p class="mb-4 text-sm font-semibold uppercase tracking-widest text-accent">L'Avenue Boulangerie</p>
+            <p class="text-foreground/75">Artisan bakery and cafe rooted in French craft and Yorkville hospitality.</p>
+          </div>
+          <div>
+            <p class="mb-4 text-sm font-semibold uppercase tracking-widest text-accent">Explore</p>
+            <ul class="space-y-2">
+              <li><a href="#menu-highlights" data-cursor-expand>Highlights</a></li>
+              <li><a href="#full-menu" data-cursor-expand>Full Menu</a></li>
+              <li><a href="#weekly-schedule" data-cursor-expand>Schedule</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mb-4 text-sm font-semibold uppercase tracking-widest text-accent">Visit</p>
+            <ul class="space-y-2">
+              <li>1850 Avenue Road</li>
+              <li>Toronto, Ontario</li>
+              <li><a href="tel:+14163334455" data-cursor-expand>(416) 333-4455</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="mb-4 text-sm font-semibold uppercase tracking-widest text-accent">Follow</p>
+            <ul class="space-y-2">
+              <li><a href="#" aria-label="Instagram" data-cursor-expand>Instagram</a></li>
+              <li><a href="#" aria-label="Facebook" data-cursor-expand>Facebook</a></li>
+              <li><a href="#" aria-label="Newsletter" data-cursor-expand>Newsletter</a></li>
+            </ul>
+          </div>
+        </div>
+        <p class="mt-12 text-sm text-foreground/60">© 2026 L'Avenue Boulangerie. All rights reserved.</p>
+      </div>
+    </footer>
+    <script type="module">
+      import initAllAnimations from "./animations.js";
+
+      window.addEventListener("DOMContentLoaded", () => {
+        initAllAnimations({ enableCursor: false });
+      });
+    </script>
+  </body>
+</html>
