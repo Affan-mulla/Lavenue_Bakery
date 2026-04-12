@@ -1,115 +1,102 @@
-export type MenuItem = {
-  name: string;
-  price: string;
-  note?: string;
-};
-
-export type MenuGroup = {
+export type FeatureItem = {
   title: string;
-  items: MenuItem[];
+  copy: string;
+  shape: "circle" | "diamond" | "star";
 };
 
-export type MenuEntry = {
-  id: string;
-  group: string;
-  index: number;
-  name: string;
-  price: string;
-  note?: string;
-  image: string;
+export type ReviewItem = {
+  quote: string;
+  author: string;
+  city: string;
 };
 
-function getPreviewImage(itemName: string, group: string): string {
-  const itemSlug = itemName
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
-  const groupSlug = group.toLowerCase().replace(/\s+/g, "-");
-
-  return `https://picsum.photos/seed/${groupSlug}-${itemSlug}/1200/900`;
-}
-
-const breads: MenuItem[] = [
-  { name: "Baguette", price: "$4.25", note: "Baked fresh daily" },
-  { name: "Demi Baguette", price: "$2.30", note: "Baked fresh daily" },
-  { name: "Breakfast Baguette", price: "$5.25", note: "Butter and Jam" },
-  { name: "Sourdough Loaf", price: "$7.50", note: "Large" },
-  {
-    name: "Sourdough Loaf - Walnut & Cranberry",
-    price: "$8.75",
-    note: "Baked fresh daily",
-  },
-  { name: "Sourdough Loaf - Olive", price: "$8.75", note: "Baked fresh daily" },
-  {
-    name: "Sourdough Loaf - Sunflower - Pumpkin seed",
-    price: "$8.75",
-    note: "Baked fresh daily",
-  },
-  { name: "Gourmet Flat Bread (Medium)", price: "$7.50" },
-  { name: "Gourmet Flat Bread (Large)", price: "$10.00" },
+export const heroLines = [
+  "Where the ideas thrive,",
+  "where kitchen and beer yes",
+  "they merge for become alive.",
 ];
 
-const pastries: MenuItem[] = [
-  { name: "Butter Croissant - Original", price: "$4.00" },
-  { name: "Butter Croissant - Nutella", price: "$6.35" },
-  { name: "Butter Croissant - Nutella-Banana-Walnut", price: "$6.35" },
-  { name: "Butter Croissant - Hazelnut", price: "$5.25" },
-  { name: "Butter Croissant - Almond", price: "$5.25" },
-  { name: "Butter Croissant - Chocolate-Almond", price: "$5.50" },
-  { name: "Butter Croissant - Pistachio", price: "$5.60" },
-  { name: "Butter Croissant - Chocolate-Pistachio", price: "$5.70" },
-  { name: "Butter Croissant - Blueberry-Almond", price: "$5.85" },
-  { name: "Butter Croissant - Raspberry-Almond", price: "$5.85" },
-  { name: "Butter Croissant - Chocolate-Blueberry", price: "$5.85" },
-  { name: "Butter Croissant - Chocolate-Raspberry", price: "$5.85" },
-  { name: "Eclair - Classic", price: "$6.75" },
-  { name: "Eclair - Hazelnut", price: "$6.75" },
-  { name: "Cookie - Almond | Pistachio | Hazelnut", price: "$5.50" },
-  { name: "Cookie - Chocolate", price: "$5.50" },
-];
-
-const desserts: MenuItem[] = [
-  { name: "Tart - Lemon", price: "$8.50" },
-  { name: "Tart - Chocolate", price: "$8.50" },
-  { name: "Tart - Fruit", price: "$8.50" },
-  { name: "Tart - Pistachio-Peach", price: "$8.50" },
-  { name: "Opera", price: "$8.50" },
-  { name: "Tiramisu Cup", price: "$8.50" },
-];
-
-export const menuGroups: MenuGroup[] = [
-  { title: "Breads", items: breads },
-  { title: "Pastries", items: pastries },
-  { title: "Desserts", items: desserts },
-];
-
-export const INITIAL_MENU_ITEMS = 4;
-
-export const menuEntriesByGroup = menuGroups.map((group) => ({
-  title: group.title,
-  entries: group.items.map((item, index) => ({
-    id: `${group.title}-${item.name}-${index}`,
-    group: group.title,
-    index: index + 1,
-    name: item.name,
-    price: item.price,
-    note: item.note,
-    image: getPreviewImage(item.name, group.title),
-  })),
-}));
-
-export const processSteps = [
+export const heroImages = [
   {
-    title: "Slow Fermentation",
-    text: "Dough rests overnight to build aroma, tenderness, and a naturally complex crumb.",
+    src: "https://images.unsplash.com/photo-1681218079567-35aef7c8e7e4?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    alt: "Seafood plate staged on marble.",
   },
   {
-    title: "Lamination",
-    text: "Butter is folded by hand for a crisp shell, honeyed interior, and clean layered structure.",
+    src: "https://images.unsplash.com/photo-1609590981063-d495e2914ce4?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    alt: "Editorial overhead food spread.",
+  },
+];
+
+export const featureItems: FeatureItem[] = [
+  {
+    title: "Breads",
+    copy: "We combine street-food instinct with premium ingredients and craft-driven cooking discipline.",
+    shape: "circle",
   },
   {
-    title: "Final Service",
-    text: "Every pastry is finished to order with visual polish, warmth, and uncompromised freshness.",
+    title: "Pastries",
+    copy: "15 craft beers from around the world in constant rotation with pairings for every plate.",
+    shape: "diamond",
+  },
+  {
+    title: "Meals",
+    copy: "From signature cocktails to spirit-free options, the bar list is designed for all tastes.",
+    shape: "star",
+  },
+];
+
+export const reviewItems: ReviewItem[] = [
+  {
+    quote:
+      "Great food, location and service. Fried dishes were crisp and light, absolutely recommended.",
+    author: "Giulia M.",
+    city: "Treviso",
+  },
+  {
+    quote:
+      "The pairing idea is brilliant: artisan bakes and rotating craft beers in one warm atmosphere.",
+    author: "Lorenzo R.",
+    city: "Padova",
+  },
+  {
+    quote:
+      "Impeccable hospitality and memorable flavors. You feel the kitchen precision in every plate.",
+    author: "Chiara B.",
+    city: "Venezia",
+  },
+  {
+    quote:
+      "A place with identity. Refined but never cold, with real personality from service to dessert.",
+    author: "Marco T.",
+    city: "Montebelluna",
+  },
+];
+
+export const storyImages = {
+  team: "https://picsum.photos/seed/lavenue-founders/960/760",
+  archive: "https://picsum.photos/seed/lavenue-archive/720/900",
+};
+
+export const galleryImages = [
+  "https://picsum.photos/seed/lavenue-bottle-lineup/560/520",
+  "https://picsum.photos/seed/lavenue-octopus/860/920",
+  "https://picsum.photos/seed/lavenue-citrus/720/920",
+  "https://picsum.photos/seed/lavenue-portrait-small/340/420",
+  "https://picsum.photos/seed/lavenue-hand-food/520/760",
+  "https://picsum.photos/seed/lavenue-staff/420/420",
+];
+
+export const reservationRows = [
+  {
+    label: "Address",
+    value: "Via Argine, 15\n31044 Montebelluna (TV)",
+  },
+  {
+    label: "Telephone",
+    value: "0423 609937",
+  },
+  {
+    label: "Mail",
+    value: "info@nidabaspirit.it",
   },
 ];

@@ -1,75 +1,85 @@
 import { memo } from "react";
-import { motion } from "framer-motion";
+import Image from "next/image";
+import { heroImages } from "../landing-data";
 
-type HeroSectionProps = {
-  prefersReducedMotion: boolean;
-};
-
-function HeroSection({ prefersReducedMotion }: HeroSectionProps) {
+function HeroSection() {
   return (
-    <section className="px-4 pb-24 pt-8 sm:px-6 lg:px-10">
-      <motion.div
-        data-parallax="hero"
-        initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.97, y: 26 }}
-        animate={prefersReducedMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        className="relative mx-auto flex min-h-[72vh] w-full max-w-7xl items-center justify-center overflow-hidden rounded-[30px] border border-white/20 shadow-[0_32px_72px_rgba(10,18,37,0.26)]"
-      >
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage:
-              "url('https://images.pexels.com/photos/1070946/pexels-photo-1070946.jpeg?auto=compress&cs=tinysrgb&w=1800')",
-          }}
-          aria-hidden="true"
-        />
-        <div
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,14,30,0.42)_0%,rgba(8,14,30,0.68)_58%,rgba(8,14,30,0.78)_100%)]"
-          aria-hidden="true"
-        />
+    <section className="wine-surface relative overflow-hidden pb-16 pt-28  md:pt-36" id="home">
+      <div className="w-full">
+        <h1 className="mx-auto my-16 text-center font-display-face text-[clamp(44px,8.2vw,88px)] leading-[0.86] text-[#f3e8de]">
+          <span className="block overflow-hidden">
+            <span data-text-line className="block">
+              Where the ideas <span className="font-semibold italic  text-[#f3ddd2]">thrive</span>,
+            </span>
+          </span>
+          <span className="block overflow-hidden">
+            <span data-text-line className="block">where kitchen and beer yes</span>
+          </span>
+          <span className="block overflow-hidden">
+            <span data-text-line className="block">
+              they merge for become <span className="font-semibold italic  ">alive</span>.
+            </span>
+          </span>
+        </h1>
 
-        <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-col items-center px-6 py-16 text-center sm:px-10 md:py-24">
-          <motion.p
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
-            animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-            className="mb-5 text-xs font-semibold uppercase tracking-[0.28em] text-white/90"
-          >
-            Yorkville, Toronto
-          </motion.p>
-
-          <h1
-            className="max-w-[14ch] font-display-face text-5xl leading-[0.95] text-white sm:text-6xl md:text-7xl lg:text-8xl"
-            aria-label="Royal mornings crafted by hand"
-            data-split-lines
-          >
-            Royal mornings, crafted by hand.
-          </h1>
-
-          <p className="mt-6 max-w-[56ch] text-base leading-7 text-white/84 md:text-lg md:leading-8" data-reveal="lift">
-            An elegant bakery and cafe where artisan bread, laminated pastry, and coffee rituals meet
-            timeless hospitality.
+        <div className="relative  ">
+          <p className="pointer-events-none absolute left-0 right-0 top-1/2 -translate-y-1/2 overflow-hidden font-display-face text-[clamp(58px,9.5vw,142px)] leading-[0.78] ">
+            <span data-marquee-loop className="marquee-track block">
+              Where kitchen and looking • Where kitchen and looking • Where kitchen and looking •
+            </span>
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-4" data-reveal="lift">
-            <motion.a
-              whileHover={prefersReducedMotion ? undefined : { y: -2, scale: 1.01 }}
-              whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
-              className="inline-flex h-12 items-center rounded-full bg-white px-8 text-sm font-semibold uppercase tracking-[0.12em] text-[#10244e] transition-colors hover:bg-[#eff4ff]"
-              href="#menu"
-            >
-              Explore Pastries
-            </motion.a>
+          <div className="relative z-10 mx-auto mt-6 grid w-[92%] max-w-6xl gap-2 md:mt-40 md:w-[88%] md:grid-cols-[minmax(0,1fr)_minmax(280px,0.52fr)] md:items-center md:gap-10">
+            <div className="flex flex-col gap-2">
+              <figure
+                className="mask-card relative mx-auto aspect-16/10 w-[80%] overflow-hidden will-change-transform md:mx-0  "
+                data-mask-card
+                data-hero-mask="left"
+              >
+                <Image
+                  src={heroImages[0].src}
+                  alt={heroImages[0].alt}
+                  fill
+                  sizes="(min-width: 768px) 46vw, 90vw"
+                  className="object-cover"
+                  priority
+                />
+              </figure>
 
-            <a
-              className="inline-flex h-12 items-center rounded-full border border-white/60 px-8 text-sm font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:border-white hover:bg-white/12"
-              href="#visit"
-            >
-              Plan Your Visit
-            </a>
+              <p className="mx-auto max-w-xl font-script text-md  font-light tracking-wider  md:mx-0" data-fade-up>
+               The quality of the ingredients, along with the wide selection of beers, makes the Nidaba a one-of-a-kind place. We want to give you always different emotions with each visit. It's not just a place, it's not just a beer house, it's not just a pub. It's all this and much more. A refuge away from the disturbances of the city, a place where everyone can find their own well-being.
+              </p>
+            </div>
+
+            <div className="flex justify-end md:justify-center md:pb-4">
+              <figure
+                className="mask-card relative aspect-9/16 w-[62%] max-w-80 overflow-hidden rounded-t-full will-change-transform md:mt-0 md:w-full md:max-w-80"
+                data-mask-card
+                data-hero-mask="right"
+              >
+                <Image
+                  src={heroImages[1].src}
+                  alt={heroImages[1].alt}
+                  fill
+                  sizes="(min-width: 768px) 24vw, 62vw"
+                  className="object-cover"
+                />
+              </figure>
+            </div>
           </div>
         </div>
-      </motion.div>
+
+        <div className="mt-12 flex flex-wrap items-center gap-4 text-sm tracking-[0.04em] text-[#e9d7c8]">
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#f5e4d6]/40">
+            ⦿
+          </span>
+          <p data-fade-up>Discover the menu</p>
+          <p className="text-[#f5d2c7]/90" data-fade-up>
+            24 luglio, Venezia 8
+          </p>
+        </div>
+      </div>
+     
     </section>
   );
 }

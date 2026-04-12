@@ -1,170 +1,130 @@
-import { memo, type RefObject } from "react";
-import Image from "next/image";
-import {
-  INITIAL_MENU_ITEMS,
-  menuEntriesByGroup,
-  type MenuEntry,
-} from "../landing-data";
+import { memo } from "react";
+import { featureItems } from "../landing-data";
 
-type MenuSectionProps = {
-  menuSectionRef: RefObject<HTMLElement | null>;
-  menuOverlayRef: RefObject<HTMLDivElement | null>;
-  menuImageWrapRef: RefObject<HTMLDivElement | null>;
-  menuImageOverlayRef: RefObject<HTMLDivElement | null>;
-  menuRowsRef: RefObject<HTMLDivElement | null>;
-  hoveredEntry: MenuEntry;
-  expandedGroups: Record<string, boolean>;
-  onMenuItemHover: (entry: MenuEntry) => void;
-  onToggleGroupItems: (groupTitle: string) => void;
-};
+function MenuShape({ shape }: { shape: "circle" | "diamond" | "star" }) {
+  if (shape === "circle") {
+    return (
+      <span className="block h-40 w-40 rounded-full bg-primary md:h-48 md:w-48" />
+    );
+  }
 
-function MenuSection({
-  menuSectionRef,
-  menuOverlayRef,
-  menuImageWrapRef,
-  menuImageOverlayRef,
-  menuRowsRef,
-  hoveredEntry,
-  expandedGroups,
-  onMenuItemHover,
-  onToggleGroupItems,
-}: MenuSectionProps) {
+  if (shape === "diamond") {
+    return (
+      <svg
+        className="h-40 w-40 fill-primary md:h-48 md:w-48"
+        viewBox="0 0 200 200"
+        aria-hidden="true"
+      >
+        <path d="M100 20C105.783 63.339 136.661 94.217 180 100C136.661 105.783 105.783 136.661 100 180C94.217 136.661 63.339 105.783 20 100C63.339 94.217 94.217 63.339 100 20Z" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      className="h-40 w-40 fill-primary md:h-48 md:w-48"
+      viewBox="0 0 200 216"
+      aria-hidden="true"
+    >
+      <path d="M100 14L124 43H166V84L195 108L166 132V173H124L100 202L76 173H34V132L5 108L34 84V43H76L100 14Z" />
+    </svg>
+  );
+}
+
+function MenuSection() {
+  
+
   return (
     <section
-      ref={menuSectionRef}
       id="menu"
-      className="relative overflow-hidden bg-[#f4f8ff] py-24 text-[#142b5f]"
+      className="wine-surface relative overflow-hidden pb-16 pt-18 "
     >
-      <div
-        ref={menuOverlayRef}
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(47,87,216,0.1)_0%,rgba(47,87,216,0)_44%,rgba(47,87,216,0.14)_100%)]"
-      />
-
-      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10">
-        <p className="mb-4 text-xs uppercase tracking-[0.22em] text-[#2f57d8]" data-reveal="lift">
-          Curated Selection
-        </p>
-        <h2
-          className="max-w-[17ch] font-display-face text-5xl leading-[0.95] text-[#10244f] md:text-7xl"
-          data-split-lines
-        >
-          Full-width menu with cinematic hover preview.
-        </h2>
-        <span className="mt-6 block h-px w-full bg-[#2f57d8]/35" data-reveal="line" />
-
-        <div
-          ref={menuImageWrapRef}
-          className="relative mt-12 overflow-hidden rounded-[30px] border border-[#2f57d8]/22"
-          data-reveal="lift"
-        >
-          <div className="relative h-[34vh] min-h-[250px] w-full">
-            <Image
-              src={hoveredEntry.image}
-              alt={hoveredEntry.name}
-              fill
-              sizes="100vw"
-              className="object-cover"
-            />
-            <div
-              ref={menuImageOverlayRef}
-              className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,rgba(7,24,78,0.74)_0%,rgba(15,44,130,0.45)_45%,rgba(47,87,216,0.08)_100%)]"
-            />
-            <div className="absolute inset-x-0 bottom-0 border-t border-white/22 bg-white/12 p-4 backdrop-blur-sm md:p-6">
-              <p className="text-xs uppercase tracking-[0.22em] text-[#dce5ff]">Live Hover Selection</p>
-              <h3 className="mt-2 font-display-face text-3xl leading-none text-white md:text-5xl">
-                {hoveredEntry.name}
-              </h3>
-            </div>
+      <div className="w-full">
+        <div className="flex items-start justify-center gap-4 text-lg text-[#efe2d8]/88">
+          <div className="max-w-xs text-center" data-fade-up>
+            <p className="text-primary text-4xl leading-none" data-spin>
+              ✦
+            </p>
+            <p className="mt-2 text-base uppercase leading-[1.15] tracking-[0.08em]">
+              Discover the menu of the day.
+            </p>
+            <p className="text-base uppercase leading-[1.15] tracking-[0.08em]">
+              Beers, dishes and specials
+            </p>
           </div>
         </div>
 
-        <div ref={menuRowsRef} className="mt-10 space-y-10" data-reveal="lift">
-          {menuEntriesByGroup.map((group) => {
-            const isExpanded = expandedGroups[group.title];
-            const visibleEntries = isExpanded
-              ? group.entries
-              : group.entries.slice(0, INITIAL_MENU_ITEMS);
-            const hiddenCount = group.entries.length - visibleEntries.length;
+        <div className="mt-10 overflow-hidden py-2">
+          <p className="pointer-events-none overflow-hidden font-display-face text-[clamp(68px,11vw,150px)]  text-[#f5e9df]">
+            <span data-marquee-loop className="marquee-track block">
+              Menu of the day • Menu of the day • Menu of the day • Menu of the day • Menu of the day •
+            </span>
+          </p>
+        </div>
 
-            return (
-              <section key={group.title} className="border-y border-[#2f57d8]/20">
-                <div className="flex items-end justify-between gap-4 px-1 py-4 md:py-5">
-                  <h3 className="font-display-face text-4xl leading-none text-[#12306c] md:text-5xl">
-                    {group.title}
-                  </h3>
-                  <p className="text-xs uppercase tracking-[0.2em] text-[#2f57d8]">
-                    {group.entries.length} items
+        <div className="relative mx-auto mt-4 max-w-6xl">
+          <div className="grid gap-6 md:grid-cols-3 md:gap-10">
+            {featureItems.map((item, index) => (
+              <article
+                key={item.title}
+                className="mask-card relative px-2 pb-5 pt-4"
+                data-mask-card
+                data-menu-card
+              >
+                <div className="flex min-h-56 items-center justify-center">
+                  <MenuShape shape={item.shape} />
+                </div>
+
+                <div className="mt-3 overflow-hidden flex items-center justify-between border-y border-[#ecd8ca] py-2">
+                  <p className="text-4xl leading-none" data-spin>
+                    ✦
+                  </p>
+                  <p
+                    className="font-display-face text-[clamp(30px,2.8vw,40px)] italic leading-none text-[#f7ede4] font-bold overflow-hidden whitespace-nowrap"
+                  data-menu-hover-text
+                  >
+                    {item.title}
+                  </p>
+                  <p
+                    className="font-display-face text-3xl text-[#f7ede4]/90"
+                  >
+                    ({String(index + 1).padStart(2, "0")})
                   </p>
                 </div>
 
-                <ul>
-                  {visibleEntries.map((entry) => {
-                    const isActive = hoveredEntry.id === entry.id;
+                <p
+                  className="mt-5 max-w-[35ch] text-lg leading-[1.15] text-[#e9d8ca]/92 font-mono"
+                  
+                >
+                  {item.copy}
+                </p>
 
-                    return (
-                      <li
-                        key={entry.id}
-                        data-menu-row
-                        className="group border-t border-[#2f57d8]/16 first:border-t-0"
-                      >
-                        <button
-                          type="button"
-                          onMouseEnter={() => onMenuItemHover(entry)}
-                          onFocus={() => onMenuItemHover(entry)}
-                          className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-5 px-1 py-6 text-left md:py-8"
-                        >
-                          <div className="flex min-w-0 items-start gap-4 md:gap-6">
-                            <p className="pt-1 text-xs uppercase tracking-[0.2em] text-[#2f57d8]">
-                              {String(entry.index).padStart(2, "0")}
-                            </p>
-                            <div className="min-w-0">
-                              <p className="truncate font-display-face text-3xl leading-none text-[#0f2a62] transition-transform duration-300 group-hover:translate-x-2 md:text-5xl">
-                                {entry.name}
-                              </p>
-                              <p className="mt-2 text-xs uppercase tracking-[0.19em] text-[#2f57d8]">
-                                {entry.group}
-                              </p>
-                              {entry.note ? (
-                                <p className="mt-1 text-sm leading-6 text-[#1f3f78]/72">{entry.note}</p>
-                              ) : null}
-                            </div>
-                          </div>
+                <a
+                  href="#visit"
+                  className="mt-6 inline-flex items-center gap-2 text-2xl font-semibold text-[#f7ede4] hover:underline"
+                >
+                  <span >Discover</span>
+                  <span
+                    aria-hidden="true"
+                    className="inline-block text-primary"
+                  >
+                    {"->"}
+                  </span>
+                </a>
+              </article>
+            ))}
+          </div>
 
-                          <div className="flex items-center gap-3 md:gap-5">
-                            <p className="text-base font-semibold text-[#1f3d7a] md:text-xl">
-                              {entry.price}
-                            </p>
-                            <span
-                              className={`inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#2f57d8]/28 text-xs text-[#2f57d8] transition-transform duration-300 ${
-                                isActive ? "translate-x-1" : "group-hover:translate-x-1"
-                              }`}
-                              aria-hidden="true"
-                            >
-                              →
-                            </span>
-                          </div>
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-
-                {group.entries.length > INITIAL_MENU_ITEMS ? (
-                  <div className="border-t border-[#2f57d8]/16 px-1 py-5">
-                    <button
-                      type="button"
-                      onClick={() => onToggleGroupItems(group.title)}
-                      className="inline-flex items-center gap-3 rounded-full border border-[#2f57d8]/28 px-5 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#1f3d7a] transition-colors hover:border-[#2f57d8]/42 hover:bg-[#eff4ff]"
-                    >
-                      {isExpanded ? "Show Fewer Items" : `Show ${hiddenCount} More Items`}
-                    </button>
-                  </div>
-                ) : null}
-              </section>
-            );
-          })}
+          <div className="mt-12 pt-3" data-fade-up>
+            <p className="flex items-center gap-2 text-sm uppercase tracking-[0.12em] text-[#eedfd4]">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#ecd8ca]">
+                {"->"}
+              </span>
+              Discover the menu
+              <span className="text-primary">10 aprile, venerdi</span>
+            </p>
+          </div>
         </div>
-
       </div>
     </section>
   );

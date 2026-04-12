@@ -1,114 +1,64 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useReducedMotion } from "framer-motion";
-import Image from "next/image";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
-import { SplitText } from "gsap/SplitText";
-import {
-  INITIAL_MENU_ITEMS,
-  menuEntriesByGroup,
-  type MenuEntry,
-} from "./landing-data";
+import Lenis from "lenis";
 import LandingHeader from "./sections/landing-header";
 import HeroSection from "./sections/hero-section";
 import AtelierSection from "./sections/atelier-section";
 import MenuSection from "./sections/menu-section";
 import CraftSection from "./sections/craft-section";
 import VisitSection from "./sections/visit-section";
+import Bg_Svg from "./Bg_Svg";
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
+gsap.registerPlugin(ScrollTrigger);
 
 export default function BakeryExperience() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const smoothWrapperRef = useRef<HTMLDivElement>(null);
-  const smoothContentRef = useRef<HTMLDivElement>(null);
-  const headerShellRef = useRef<HTMLDivElement>(null);
+  const headerShellRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
-  const craftRef = useRef<HTMLElement>(null);
   const magneticRef = useRef<HTMLAnchorElement>(null);
-  const menuSectionRef = useRef<HTMLElement>(null);
-  const menuOverlayRef = useRef<HTMLDivElement>(null);
-  const menuImageWrapRef = useRef<HTMLDivElement>(null);
-  const menuImageOverlayRef = useRef<HTMLDivElement>(null);
-  const menuRowsRef = useRef<HTMLDivElement>(null);
-  const cursorFollowerRef = useRef<HTMLDivElement>(null);
-  const cursorFollowerInnerRef = useRef<HTMLDivElement>(null);
-  const footerBounceRef = useRef<HTMLDivElement>(null);
-
-  const [hoveredEntry, setHoveredEntry] = useState<MenuEntry>(menuEntriesByGroup[0].entries[0]);
-  const hoveredEntryRef = useRef<MenuEntry>(menuEntriesByGroup[0].entries[0]);
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(menuEntriesByGroup.map((group) => [group.title, false]))
-  );
-
-  const prefersReducedMotion = useReducedMotion();
-  const reducedMotionEnabled = Boolean(prefersReducedMotion);
-
-  const handleMenuItemHover = useCallback((entry: MenuEntry) => {
-    setHoveredEntry(entry);
-  }, []);
-
-  useEffect(() => {
-    hoveredEntryRef.current = hoveredEntry;
-  }, [hoveredEntry]);
-
-  const toggleGroupItems = useCallback((groupTitle: string) => {
-    setExpandedGroups((prev) => {
-      const nextExpanded = !prev[groupTitle];
-
-      if (!nextExpanded) {
-        const targetGroup = menuEntriesByGroup.find((group) => group.title === groupTitle);
-        if (targetGroup) {
-          const visibleWhenCollapsed = targetGroup.entries.slice(0, INITIAL_MENU_ITEMS).map((entry) => entry.id);
-          if (
-            hoveredEntryRef.current.group === groupTitle &&
-            !visibleWhenCollapsed.includes(hoveredEntryRef.current.id)
-          ) {
-            setHoveredEntry(targetGroup.entries[0]);
-          }
-        }
-      }
-
-      return {
-        ...prev,
-        [groupTitle]: nextExpanded,
-      };
-    });
-  }, []);
 
   useEffect(() => {
     if (!rootRef.current) {
       return;
     }
 
-    ScrollSmoother.get()?.kill();
-
     const cleanups: Array<() => void> = [];
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const ctx = gsap.context(() => {
-      const allowSmoothScroll =
-        !prefersReducedMotion &&
-        window.matchMedia("(min-width: 1024px) and (hover: hover)").matches;
+    let lenis: Lenis | null = null;
+    let rafId = 0;
 
-      if (smoothWrapperRef.current && smoothContentRef.current && allowSmoothScroll) {
-        const smoother = ScrollSmoother.create({
-          wrapper: smoothWrapperRef.current,
-          content: smoothContentRef.current,
-          smooth: 0.9,
-          smoothTouch: 0,
-          effects: false,
-          normalizeScroll: false,
-          ignoreMobileResize: true,
-        });
+    if (!prefersReducedMotion) {
+      lenis = new Lenis({
+        duration: 1.1,
+        smoothWheel: true,
+        wheelMultiplier: 0.9,
+        touchMultiplier: 1.2,
+      });
 
-        cleanups.push(() => smoother.kill());
-      }
+      const onLenisScroll = () => ScrollTrigger.update();
+      lenis.on("scroll", onLenisScroll);
 
+      const onRaf = (time: number) => {
+        lenis?.raf(time);
+        rafId = window.requestAnimationFrame(onRaf);
+      };
+
+      rafId = window.requestAnimationFrame(onRaf);
+
+      cleanups.push(() => {
+        window.cancelAnimationFrame(rafId);
+        lenis?.destroy();
+      });
+    }
+
+    const context = gsap.context(() => {
       if (progressRef.current) {
         gsap.set(progressRef.current, { scaleX: 0, transformOrigin: "left center" });
+
         gsap.to(progressRef.current, {
           scaleX: 1,
           ease: "none",
@@ -116,84 +66,284 @@ export default function BakeryExperience() {
             trigger: document.documentElement,
             start: "top top",
             end: "max",
-            scrub: 0.2,
+            scrub: 0.3,
           },
         });
       }
 
       if (headerShellRef.current) {
-        const stickyTrigger = ScrollTrigger.create({
+        const headerTrigger = ScrollTrigger.create({
           start: 0,
           end: "max",
           onUpdate: (self) => {
-            headerShellRef.current?.classList.toggle("is-compact", self.scroll() > 48);
+            headerShellRef.current?.classList.toggle("is-compact", self.scroll() > 42);
           },
         });
-        cleanups.push(() => stickyTrigger.kill());
+        cleanups.push(() => headerTrigger.kill());
       }
 
-      if (!prefersReducedMotion) {
-        const splitInstances: SplitText[] = [];
-        const splitHeadings = gsap.utils.toArray<HTMLElement>("[data-split-lines]");
+      const firstLine = rootRef.current?.querySelector("[data-text-line]");
+      if (firstLine) {
+        gsap.fromTo(
+          "[data-text-line]",
+          { yPercent: 120, autoAlpha: 0 },
+          {
+            yPercent: 0,
+            autoAlpha: 1,
+            duration: 1.2,
+            stagger: 0.16,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: firstLine,
+              start: "top 90%",
+              once: true,
+            },
+          }
+        );
+      }
 
-        splitHeadings.forEach((heading) => {
-          const split = SplitText.create(heading, {
-            type: "lines",
-            linesClass: "split-line",
-          });
+      gsap.utils.toArray<HTMLElement>("[data-fade-up]").forEach((item, index) => {
+        gsap.fromTo(
+          item,
+          { y: 30, autoAlpha: 0 },
+          {
+            y: 0,
+            autoAlpha: 1,
+            duration: 0.84,
+            delay: index * 0.03,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 88%",
+              once: true,
+            },
+          }
+        );
+      });
 
-          splitInstances.push(split);
-          gsap.set(split.lines, { overflow: "hidden" });
+      gsap.utils.toArray<HTMLElement>("[data-mask-card]").forEach((card, index) => {
+        if (card.dataset.heroMask) {
+          return;
+        }
 
+        const image = card.querySelector("img");
+
+        gsap.to(card, {
+          clipPath: "inset(0% 0% 0% 0% round 0px)",
+          duration: 1.12,
+          ease: "power4.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 84%",
+            once: true,
+          },
+        });
+
+        if (image) {
           gsap.fromTo(
-            split.lines,
-            { yPercent: 115, autoAlpha: 0 },
+            image,
+            { scale: 1.17, yPercent: 9 },
             {
+              scale: 1,
               yPercent: 0,
-              autoAlpha: 1,
-              duration: 0.95,
-              stagger: 0.08,
-              ease: "power4.out",
+              duration: 1.28,
+              ease: "power3.out",
               scrollTrigger: {
-                trigger: heading,
+                trigger: card,
+                start: "top 84%",
+                once: true,
+              },
+            }
+          );
+
+          if (!prefersReducedMotion) {
+            gsap.to(image, {
+              yPercent: index % 2 === 0 ? -8 : -4,
+              ease: "none",
+              scrollTrigger: {
+                trigger: card,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 0.8,
+              },
+            });
+          }
+        }
+      });
+
+      const leftHeroMask = rootRef.current?.querySelector<HTMLElement>("[data-hero-mask='left']");
+      const rightHeroMask = rootRef.current?.querySelector<HTMLElement>("[data-hero-mask='right']");
+
+      if (leftHeroMask) {
+        const leftHeroImage = leftHeroMask.querySelector("img");
+
+        gsap.fromTo(
+          leftHeroMask,
+          { clipPath: "inset(0% 100% 0% 0% round 4px)", autoAlpha: 0.55 },
+          {
+            clipPath: "inset(0% 0% 0% 0% round 4px)",
+            autoAlpha: 1,
+            duration: 1.2,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: leftHeroMask,
+              start: "top 86%",
+              once: true,
+            },
+          }
+        );
+
+        if (leftHeroImage && !prefersReducedMotion) {
+          gsap.fromTo(
+            leftHeroImage,
+            { scale: 1.15, yPercent: 0 },
+            {
+              scale: 1,
+              yPercent: 0,
+              ease: "power3.out",
+              duration: 1.25,
+              scrollTrigger: {
+                trigger: leftHeroMask,
                 start: "top 86%",
                 once: true,
               },
             }
           );
-        });
 
-        cleanups.push(() => {
-          splitInstances.forEach((instance) => instance.revert());
-        });
+          gsap.to(leftHeroMask, {
+            yPercent: -10,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#home",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1.5,
+            },
+          });
+
+          gsap.to(leftHeroImage, {
+            yPercent: -18,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#home",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 1.5,
+            },
+          });
+        }
       }
 
-      ScrollTrigger.batch("[data-reveal='lift']", {
-        start: "top 86%",
-        once: true,
-        onEnter: (batch) => {
+      if (rightHeroMask) {
+        const rightHeroImage = rightHeroMask.querySelector("img");
+        const rightFinalClip =
+          rightHeroMask.dataset.heroClip ?? "inset(0% 0% 0% 0% round 4px)";
+        const rightStartClip = rightFinalClip.includes("round")
+          ? rightFinalClip.replace("0% 0% 0% 0%", "0% 0% 100% 0%")
+          : "inset(0% 0% 0% 100% round 4px)";
+
+        gsap.fromTo(
+          rightHeroMask,
+          { clipPath: rightStartClip, autoAlpha: 0.55 },
+          {
+            clipPath: rightFinalClip,
+            autoAlpha: 1,
+            duration: 1.2,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: rightHeroMask,
+              start: "top 80%",
+              once: true,
+            },
+          }
+        );
+
+        if (rightHeroImage && !prefersReducedMotion) {
           gsap.fromTo(
-            batch,
-            { opacity: 0, y: 36 },
+            rightHeroImage,
+            { scale: 1.14, yPercent: 0 },
             {
-              opacity: 1,
-              y: 0,
-              duration: 0.75,
-              stagger: 0.08,
+              scale: 1,
+              yPercent: 0,
               ease: "power3.out",
+              duration: 1.2,
+              scrollTrigger: {
+                trigger: rightHeroMask,
+                start: "top 80%",
+                once: true,
+              },
             }
           );
-        },
+
+          gsap.to(rightHeroMask, {
+            yPercent: -20,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#home",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.85,
+            },
+          });
+
+          gsap.to(rightHeroImage, {
+            yPercent: -34,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#home",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.85,
+            },
+          });
+
+          gsap.to(rightHeroImage, {
+            scale: 1.04,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#home",
+              start: "top 70%",
+              end: "bottom top",
+              scrub: 0.95,
+              },
+            }
+          );
+        }
+      }
+
+      gsap.utils.toArray<SVGElement>("[data-svg-path]").forEach((path) => {
+        const drawable = path as unknown as SVGGeometryElement;
+        const length = drawable.getTotalLength();
+
+        gsap.set(path, {
+          strokeDasharray: length,
+          strokeDashoffset: length,
+          opacity: 0.3,
+        });
+
+        gsap.to(path, {
+          strokeDashoffset: 0,
+          opacity: 1,
+          duration: 1.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: path,
+            start: "top 85%",
+            once: true,
+          },
+        });
       });
 
-      gsap.utils.toArray<HTMLElement>("[data-reveal='line']").forEach((item) => {
+      gsap.utils.toArray<HTMLElement>("[data-spin]").forEach((item) => {
         gsap.fromTo(
           item,
-          { scaleX: 0, transformOrigin: "left center" },
+          { rotate: -25, scale: 0.8, autoAlpha: 0 },
           {
-            scaleX: 1,
-            duration: 0.9,
-            ease: "power2.out",
+            rotate: 0,
+            scale: 1,
+            autoAlpha: 1,
+            duration: 0.7,
+            ease: "back.out(1.7)",
             scrollTrigger: {
               trigger: item,
               start: "top 86%",
@@ -203,349 +353,162 @@ export default function BakeryExperience() {
         );
       });
 
-      const heroVisual = rootRef.current?.querySelector<HTMLElement>("[data-parallax='hero']");
-      if (heroVisual && !prefersReducedMotion) {
-        gsap.to(heroVisual, {
-          yPercent: 12,
-          rotate: -2,
+      gsap.utils.toArray<HTMLElement>("[data-marquee-loop]").forEach((track, index) => {
+        if (!track.dataset.loopReady) {
+          track.textContent = `${track.textContent ?? ""} ${track.textContent ?? ""}`;
+          track.dataset.loopReady = "true";
+        }
+
+        const distance = Math.max(track.scrollWidth / 2, 480);
+        const isLeftward = index % 2 === 0;
+        const startX = isLeftward ? 0 : -distance;
+        const endX = isLeftward ? -distance : 0;
+
+        gsap.set(track, { x: startX });
+        gsap.to(track, {
+          x: endX,
+          duration: 36 + index * 4,
+          ease: "none",
+          repeat: -1,
+        });
+      });
+
+      if (!prefersReducedMotion) {
+        gsap.utils.toArray<HTMLElement>("[data-menu-card]").forEach((card) => {
+          const textNodes = card.querySelectorAll<HTMLElement>("[data-menu-hover-text]");
+          const baseColors = Array.from(textNodes, (node) => getComputedStyle(node).color);
+          const hoverColor = "#f63143";
+
+          const onPointerEnter = () => {
+            
+            gsap.killTweensOf(textNodes);
+            gsap.to(textNodes, {
+              keyframes: [
+                { yPercent: -180, duration: 0.2, ease: "power2.in" },
+                { yPercent: 180, duration: 0 },
+                { yPercent: 0, duration: 0.26, ease: "power2.out" },
+              ],
+              stagger: 0.04,
+              overwrite: "auto",
+            });
+
+            gsap.to(textNodes, {
+              color: hoverColor,
+              duration: 0.22,
+              delay: 0.2,
+              ease: "power2.out",
+              stagger: 0.04,
+              overwrite: "auto",
+            });
+          };
+
+          const onPointerLeave = () => {
+            gsap.killTweensOf(textNodes);
+            gsap.to(textNodes, {
+              keyframes: [
+                { yPercent: 180, duration: 0.2, ease: "power2.in" },
+                { yPercent: -180, duration: 0 },
+                { yPercent: 0, duration: 0.26, ease: "power2.out" },
+              ],
+              stagger: 0.04,
+              overwrite: "auto",
+            });
+
+            gsap.to(textNodes, {
+              color: (index: number) => baseColors[index],
+              duration: 0.24,
+              delay: 0.2,
+              ease: "power2.out",
+              stagger: 0.04,
+              overwrite: "auto",
+            });
+          };
+
+          card.addEventListener("pointerenter", onPointerEnter);
+          card.addEventListener("pointerleave", onPointerLeave);
+
+          cleanups.push(() => {
+            card.removeEventListener("pointerenter", onPointerEnter);
+            card.removeEventListener("pointerleave", onPointerLeave);
+          });
+        });
+      }
+
+      const reservationTitle = rootRef.current?.querySelector("#visit [data-marquee-loop]");
+      if (reservationTitle) {
+        gsap.to(reservationTitle, {
+          xPercent: -8,
           ease: "none",
           scrollTrigger: {
-            trigger: heroVisual,
+            trigger: "#visit",
             start: "top bottom",
             end: "bottom top",
-            scrub: 1.1,
-          },
-        });
-      }
-
-      if (menuSectionRef.current && menuOverlayRef.current) {
-        gsap.fromTo(
-          menuOverlayRef.current,
-          { autoAlpha: 0.15, scaleY: 0.65, transformOrigin: "top center" },
-          {
-            autoAlpha: 1,
-            scaleY: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: menuSectionRef.current,
-              start: "top 78%",
-              end: "bottom 30%",
-              scrub: 0.65,
-            },
-          }
-        );
-
-        const menuRows = gsap.utils.toArray<HTMLElement>("[data-menu-row]");
-        if (menuRows.length > 0) {
-          gsap.fromTo(
-            menuRows,
-            { autoAlpha: 0, y: 28 },
-            {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.7,
-              stagger: 0.05,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: menuSectionRef.current,
-                start: "top 75%",
-                once: true,
-              },
-            }
-          );
-        }
-      }
-
-      if (menuImageWrapRef.current && menuImageOverlayRef.current && !prefersReducedMotion) {
-        gsap.fromTo(
-          menuImageWrapRef.current,
-          { yPercent: 6 },
-          {
-            yPercent: -6,
-            ease: "none",
-            scrollTrigger: {
-              trigger: menuImageWrapRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1,
-            },
-          }
-        );
-
-        gsap.fromTo(
-          menuImageOverlayRef.current,
-          { yPercent: 0, autoAlpha: 0.72 },
-          {
-            yPercent: -22,
-            autoAlpha: 0.35,
-            ease: "none",
-            scrollTrigger: {
-              trigger: menuImageWrapRef.current,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1,
-            },
-          }
-        );
-      }
-
-      const craftCards = gsap.utils.toArray<HTMLElement>("[data-craft-step]");
-      if (
-        craftRef.current &&
-        craftCards.length > 0 &&
-        !prefersReducedMotion &&
-        window.matchMedia("(min-width: 1024px)").matches
-      ) {
-        gsap.set(craftCards, { opacity: 0.22, y: 28, scale: 0.985 });
-        gsap.set(craftCards[0], { opacity: 1, y: 0, scale: 1 });
-
-        const timeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: craftRef.current,
-            start: "top top+=100",
-            end: "+=980",
-            pin: true,
             scrub: 1,
-            snap: {
-              snapTo: 1 / (craftCards.length - 1),
-              duration: { min: 0.15, max: 0.35 },
-            },
-          },
-        });
-
-        craftCards.forEach((card, index) => {
-          timeline.to(
-            craftCards,
-            {
-              opacity: 0.22,
-              y: 24,
-              scale: 0.985,
-              duration: 0.35,
-              ease: "power2.out",
-            },
-            index === 0 ? 0 : ">"
-          );
-          timeline.to(
-            card,
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.45,
-              ease: "power3.out",
-            },
-            "<"
-          );
-        });
-      }
-
-      if (magneticRef.current && !prefersReducedMotion) {
-        const magnetic = magneticRef.current;
-        const onPointerMove = (event: PointerEvent) => {
-          const rect = magnetic.getBoundingClientRect();
-          const deltaX = event.clientX - (rect.left + rect.width / 2);
-          const deltaY = event.clientY - (rect.top + rect.height / 2);
-          const radius = 130;
-          if (Math.hypot(deltaX, deltaY) > radius) {
-            return;
-          }
-          gsap.to(magnetic, {
-            x: deltaX * 0.22,
-            y: deltaY * 0.22,
-            duration: 0.24,
-            ease: "power3.out",
-          });
-        };
-
-        const onPointerLeave = () => {
-          gsap.to(magnetic, {
-            x: 0,
-            y: 0,
-            duration: 0.55,
-            ease: "elastic.out(1, 0.5)",
-          });
-        };
-
-        magnetic.addEventListener("pointermove", onPointerMove);
-        magnetic.addEventListener("pointerleave", onPointerLeave);
-        cleanups.push(() => {
-          magnetic.removeEventListener("pointermove", onPointerMove);
-          magnetic.removeEventListener("pointerleave", onPointerLeave);
-        });
-      }
-
-      if (
-        cursorFollowerRef.current &&
-        menuSectionRef.current &&
-        menuRowsRef.current &&
-        !prefersReducedMotion &&
-        window.matchMedia("(hover: hover) and (min-width: 1024px)").matches
-      ) {
-        const follower = cursorFollowerRef.current;
-        const menuSection = menuSectionRef.current;
-        const menuRows = menuRowsRef.current;
-
-        gsap.set(follower, { xPercent: -50, yPercent: -50, autoAlpha: 0, scale: 0.86 });
-
-        const moveX = gsap.quickTo(follower, "x", { duration: 0.5, ease: "power3.out" });
-        const moveY = gsap.quickTo(follower, "y", { duration: 0.5, ease: "power3.out" });
-        const hideFollower = () => {
-          gsap.to(follower, {
-            autoAlpha: 0,
-            scale: 0.86,
-            duration: 0.24,
-            ease: "power2.out",
-          });
-        };
-
-        const placeFollowerAtPointer = (event: PointerEvent) => {
-          moveX(event.clientX + 28);
-          moveY(event.clientY + 18);
-        };
-
-        const onMenuPointerMove = (event: PointerEvent) => {
-          placeFollowerAtPointer(event);
-        };
-
-        const onMenuPointerEnter = (event: PointerEvent) => {
-          placeFollowerAtPointer(event);
-          gsap.to(follower, {
-            autoAlpha: 1,
-            scale: 1,
-            duration: 0.24,
-            ease: "power2.out",
-          });
-        };
-
-        const onMenuPointerLeave = () => hideFollower();
-
-        const visibilityTrigger = ScrollTrigger.create({
-          trigger: menuSection,
-          start: "top bottom",
-          end: "bottom top",
-          onLeave: () => hideFollower(),
-          onLeaveBack: () => hideFollower(),
-        });
-
-        menuRows.addEventListener("pointermove", onMenuPointerMove);
-        menuRows.addEventListener("pointerenter", onMenuPointerEnter);
-        menuRows.addEventListener("pointerleave", onMenuPointerLeave);
-
-        cleanups.push(() => {
-          menuRows.removeEventListener("pointermove", onMenuPointerMove);
-          menuRows.removeEventListener("pointerenter", onMenuPointerEnter);
-          menuRows.removeEventListener("pointerleave", onMenuPointerLeave);
-          visibilityTrigger.kill();
-          gsap.killTweensOf(follower);
-          gsap.set(follower, { autoAlpha: 0, scale: 0.86 });
-        });
-      }
-
-      if (footerBounceRef.current && !prefersReducedMotion) {
-        gsap.to("[data-footer-bounce]", {
-          y: -10,
-          duration: 0.92,
-          ease: "sine.inOut",
-          stagger: 0.14,
-          yoyo: true,
-          repeat: -1,
-          scrollTrigger: {
-            trigger: footerBounceRef.current,
-            start: "top 88%",
-            end: "bottom top",
-            toggleActions: "play pause resume pause",
           },
         });
       }
-
-      const refreshId = requestAnimationFrame(() => ScrollTrigger.refresh());
-      cleanups.push(() => cancelAnimationFrame(refreshId));
     }, rootRef);
+
+    if (magneticRef.current && !prefersReducedMotion) {
+      const magneticButton = magneticRef.current;
+
+      const onPointerMove = (event: PointerEvent) => {
+        const bounds = magneticButton.getBoundingClientRect();
+        const offsetX = event.clientX - (bounds.left + bounds.width / 2);
+        const offsetY = event.clientY - (bounds.top + bounds.height / 2);
+
+        gsap.to(magneticButton, {
+          x: offsetX * 0.2,
+          y: offsetY * 0.2,
+          duration: 0.28,
+          ease: "power2.out",
+        });
+      };
+
+      const onPointerLeave = () => {
+        gsap.to(magneticButton, {
+          x: 0,
+          y: 0,
+          duration: 0.58,
+          ease: "elastic.out(1, 0.45)",
+        });
+      };
+
+      magneticButton.addEventListener("pointermove", onPointerMove);
+      magneticButton.addEventListener("pointerleave", onPointerLeave);
+
+      cleanups.push(() => {
+        magneticButton.removeEventListener("pointermove", onPointerMove);
+        magneticButton.removeEventListener("pointerleave", onPointerLeave);
+      });
+    }
+
+    const refreshId = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+    cleanups.push(() => window.cancelAnimationFrame(refreshId));
 
     return () => {
       cleanups.forEach((cleanup) => cleanup());
-      ctx.revert();
+      context.revert();
     };
-  }, [prefersReducedMotion]);
-
-  useEffect(() => {
-    if (prefersReducedMotion || !cursorFollowerInnerRef.current) {
-      return;
-    }
-
-    const tl = gsap.timeline();
-    tl.fromTo(
-      cursorFollowerInnerRef.current,
-      { autoAlpha: 0.45, scale: 1.08 },
-      { autoAlpha: 1, scale: 1, duration: 0.36, ease: "power2.out" }
-    );
-
-    return () => {
-      tl.kill();
-    };
-  }, [hoveredEntry, prefersReducedMotion]);
+  }, []);
 
   return (
-    <div
-      ref={rootRef}
-      className="relative min-h-screen overflow-x-clip bg-[radial-gradient(120%_90%_at_12%_0%,#ffffff_0%,#eef4ff_48%,#e4edff_100%)] text-[#10254f]"
-    >
-      <div className="pointer-events-none fixed left-0 top-0 z-50 h-1 w-full" aria-hidden="true">
-        <span
-          ref={progressRef}
-          className="block h-full w-full origin-left bg-[linear-gradient(90deg,#2849cb,#4c70ff,#86a0ff)]"
-        />
-      </div>
+    <div ref={rootRef} className="relative min-h-screen overflow-x-clip bg-wine text-[#f3e8de]">
+      <LandingHeader />
 
-      <LandingHeader headerShellRef={headerShellRef} magneticRef={magneticRef} />
-
-      <div ref={smoothWrapperRef} id="smooth-wrapper">
-        <div ref={smoothContentRef} id="smooth-content">
-          <main id="home" className="pb-20 pt-28 md:pt-32">
-            <HeroSection prefersReducedMotion={reducedMotionEnabled} />
-            <AtelierSection prefersReducedMotion={reducedMotionEnabled} />
-            <MenuSection
-              menuSectionRef={menuSectionRef}
-              menuOverlayRef={menuOverlayRef}
-              menuImageWrapRef={menuImageWrapRef}
-              menuImageOverlayRef={menuImageOverlayRef}
-              menuRowsRef={menuRowsRef}
-              hoveredEntry={hoveredEntry}
-              expandedGroups={expandedGroups}
-              onMenuItemHover={handleMenuItemHover}
-              onToggleGroupItems={toggleGroupItems}
-            />
-            <CraftSection craftRef={craftRef} />
-            <VisitSection
-              footerBounceRef={footerBounceRef}
-              prefersReducedMotion={reducedMotionEnabled}
-            />
-          </main>
-        </div>
-      </div>
-
-      <div
-        ref={cursorFollowerRef}
-        className="pointer-events-none fixed left-0 top-0 z-[90] hidden w-[230px] overflow-hidden rounded-2xl border border-[#2f57d8]/28 bg-[#ebf2ff] lg:block"
+      <main>
+          <div
+        className="pointer-events-none fixed -z-10 inset-0 flex  overflow-hidden -translate-3 scale-[1.2] "
         aria-hidden="true"
       >
-        <div ref={cursorFollowerInnerRef} className="relative aspect-[4/5] w-full">
-          <Image
-            src={hoveredEntry.image}
-            alt={hoveredEntry.name}
-            fill
-            sizes="230px"
-            className="object-cover"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(14,41,107,0.06)_0%,rgba(14,41,107,0.78)_100%)]" />
-          <div className="absolute inset-x-0 bottom-0 p-3">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-[#dce5ff]">{hoveredEntry.group}</p>
-            <p className="mt-1 line-clamp-2 font-display-face text-2xl leading-none text-white">
-              {hoveredEntry.name}
-            </p>
-          </div>
-        </div>
+        <Bg_Svg className=" w-[max(120%,1200px)] h-auto opacity-40" />
       </div>
+        <HeroSection />
+        <AtelierSection />
+        <MenuSection />
+        <CraftSection />
+        <VisitSection />
+      </main>
     </div>
   );
 }

@@ -1,16 +1,30 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f9ff;
-  --foreground: #10254f;
-  --font-display: var(--font-cinzel);
-  --font-body: var(--font-inter);
+  --wine-950: #160007;
+  --wine-850: #320014;
+  --wine-800: #3d0019;
+  --paper-50: #ede6e1;
+  --paper-100: #e2d9d2;
+  --accent-rose: #f63143;
+  --ink-soft: #f2eae3;
+  --font-color: #ece2dc;
+  --line-soft: rgba(245, 231, 222, 0.18);
+  --background: var(--wine-950);
+  --foreground: var(--ink-soft);
+  --font-display: var(--font-cormorant);
+  --font-body: var(--font-quintessential);
+  --font-script: var(--font-script);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--accent-rose);
+  --font-display: var(--font-display);
   --font-sans: var(--font-body);
+  --font-script: var(--font-script);
+  --text-primary: var(--font-color);
 }
 
 * {
@@ -40,21 +54,54 @@ a {
 
 .font-display-face {
   font-family: var(--font-display), serif;
+  letter-spacing: -0.01em;
+}
+
+.font-script-face {
+  font-family: var(--font-script), cursive;
+  letter-spacing: 0;
+  font-weight: 400;
 }
 
 .split-line {
   display: block;
 }
 
-::selection {
-  background: rgba(65, 105, 225, 0.24);
-  color: #0d1f45;
+.wine-surface {
+  background-color: var(--wine-900);
+  background-image: none;
+}
+
+.paper-surface {
+  background-color: var(--paper-50);
+  color: #2c1a20;
+}
+
+.marquee-track {
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.mask-card {
+  clip-path: inset(50% 0 50% 0 round 4px);
+}
+
+.hero-outline path,
+.hero-outline circle {
+  stroke: rgba(244, 226, 212, 0.5);
+  fill: transparent;
 }
 
 .is-compact {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border-color: rgba(47, 87, 216, 0.3) !important;
-  transform: translateY(-4px) scale(0.985);
+  background: rgba(35, 0, 13, 0.42) !important;
+  border-color: rgba(247, 228, 213, 0.32) !important;
+  transform: translateY(-2px);
+  backdrop-filter: blur(4px);
+}
+
+::selection {
+  background: rgba(246, 73, 89, 0.35);
+  color: var(--paper-50);
 }
 
 @media (prefers-reduced-motion: reduce) {

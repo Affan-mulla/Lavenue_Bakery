@@ -1,69 +1,53 @@
-import { memo, type RefObject } from "react";
-import { motion } from "framer-motion";
+import { memo } from "react";
+import { reservationRows } from "../landing-data";
 
-type VisitSectionProps = {
-  footerBounceRef: RefObject<HTMLElement | null>;
-  prefersReducedMotion: boolean;
-};
-
-function VisitSection({ footerBounceRef, prefersReducedMotion }: VisitSectionProps) {
+function VisitSection() {
   return (
-    <section
-      id="visit"
-      ref={footerBounceRef}
-      className="bg-[#edf3ff] px-4 py-24 sm:px-6 lg:px-10"
-    >
-      <div className="mx-auto grid w-full max-w-7xl gap-8 rounded-[28px] border border-[#2f57d8]/15 bg-[linear-gradient(145deg,#254abc,#1b3f9f)] p-8 md:grid-cols-2 md:p-12">
-        <div data-reveal="lift">
-          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-[#d5e0ff]">Visit L&apos;Avenue</p>
-          <h2
-            className="font-display-face text-5xl leading-[0.95] text-white md:text-6xl"
-            data-split-lines
-          >
-            1850 Avenue Road, Toronto
-          </h2>
-
-          <div className="mt-6 flex items-center gap-2" aria-hidden="true">
-            <span data-footer-bounce className="h-2.5 w-2.5 rounded-full bg-[#dbe4ff]" />
-            <span data-footer-bounce className="h-2.5 w-2.5 rounded-full bg-[#b9cbff]" />
-            <span data-footer-bounce className="h-2.5 w-2.5 rounded-full bg-[#8da9ff]" />
-          </div>
-
-          <p className="mt-6 text-base leading-8 text-white/84">
-            Phone:{" "}
-            <a
-              className="text-[#dbe4ff] underline decoration-[#dbe4ff]/45 underline-offset-4"
-              href="tel:+14163334455"
-            >
-              (416) 333-4455
-            </a>
-            <br />
-            Email:{" "}
-            <a
-              className="text-[#dbe4ff] underline decoration-[#dbe4ff]/45 underline-offset-4"
-              href="mailto:info@lavenuebakery.com"
-            >
-              info@lavenuebakery.com
-            </a>
-          </p>
+    <section id="visit" className="wine-surface overflow-hidden pb-10 pt-12">
+      <div className="mx-auto w-full max-w-340 border-t border-[#f0dac9]/22 text-[#f0ddd0]">
+        <div className="flex items-center justify-between px-4 py-5 text-sm sm:px-8">
+          <a href="#menu">Menu</a>
+          <a href="#philosophy">Philosophy</a>
+          <a href="#visit">Book</a>
         </div>
 
-        <motion.div
-          data-reveal="lift"
-          whileHover={prefersReducedMotion ? undefined : { y: -8, scale: 1.01 }}
-          className="rounded-2xl border border-white/28 bg-white/12 p-6"
-        >
-          <p className="mb-3 text-xs uppercase tracking-[0.22em] text-[#dbe4ff]">House Recommendation</p>
-          <p className="text-lg leading-8 text-white">
-            Pair the Pistachio Croissant with an espresso and finish with our Opera for a full L&apos;Avenue
-            signature tasting.
-          </p>
-          <div className="mt-8 flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-[#dbe4ff]">
-            <span className="h-px flex-1 bg-[#dbe4ff]/40" />
-            Royal pairing
-            <span className="h-px flex-1 bg-[#dbe4ff]/40" />
-          </div>
-        </motion.div>
+        <p className="overflow-hidden border-y border-[#f0dac9]/18 py-2 font-display-face text-[clamp(62px,11vw,198px)] leading-[0.82]">
+          <span data-marquee-loop className="marquee-track block">
+            Reservation Request Richiesta Prenotazione Reservation Request Richiesta Prenotazione
+          </span>
+        </p>
+
+        <div className="grid border-b border-[#f0dac9]/18 px-4 py-10 text-center text-[clamp(20px,2.3vw,38px)] sm:grid-cols-2 sm:px-8">
+          <p>From Tuesday to Saturday</p>
+          <p>6.00 PM - 00.00</p>
+        </div>
+
+        <div className="grid border-b border-[#f0dac9]/18 px-4 sm:grid-cols-3 sm:px-8">
+          {reservationRows.map((row) => (
+            <article
+              className="border-b border-[#f0dac9]/18 px-3 py-9 text-center sm:border-b-0 sm:border-r sm:border-[#f0dac9]/18 sm:last:border-r-0"
+              key={row.label}
+            >
+              <p className="mb-3 text-[14px] font-semibold">{row.label}</p>
+              <p className="font-display-face whitespace-pre-line text-[clamp(26px,3.1vw,52px)] leading-[0.95]">
+                {row.value}
+              </p>
+            </article>
+          ))}
+        </div>
+
+        <div className="grid border-b border-[#f0dac9]/18 px-4 py-6 text-sm sm:grid-cols-2 sm:px-8">
+          <p className="mb-3 sm:mb-0">Join Nidaba on Instagram ✦ Diventa un Nidafellas</p>
+          <p className="text-left sm:text-right">Discover ✦ Nidabar</p>
+        </div>
+
+        <div className="grid px-4 py-5 text-sm sm:grid-cols-2 sm:px-8">
+          <p>©2026 Nidaba Sas - VAT 01689520268</p>
+          <p className="text-left sm:text-right">Privacy - Cookie</p>
+        </div>
+        <p className="px-4 pb-4 text-xs text-[#ceb7a9] sm:px-8">
+          Before submitting your request please check your internet connection and reload to complete verification.
+        </p>
       </div>
     </section>
   );

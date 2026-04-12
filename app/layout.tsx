@@ -1,25 +1,32 @@
 import type { Metadata } from "next";
-import { Cinzel , Inter } from "next/font/google";
+import { Cormorant_Garamond, Great_Vibes, Quintessential } from "next/font/google";
 import "./globals.css";
 
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
   display: "swap",
 });
 
-const inter = Inter({
-  variable: "--font-inter",
-  weight: ["400", "500", "600", "700"],
+const quintessential = Quintessential({
+  variable: "--font-quintessential",
+  weight: ["400"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const greatVibes = Great_Vibes({
+  variable: "--font-script",
+  weight: ["400"],
   subsets: ["latin"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "L'Avenue Boulangerie | Toronto",
+  title: "L'Avenue Boulangerie | Crafted Evenings",
   description:
-    "Elegant bakery and cafe in Toronto serving artisanal bread, pastry, and coffee with royal craftsmanship.",
+    "Immersive culinary destination with artisanal plates, cellar craft, and reservation-led dining rituals.",
 };
 
 export default function RootLayout({
@@ -28,7 +35,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${cinzel.variable} ${inter.variable} h-full antialiased`}>
+    <html
+      lang="en"
+      className={`${cormorant.variable} ${quintessential.variable} ${greatVibes.variable} h-full antialiased`}
+    >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

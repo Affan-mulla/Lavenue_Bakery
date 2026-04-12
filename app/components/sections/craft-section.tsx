@@ -1,48 +1,43 @@
-import { memo, type RefObject } from "react";
-import { processSteps } from "../landing-data";
+import { memo } from "react";
+import Image from "next/image";
+import { galleryImages } from "../landing-data";
 
-type CraftSectionProps = {
-  craftRef: RefObject<HTMLElement | null>;
-};
-
-function CraftSection({ craftRef }: CraftSectionProps) {
+function CraftSection() {
   return (
-    <section
-      ref={craftRef}
-      id="craft"
-      className="bg-[linear-gradient(150deg,#2448b8,#173890)] px-4 py-24 sm:px-6 lg:px-10"
-    >
-      <div className="mx-auto grid w-full max-w-7xl items-start gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <div>
-          <p className="mb-4 text-xs uppercase tracking-[0.22em] text-[#d5e0ff]" data-reveal="lift">
-            Craft Process
-          </p>
+    <section className="paper-surface px-4 py-22 sm:px-8">
+      <div className="mx-auto w-full max-w-7xl">
+        <p className="mx-auto mb-12 h-6 w-6 text-center text-xl leading-none text-[#f53345]" data-spin>
+          ✦
+        </p>
 
-          <h2
-            className="font-display-face text-5xl leading-[0.95] text-white md:text-6xl"
-            data-split-lines
-          >
-            Precision from flour to final glaze.
-          </h2>
+        <div className="grid gap-5 md:grid-cols-[0.3fr_1fr_0.8fr_0.42fr] md:grid-rows-[220px_290px]">
+          <figure className="mask-card relative overflow-hidden border border-[#ccbdb3]" data-mask-card>
+            <Image src={galleryImages[0]} alt="Bottled pantry selection." fill sizes="26vw" className="object-cover" />
+          </figure>
 
-          <p className="mt-6 max-w-[52ch] text-base leading-8 text-white/85" data-reveal="lift">
-            Our process is deliberate and calm. Each movement is designed for texture, aroma, and a finish
-            that feels worthy of the table.
-          </p>
+          <figure className="mask-card relative row-span-2 overflow-hidden border border-[#ccbdb3]" data-mask-card>
+            <Image src={galleryImages[1]} alt="Chef plated octopus dish." fill sizes="44vw" className="object-cover" />
+          </figure>
+
+          <figure className="mask-card relative row-span-2 overflow-hidden border border-[#ccbdb3]" data-mask-card>
+            <Image src={galleryImages[2]} alt="Citrus still life composition." fill sizes="32vw" className="object-cover" />
+          </figure>
+
+          <figure className="mask-card relative overflow-hidden border border-[#ccbdb3]" data-mask-card>
+            <Image src={galleryImages[3]} alt="Close portrait crop." fill sizes="18vw" className="object-cover" />
+          </figure>
+
+          <figure className="mask-card relative overflow-hidden border border-[#ccbdb3]" data-mask-card>
+            <Image src={galleryImages[4]} alt="Hand carrying plated dessert." fill sizes="24vw" className="object-cover" />
+          </figure>
+
+          <figure className="mask-card relative overflow-hidden border border-[#ccbdb3]" data-mask-card>
+            <Image src={galleryImages[5]} alt="Group team portrait." fill sizes="20vw" className="object-cover" />
+          </figure>
         </div>
 
-        <div className="grid gap-4">
-          {processSteps.map((step, index) => (
-            <article
-              className="rounded-2xl border border-white/28 bg-white/10 p-6 backdrop-blur-sm"
-              data-craft-step
-              key={step.title}
-            >
-              <p className="text-xs uppercase tracking-[0.22em] text-[#dbe4ff]">0{index + 1}</p>
-              <h3 className="mt-3 font-display-face text-3xl text-white">{step.title}</h3>
-              <p className="mt-2 text-sm leading-7 text-white/82">{step.text}</p>
-            </article>
-          ))}
+        <div className="mt-8 flex justify-end text-sm text-[#49373a]" data-fade-up>
+          <p>Join Nidabao → Diventa una Nidabafellas</p>
         </div>
       </div>
     </section>
