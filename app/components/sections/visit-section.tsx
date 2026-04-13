@@ -3,51 +3,61 @@ import { reservationRows } from "../landing-data";
 
 function VisitSection() {
   return (
-    <section id="visit" className="wine-surface overflow-hidden pb-10 pt-12">
-      <div className="mx-auto w-full max-w-340 border-t border-[#f0dac9]/22 text-[#f0ddd0]">
-        <div className="flex items-center justify-between px-4 py-5 text-sm sm:px-8">
-          <a href="#menu">Menu</a>
-          <a href="#philosophy">Philosophy</a>
-          <a href="#visit">Book</a>
+    <section id="visit" className="wine-surface relative overflow-hidden pb-6 pt-10 sm:pb-8">
+
+      <div className="relative z-10 w-full text-[#f0ddd0]">
+        <p className="mx-auto h-6 w-6 text-center text-4xl leading-none text-[#f53345]" data-spin>
+          ✦
+        </p>
+
+        <div className="mt-6 px-4 text-center text-[#f2dfd2] sm:px-8" data-fade-up>
+          <p className="font-display-face text-[clamp(28px,2.1vw,38px)] leading-none">Why wait?</p>
+          <p className="mt-1 font-display-face text-[clamp(18px,1.2vw,22px)] leading-none">
+            Request your reservation now
+          </p>
         </div>
 
-        <p className="overflow-hidden border-y border-[#f0dac9]/18 py-2 font-display-face text-[clamp(62px,11vw,198px)] leading-[0.82]">
-          <span data-marquee-loop className="marquee-track block">
-            Reservation Request Richiesta Prenotazione Reservation Request Richiesta Prenotazione
+        <p className="my-18 overflow-hidden  py-10 font-script-face text-8xl leading-[0.78] text-[#f4e7dd] sm:py-7">
+          <span data-marquee-loop className="marquee-track -ml-18 block pr-18 tracking-[-0.012em]">
+            Reservation Request Richiesta di Prenotazione
           </span>
         </p>
 
-        <div className="grid border-b border-[#f0dac9]/18 px-4 py-10 text-center text-[clamp(20px,2.3vw,38px)] sm:grid-cols-2 sm:px-8">
-          <p>From Tuesday to Saturday</p>
-          <p>6.00 PM - 00.00</p>
+        <div className="grid border-y border-[#f0dac9]/18 px-4 font-mono text-center sm:grid-cols-2 sm:px-8">
+          <p className="overflow-hidden py-6">
+            <span data-slide-up className="block">From Monday to Saturday</span>
+          </p>
+          <p className="overflow-hidden border-t border-[#f0dac9]/18 py-6 sm:border-l sm:border-t-0">
+            <span data-slide-up className="block">6.00 PM - 00.00</span>
+          </p>
         </div>
 
         <div className="grid border-b border-[#f0dac9]/18 px-4 sm:grid-cols-3 sm:px-8">
           {reservationRows.map((row) => (
             <article
-              className="border-b border-[#f0dac9]/18 px-3 py-9 text-center sm:border-b-0 sm:border-r sm:border-[#f0dac9]/18 sm:last:border-r-0"
+              className="border-b font-mono border-[#f0dac9]/18 px-3 py-8 text-center sm:border-b-0 sm:border-r sm:border-[#f0dac9]/18 sm:last:border-r-0"
               key={row.label}
             >
-              <p className="mb-3 text-[14px] font-semibold">{row.label}</p>
-              <p className="font-display-face whitespace-pre-line text-[clamp(26px,3.1vw,52px)] leading-[0.95]">
-                {row.value}
+              <p className="overflow-hidden text-xl font-semibold leading-none">
+                <span data-slide-up className="block">{row.label}</span>
+              </p>
+              <p className="mt-5 overflow-hidden leading-6">
+                <span data-slide-up className="block whitespace-pre-line">{row.value}</span>
               </p>
             </article>
           ))}
         </div>
 
-        <div className="grid border-b border-[#f0dac9]/18 px-4 py-6 text-sm sm:grid-cols-2 sm:px-8">
-          <p className="mb-3 sm:mb-0">Join Nidaba on Instagram ✦ Diventa un Nidafellas</p>
-          <p className="text-left sm:text-right">Discover ✦ Nidabar</p>
+
+        <div className="grid border-b border-[#f0dac9]/18 font-mono px-4 py-5 sm:grid-cols-2 sm:px-8">
+          <p className="overflow-hidden">
+            <span data-slide-up className="block">©2026 Nidaba Sas - VAT 01689520268</span>
+          </p>
+          <p className="overflow-hidden text-left sm:text-right">
+            <span data-slide-up className="block">Privacy - Cookie</span>
+          </p>
         </div>
 
-        <div className="grid px-4 py-5 text-sm sm:grid-cols-2 sm:px-8">
-          <p>©2026 Nidaba Sas - VAT 01689520268</p>
-          <p className="text-left sm:text-right">Privacy - Cookie</p>
-        </div>
-        <p className="px-4 pb-4 text-xs text-[#ceb7a9] sm:px-8">
-          Before submitting your request please check your internet connection and reload to complete verification.
-        </p>
       </div>
     </section>
   );

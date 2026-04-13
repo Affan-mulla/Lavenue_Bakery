@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Great_Vibes, Quintessential } from "next/font/google";
+import { Bricolage_Grotesque, Cormorant_Garamond, Great_Vibes, Quintessential } from "next/font/google";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -23,6 +23,13 @@ const greatVibes = Great_Vibes({
   display: "swap",
 });
 
+const bricolageGrotesque = Bricolage_Grotesque({
+  variable: "--font-bricolage-grotesque",
+  weight: ["400", "500", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "L'Avenue Boulangerie | Crafted Evenings",
   description:
@@ -37,7 +44,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${cormorant.variable} ${quintessential.variable} ${greatVibes.variable} h-full antialiased`}
+      className={`${cormorant.variable} ${quintessential.variable} ${greatVibes.variable} ${bricolageGrotesque.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

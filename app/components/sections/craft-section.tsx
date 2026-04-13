@@ -6,38 +6,55 @@ function CraftSection() {
   return (
     <section className="paper-surface px-4 py-22 sm:px-8">
       <div className="mx-auto w-full max-w-7xl">
-        <p className="mx-auto mb-12 h-6 w-6 text-center text-xl leading-none text-[#f53345]" data-spin>
+        <p className="mx-auto mb-12 h-6 w-6 text-center text-4xl leading-none text-[#f53345]" data-spin>
           ✦
         </p>
 
-        <div className="grid gap-5 md:grid-cols-[0.3fr_1fr_0.8fr_0.42fr] md:grid-rows-[220px_290px]">
-          <figure className="mask-card relative overflow-hidden border border-[#ccbdb3]" data-mask-card>
+        <div className="text-5xl sm:text-6xl" data-fade-up>
+          <h1 className="font-display">Follow</h1>
+          <a
+            href="https://www.instagram.com/lavenuebakery"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="italic"
+          >
+            @lavenuebakery
+          </a>
+        </div>
+
+        <div className="relative mt-8 grid auto-rows-[8rem] grid-cols-2 gap-3 sm:auto-rows-[9.5rem] sm:grid-cols-3 sm:gap-4 md:block md:h-168 lg:h-176">
+          <figure className="mask-card relative col-span-1 row-span-1 overflow-hidden sm:col-start-1 sm:row-start-1 md:absolute md:left-[12%] md:top-[10%] md:h-48 md:w-42 lg:left-[12.5%] lg:top-[11%] lg:h-51 lg:w-46" data-mask-card>
             <Image src={galleryImages[0]} alt="Bottled pantry selection." fill sizes="26vw" className="object-cover" />
           </figure>
 
-          <figure className="mask-card relative row-span-2 overflow-hidden border border-[#ccbdb3]" data-mask-card>
+          <figure className="mask-card relative col-span-1 row-span-2 overflow-hidden sm:col-span-2 sm:row-span-2 sm:col-start-2 sm:row-start-1 md:absolute md:left-[27%] md:top-[16%] md:h-102 md:w-90 lg:left-[30%] lg:top-[18%] lg:h-110 lg:w-101" data-mask-card>
             <Image src={galleryImages[1]} alt="Chef plated octopus dish." fill sizes="44vw" className="object-cover" />
           </figure>
 
-          <figure className="mask-card relative row-span-2 overflow-hidden border border-[#ccbdb3]" data-mask-card>
+          <figure className="mask-card relative col-span-1 row-span-2 overflow-hidden sm:col-start-3 sm:row-start-3 md:absolute md:left-[60%] md:top-[15%] md:h-76 md:w-68 lg:left-[62.5%] lg:top-[15.5%] lg:h-84 lg:w-76" data-mask-card>
             <Image src={galleryImages[2]} alt="Citrus still life composition." fill sizes="32vw" className="object-cover" />
           </figure>
 
-          <figure className="mask-card relative overflow-hidden border border-[#ccbdb3]" data-mask-card>
+          <figure className="mask-card relative col-span-1 row-span-1 overflow-hidden sm:col-start-3 sm:row-start-1 md:absolute md:right-[7%] md:top-[6%] md:h-38 md:w-32 lg:right-[2%] lg:top-[4.5%] lg:h-41 lg:w-34" data-mask-card>
             <Image src={galleryImages[3]} alt="Close portrait crop." fill sizes="18vw" className="object-cover" />
           </figure>
 
-          <figure className="mask-card relative overflow-hidden border border-[#ccbdb3]" data-mask-card>
+          <figure className="mask-card relative col-span-1 row-span-2 overflow-hidden sm:col-start-1 sm:row-start-2 md:absolute md:left-[1%] md:top-[33%] md:h-72 md:w-66 lg:left-[0.5%] lg:top-[32.5%] lg:h-73 lg:w-74" data-mask-card>
             <Image src={galleryImages[4]} alt="Hand carrying plated dessert." fill sizes="24vw" className="object-cover" />
           </figure>
 
-          <figure className="mask-card relative overflow-hidden border border-[#ccbdb3]" data-mask-card>
+          <figure className="mask-card relative col-span-1 row-span-1 overflow-hidden sm:col-start-3 sm:row-start-4 md:absolute md:right-[0%] md:top-[56%] md:h-36 md:w-42 lg:right-[0.5%] lg:top-[55%] lg:h-38 lg:w-46" data-mask-card>
             <Image src={galleryImages[5]} alt="Group team portrait." fill sizes="20vw" className="object-cover" />
           </figure>
         </div>
 
-        <div className="mt-8 flex justify-end text-sm text-[#49373a]" data-fade-up>
-          <p>Join Nidabao → Diventa una Nidabafellas</p>
+        <div className="mt-8 flex justify-center text-sm text-[#49373a] lg:justify-end" data-fade-up>
+          <p className="inline-flex items-center gap-3 font-display text-[1.2rem] tracking-tight">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#7c6f72] text-sm leading-none">→</span>
+            <span>
+              Join Nidaba <span className="text-[#f53345]">✦</span> Diventa una Nidabafellas
+            </span>
+          </p>
         </div>
       </div>
     </section>

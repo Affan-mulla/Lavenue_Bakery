@@ -121,6 +121,24 @@ export default function BakeryExperience() {
         );
       });
 
+      gsap.utils.toArray<HTMLElement>("[data-slide-up]").forEach((item) => {
+        gsap.fromTo(
+          item,
+          { yPercent: 120, autoAlpha: 0 },
+          {
+            yPercent: 0,
+            autoAlpha: 1,
+            duration: 0.82,
+            ease: "power4.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 90%",
+              once: true,
+            },
+          }
+        );
+      });
+
       gsap.utils.toArray<HTMLElement>("[data-mask-card]").forEach((card, index) => {
         if (card.dataset.heroMask) {
           return;
