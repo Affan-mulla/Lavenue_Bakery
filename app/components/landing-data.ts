@@ -10,20 +10,15 @@ export type ReviewItem = {
   city: string;
 };
 
-export const heroLines = [
-  "Where the ideas thrive,",
-  "where kitchen and beer yes",
-  "they merge for become alive.",
-];
-
+// Keep only media/content objects consumed by rendered sections.
 export const heroImages = [
   {
     src: "https://images.unsplash.com/photo-1681218079567-35aef7c8e7e4?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    alt: "Seafood plate staged on marble.",
+    alt: "Fresh artisan sourdough and laminated pastries on a bakery counter.",
   },
   {
     src: "https://images.unsplash.com/photo-1609590981063-d495e2914ce4?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    alt: "Editorial overhead food spread.",
+    alt: "Golden croissants and morning pastries arranged for service.",
   },
 ];
 
@@ -72,24 +67,37 @@ export const reviewItems: ReviewItem[] = [
   },
 ];
 
-export const storyImages = {
-  team: "https://picsum.photos/seed/lavenue-founders/960/760",
-  archive: "https://picsum.photos/seed/lavenue-archive/720/900",
-};
-
 export const galleryImages = [
-  "https://images.unsplash.com/photo-1568254183919-78a4f43a2877?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  "https://img1.wsimg.com/isteam/ip/1b79d52e-a81a-482a-91ea-bf71e7d0bc6e/REG02061.jpg/:/rs=w:2320,h:1740",
-  "https://img1.wsimg.com/isteam/ip/1b79d52e-a81a-482a-91ea-bf71e7d0bc6e/REG02100.jpg/:/rs=w:2320,h:1740",
-  "https://img1.wsimg.com/isteam/ip/1b79d52e-a81a-482a-91ea-bf71e7d0bc6e/REG03615.jpg/:/rs=w:1160,h:1547",
-  "https://img1.wsimg.com/isteam/ip/1b79d52e-a81a-482a-91ea-bf71e7d0bc6e/REG02053.jpg/:/cr=t:0%25,l:0%25,w:88.89%25,h:88.89%25/rs=w:2320,h:1740",
-  "https://img1.wsimg.com/isteam/ip/1b79d52e-a81a-482a-91ea-bf71e7d0bc6e/REG05332.jpg/:/rs=w:2320,h:1740  ",
+  {
+    src: "https://images.unsplash.com/photo-1517433670267-08bbd4be890f?q=80&w=1200&auto=format&fit=crop",
+    alt: "Freshly baked croissants cooling on a bakery tray.",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1200&auto=format&fit=crop",
+    alt: "Artisan sourdough loaves lined up on wooden shelves.",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?q=80&w=1200&auto=format&fit=crop",
+    alt: "Flaky pain au chocolat arranged for the morning rush.",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?q=80&w=1200&auto=format&fit=crop",
+    alt: "Seasonal fruit tart finished with meticulous pastry detail.",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1200&auto=format&fit=crop",
+    alt: "Baker scoring dough before loading breads into the oven.",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?q=80&w=1200&auto=format&fit=crop",
+    alt: "Morning espresso and pastry pairing at a neighborhood bakery.",
+  },
 ];
 
 export const reservationRows = [
   {
     label: "Address",
-    value: "1850 Avenue Road,\n Toronto, Ontario M5M 3Z5, Canada",
+    value: "1850 Avenue Road, Toronto, Ontario M5M 3Z5",
   },
   {
     label: "Telephone",

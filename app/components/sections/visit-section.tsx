@@ -6,7 +6,7 @@ function VisitSection() {
     <section id="visit" className="wine-surface relative overflow-hidden pb-6 pt-10 sm:pb-8">
 
       <div className="relative z-10 w-full text-[#f0ddd0]">
-        <p className="mx-auto h-6 w-6 text-center text-4xl leading-none text-[#f53345]" data-spin>
+        <p aria-hidden="true" className="mx-auto h-6 w-6 text-center text-4xl leading-none text-[#f53345]" data-spin>
           ✦
         </p>
 
@@ -17,9 +17,9 @@ function VisitSection() {
           </p>
         </div>
 
-        <p className="my-18 overflow-hidden  py-10 font-script-face text-8xl leading-[0.78] text-[#f4e7dd] sm:py-7">
+        <p aria-hidden="true" className="my-18 overflow-hidden  py-10 font-script-face text-8xl leading-[0.78] text-[#f4e7dd] sm:py-7">
           <span data-marquee-loop className="marquee-track -ml-18 block pr-18 tracking-[-0.012em]">
-            Reservation Request Richiesta di Prenotazione
+            Reservation Request Reservation Request
           </span>
         </p>
 
@@ -51,7 +51,7 @@ function VisitSection() {
 
         <div className="grid border-b border-[#f0dac9]/18 font-mono px-4 py-5 sm:grid-cols-2 sm:px-8">
           <p className="overflow-hidden">
-            <span data-slide-up className="block">©2026 Nidaba Sas - VAT 01689520268</span>
+            <span data-slide-up className="block">©2026 L'Avenue Boulangerie</span>
           </p>
           <p className="overflow-hidden text-left sm:text-right">
             <span data-slide-up className="block">Privacy - Cookie</span>

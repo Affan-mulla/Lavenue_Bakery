@@ -6,26 +6,32 @@ function HeroSection() {
   return (
     <section className="wine-surface relative overflow-hidden pb-16 pt-28  md:pt-36" id="home">
       <div className="w-full">
-        <h1 className="mx-auto my-16 text-center font-display-face text-[clamp(44px,8.2vw,88px)] leading-[0.86] text-[#f3e8de]">
+        <h1
+          aria-label="Where inspiration rises, where craft and comfort meet, they merge and come alive."
+          className="mx-auto my-16 text-center font-display-face text-[clamp(44px,8.2vw,88px)] leading-[0.86] text-[#f3e8de]"
+        >
           <span className="block overflow-hidden">
             <span data-text-line className="block">
-              Where the ideas <span className="font-semibold italic  text-[#f3ddd2]">thrive</span>,
+              Where inspiration <span className="font-semibold italic  text-[#f3ddd2]">rises</span>,
             </span>
           </span>
           <span className="block overflow-hidden">
-            <span data-text-line className="block">where kitchen and beer yes</span>
+            <span data-text-line className="block">where craft and comfort meet,</span>
           </span>
           <span className="block overflow-hidden">
             <span data-text-line className="block">
-              they merge for become <span className="font-semibold italic  ">alive</span>.
+              they merge and come <span className="font-semibold italic  ">alive</span>.
             </span>
           </span>
         </h1>
 
         <div className="relative  ">
-          <p className="pointer-events-none absolute left-0 right-0 top-1/2 -translate-y-1/2 overflow-hidden font-display-face text-[clamp(58px,9.5vw,142px)] leading-[0.78] ">
+          <p
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 right-0 top-1/2 -translate-y-1/2 overflow-hidden font-display-face text-[clamp(58px,9.5vw,142px)] leading-[0.78] "
+          >
             <span data-marquee-loop className="marquee-track block">
-              Where kitchen and looking • Where kitchen and looking • Where kitchen and looking •
+              Where craft and comfort meet • Where craft and comfort meet • Where craft and comfort meet •
             </span>
           </p>
 
@@ -70,7 +76,7 @@ function HeroSection() {
         </div>
 
         <div className="mt-12 flex flex-wrap items-center gap-4 text-sm tracking-[0.04em] text-[#e9d7c8]">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#f5e4d6]/40">
+          <span aria-hidden="true" className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#f5e4d6]/40">
             ⦿
           </span>
           <p data-fade-up>Discover the menu</p>

@@ -4,7 +4,7 @@ import { featureItems } from "../landing-data";
 function MenuShape({ shape }: { shape: "circle" | "diamond" | "star" }) {
   if (shape === "circle") {
     return (
-      <span className="block h-40 w-40 rounded-full bg-primary md:h-48 md:w-48" />
+      <span aria-hidden="true" className="block h-40 w-40 rounded-full bg-primary md:h-48 md:w-48" />
     );
   }
 
@@ -42,7 +42,7 @@ function MenuSection() {
       <div className="w-full">
         <div className="flex items-start justify-center gap-4 text-lg text-[#efe2d8]/88">
           <div className="max-w-xs text-center" data-fade-up>
-            <p className="text-primary text-4xl leading-none" data-spin>
+            <p aria-hidden="true" className="text-primary text-4xl leading-none" data-spin>
               ✦
             </p>
             <p className="mt-2 text-base uppercase leading-[1.15] tracking-[0.08em]">
@@ -55,7 +55,7 @@ function MenuSection() {
         </div>
 
         <div className="mt-10 overflow-hidden py-2">
-          <p className="pointer-events-none overflow-hidden font-display-face text-[clamp(68px,11vw,150px)]  text-[#f5e9df]">
+          <p aria-hidden="true" className="pointer-events-none overflow-hidden font-display-face text-[clamp(68px,11vw,150px)]  text-[#f5e9df]">
             <span data-marquee-loop className="marquee-track block">
               Menu of the day • Menu of the day • Menu of the day • Menu of the day • Menu of the day •
             </span>
@@ -76,7 +76,7 @@ function MenuSection() {
                 </div>
 
                 <div className="mt-3 overflow-hidden flex items-center justify-between border-y border-[#ecd8ca] py-2">
-                  <p className="text-4xl leading-none" data-spin>
+                  <p aria-hidden="true" className="text-4xl leading-none" data-spin>
                     ✦
                   </p>
                   <p
@@ -101,6 +101,7 @@ function MenuSection() {
 
                 <a
                   href="#visit"
+                  aria-label={`Discover ${item.title}`}
                   className="mt-6 inline-flex items-center gap-2 text-2xl font-semibold text-[#f7ede4] hover:underline"
                 >
                   <span >Discover</span>

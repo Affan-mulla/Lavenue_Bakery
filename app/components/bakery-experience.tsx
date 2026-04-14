@@ -16,9 +16,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function BakeryExperience() {
   const rootRef = useRef<HTMLDivElement>(null);
+  // Wired into LandingHeader so ScrollTrigger can toggle compact state.
   const headerShellRef = useRef<HTMLElement>(null);
-  const progressRef = useRef<HTMLSpanElement>(null);
-  const magneticRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     if (!rootRef.current) {
@@ -56,21 +55,6 @@ export default function BakeryExperience() {
     }
 
     const context = gsap.context(() => {
-      if (progressRef.current) {
-        gsap.set(progressRef.current, { scaleX: 0, transformOrigin: "left center" });
-
-        gsap.to(progressRef.current, {
-          scaleX: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: document.documentElement,
-            start: "top top",
-            end: "max",
-            scrub: 0.3,
-          },
-        });
-      }
-
       if (headerShellRef.current) {
         const headerTrigger = ScrollTrigger.create({
           start: 0,
@@ -467,40 +451,6 @@ export default function BakeryExperience() {
       }
     }, rootRef);
 
-    if (magneticRef.current && !prefersReducedMotion) {
-      const magneticButton = magneticRef.current;
-
-      const onPointerMove = (event: PointerEvent) => {
-        const bounds = magneticButton.getBoundingClientRect();
-        const offsetX = event.clientX - (bounds.left + bounds.width / 2);
-        const offsetY = event.clientY - (bounds.top + bounds.height / 2);
-
-        gsap.to(magneticButton, {
-          x: offsetX * 0.2,
-          y: offsetY * 0.2,
-          duration: 0.28,
-          ease: "power2.out",
-        });
-      };
-
-      const onPointerLeave = () => {
-        gsap.to(magneticButton, {
-          x: 0,
-          y: 0,
-          duration: 0.58,
-          ease: "elastic.out(1, 0.45)",
-        });
-      };
-
-      magneticButton.addEventListener("pointermove", onPointerMove);
-      magneticButton.addEventListener("pointerleave", onPointerLeave);
-
-      cleanups.push(() => {
-        magneticButton.removeEventListener("pointermove", onPointerMove);
-        magneticButton.removeEventListener("pointerleave", onPointerLeave);
-      });
-    }
-
     const refreshId = window.requestAnimationFrame(() => ScrollTrigger.refresh());
     cleanups.push(() => window.cancelAnimationFrame(refreshId));
 
@@ -512,14 +462,15 @@ export default function BakeryExperience() {
 
   return (
     <div ref={rootRef} className="relative min-h-screen overflow-x-clip bg-wine text-[#f3e8de]">
-      <LandingHeader />
+      {/* Pass shell ref so compact-header class toggling actually applies to DOM. */}
+      <LandingHeader headerRef={headerShellRef} />
 
       <main>
           <div
         className="pointer-events-none fixed -z-10 inset-0 flex  overflow-hidden -translate-3 scale-[1.2] "
         aria-hidden="true"
       >
-        <Bg_Svg className=" w-[max(120%,1200px)] h-auto opacity-40" />
+        <Bg_Svg className=" w-[max(120%,1200px)] h-auto opacity-40" aria-hidden="true" />
       </div>
         <HeroSection />
         <AtelierSection />

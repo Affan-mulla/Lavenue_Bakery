@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Cormorant_Garamond, Great_Vibes, Quintessential } from "next/font/google";
+import JsonLd from "./components/JsonLd";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -31,9 +32,43 @@ const bricolageGrotesque = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "L'Avenue Boulangerie | Crafted Evenings",
+  metadataBase: new URL("https://lavenuebakery.com"),
+  alternates: {
+    canonical: "/",
+  },
+  title: "L'Avenue Boulangerie | Artisan Bakery Toronto",
   description:
-    "Immersive culinary destination with artisanal plates, cellar craft, and reservation-led dining rituals.",
+    "L'Avenue Boulangerie on Avenue Road, Toronto. Handcrafted breads, pastries, and seasonal menus in the heart of the city.",
+  keywords: [
+    "L'Avenue Boulangerie",
+    "artisan bakery Toronto",
+    "Avenue Road bakery",
+    "fresh bread Toronto",
+    "pastries Toronto",
+    "seasonal bakery menu",
+    "Toronto boulangerie",
+    "handcrafted baked goods",
+  ],
+  authors: [
+    { name: "L'Avenue Boulangerie", url: "https://lavenuebakery.com" },
+    { name: "L'Avenue Bakery Team" },
+  ],
+  creator: "L'Avenue Boulangerie",
+  openGraph: {
+    title: "L'Avenue Boulangerie | Artisan Bakery Toronto",
+    description:
+      "L'Avenue Boulangerie on Avenue Road, Toronto. Handcrafted breads, pastries, and seasonal menus in the heart of the city.",
+    type: "website",
+    url: "https://lavenuebakery.com",
+    siteName: "L'Avenue Boulangerie",
+    locale: "en_CA",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "L'Avenue Boulangerie | Artisan Bakery Toronto",
+    description:
+      "L'Avenue Boulangerie on Avenue Road, Toronto. Handcrafted breads, pastries, and seasonal menus in the heart of the city.",
+  },
 };
 
 export default function RootLayout({
@@ -46,7 +81,10 @@ export default function RootLayout({
       lang="en"
       className={`${cormorant.variable} ${quintessential.variable} ${greatVibes.variable} ${bricolageGrotesque.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <JsonLd />
+        {children}
+      </body>
     </html>
   );
 }

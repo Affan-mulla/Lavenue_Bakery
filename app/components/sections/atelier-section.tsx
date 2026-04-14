@@ -104,7 +104,7 @@ function AtelierSection() {
     <section id="philosophy">
       <div className="paper-surface relative h-full min-h-[80vh] px-4 py-18 sm:px-8">
         <div className="mx-auto flex max-w-195 flex-col items-center gap-8 text-center">
-          <p className="mx-auto text-6xl leading-none" data-spin>
+          <p aria-hidden="true" className="mx-auto text-6xl leading-none" data-spin>
             ✦
           </p>
 
