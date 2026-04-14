@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -11,15 +11,55 @@ import MenuSection from "./sections/menu-section";
 import CraftSection from "./sections/craft-section";
 import VisitSection from "./sections/visit-section";
 import Bg_Svg from "./Bg_Svg";
+import PageLoader from "./PageLoader";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function BakeryExperience() {
   const rootRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
   // Wired into LandingHeader so ScrollTrigger can toggle compact state.
   const headerShellRef = useRef<HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoaderComplete = useCallback(() => {
+    window.sessionStorage.setItem("lavenue-visited", "1");
+    setIsLoading(false);
+  }, []);
 
   useEffect(() => {
+    const hasVisited = window.sessionStorage.getItem("lavenue-visited") === "1";
+
+    if (hasVisited) {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!mainRef.current) {
+      return;
+    }
+
+    if (isLoading) {
+      gsap.set(mainRef.current, { autoAlpha: 0, y: 30 });
+      return;
+    }
+
+    const revealTween = gsap.fromTo(
+      mainRef.current,
+      { autoAlpha: 0, y: 30 },
+      { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" }
+    );
+
+    return () => {
+      revealTween.kill();
+    };
+  }, [isLoading]);
+
+  useEffect(() => {
+    // Remove no-js fallback class as soon as client code is running.
+    document.body.classList.remove("no-js");
+
     if (!rootRef.current) {
       return;
     }
@@ -55,6 +95,24 @@ export default function BakeryExperience() {
     }
 
     const context = gsap.context(() => {
+      const backgroundParallaxLayer = rootRef.current?.querySelector<HTMLElement>("[data-bg-parallax]");
+      if (backgroundParallaxLayer && !prefersReducedMotion) {
+        gsap.fromTo(
+          backgroundParallaxLayer,
+          { y: 0 },
+          {
+            y: -80,
+            ease: "none",
+            scrollTrigger: {
+              trigger: "#home",
+              start: "top top",
+              end: "bottom top",
+              scrub: 1.2,
+            },
+          }
+        );
+      }
+
       if (headerShellRef.current) {
         const headerTrigger = ScrollTrigger.create({
           start: 0,
@@ -64,6 +122,67 @@ export default function BakeryExperience() {
           },
         });
         cleanups.push(() => headerTrigger.kill());
+      }
+
+      const sectionIds = new Set(["home", "philosophy", "menu", "visit"]);
+      gsap.utils.toArray<HTMLElement>("section[id]").forEach((section) => {
+        if (!sectionIds.has(section.id)) {
+          return;
+        }
+
+        const entranceChildren = Array.from(section.children).filter((child) => {
+          const hasOwnAnimation = child.matches("[data-fade-up], [data-text-line]");
+          const hasNestedAnimation = Boolean(child.querySelector("[data-fade-up], [data-text-line]"));
+          return !hasOwnAnimation && !hasNestedAnimation;
+        });
+
+        if (!entranceChildren.length) {
+          return;
+        }
+
+        if (prefersReducedMotion) {
+          gsap.set(entranceChildren, { autoAlpha: 1, y: 0 });
+          return;
+        }
+
+        gsap.fromTo(
+          entranceChildren,
+          { autoAlpha: 0, y: 40 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            stagger: 0.12,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 80%",
+              once: true,
+            },
+          }
+        );
+      });
+
+      const philosophySurface = rootRef.current?.querySelector<HTMLElement>("#philosophy .paper-surface");
+      if (philosophySurface) {
+        if (prefersReducedMotion) {
+          gsap.set(philosophySurface, { clipPath: "inset(0% 0% 0% 0%)" });
+        } else {
+          gsap.fromTo(
+            philosophySurface,
+            { clipPath: "inset(0% 0% 100% 0%)" },
+            {
+              clipPath: "inset(0% 0% 0% 0%)",
+              duration: 1,
+              ease: "power4.out",
+              scrollTrigger: {
+                trigger: "#philosophy",
+                start: "top 75%",
+                once: true,
+              },
+            }
+          );
+        }
       }
 
       const firstLine = rootRef.current?.querySelector("[data-text-line]");
@@ -128,11 +247,18 @@ export default function BakeryExperience() {
           return;
         }
 
+        const craftMaskCards = Array.from(
+          rootRef.current?.querySelectorAll<HTMLElement>("section.paper-surface figure[data-mask-card]") ?? []
+        );
+        const craftCardIndex = craftMaskCards.indexOf(card);
+        const craftStaggerDelay = craftCardIndex >= 0 ? craftCardIndex * 0.08 : 0;
+
         const image = card.querySelector("img");
 
         gsap.to(card, {
           clipPath: "inset(0% 0% 0% 0% round 0px)",
           duration: 1.12,
+          delay: craftStaggerDelay,
           ease: "power4.out",
           scrollTrigger: {
             trigger: card,
@@ -149,6 +275,7 @@ export default function BakeryExperience() {
               scale: 1,
               yPercent: 0,
               duration: 1.28,
+              delay: craftStaggerDelay,
               ease: "power3.out",
               scrollTrigger: {
                 trigger: card,
@@ -159,6 +286,47 @@ export default function BakeryExperience() {
           );
 
           if (!prefersReducedMotion) {
+
+      const menuSection = rootRef.current?.querySelector<HTMLElement>("#menu");
+      if (menuSection) {
+        const menuCards = Array.from(menuSection.querySelectorAll<HTMLElement>("[data-menu-card]"));
+
+        menuCards.forEach((card, index) => {
+          const numberNode = Array.from(card.querySelectorAll<HTMLElement>("p, span")).find((node) =>
+            /\(\d{2}\)/.test(node.textContent ?? "")
+          );
+
+          if (!numberNode) {
+            return;
+          }
+
+          const targetValue = Number((numberNode.textContent ?? "").replace(/\D/g, "")) || index + 1;
+
+          if (prefersReducedMotion) {
+            numberNode.textContent = `(${String(targetValue).padStart(2, "0")})`;
+            return;
+          }
+
+          numberNode.textContent = "(00)";
+          const counter = { value: 0 };
+
+          gsap.to(counter, {
+            value: targetValue,
+            duration: 1,
+            ease: "power2.out",
+            delay: index * 0.2,
+            snap: { value: 1 },
+            onUpdate: () => {
+              numberNode.textContent = `(${String(Math.round(counter.value)).padStart(2, "0")})`;
+            },
+            scrollTrigger: {
+              trigger: menuSection,
+              start: "top 80%",
+              once: true,
+            },
+          });
+        });
+      }
             gsap.to(image, {
               yPercent: index % 2 === 0 ? -8 : -4,
               ease: "none",
@@ -438,6 +606,30 @@ export default function BakeryExperience() {
 
       const reservationTitle = rootRef.current?.querySelector("#visit [data-marquee-loop]");
       if (reservationTitle) {
+        const reservationTitleShell = reservationTitle.closest("p");
+
+        if (reservationTitleShell) {
+          if (prefersReducedMotion) {
+            gsap.set(reservationTitleShell, { x: 0, autoAlpha: 1 });
+          } else {
+            gsap.fromTo(
+              reservationTitleShell,
+              { x: 200, autoAlpha: 0 },
+              {
+                x: 0,
+                autoAlpha: 1,
+                duration: 1,
+                ease: "power4.out",
+                scrollTrigger: {
+                  trigger: "#visit",
+                  start: "top 85%",
+                  once: true,
+                },
+              }
+            );
+          }
+        }
+
         gsap.to(reservationTitle, {
           xPercent: -8,
           ease: "none",
@@ -462,11 +654,14 @@ export default function BakeryExperience() {
 
   return (
     <div ref={rootRef} className="relative min-h-screen overflow-x-clip bg-wine text-[#f3e8de]">
+      {isLoading ? <PageLoader onComplete={handleLoaderComplete} /> : null}
+
       {/* Pass shell ref so compact-header class toggling actually applies to DOM. */}
       <LandingHeader headerRef={headerShellRef} />
 
-      <main>
+      <main ref={mainRef}>
           <div
+        data-bg-parallax
         className="pointer-events-none fixed -z-10 inset-0 flex  overflow-hidden -translate-3 scale-[1.2] "
         aria-hidden="true"
       >

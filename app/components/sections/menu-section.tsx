@@ -4,14 +4,14 @@ import { featureItems } from "../landing-data";
 function MenuShape({ shape }: { shape: "circle" | "diamond" | "star" }) {
   if (shape === "circle") {
     return (
-      <span aria-hidden="true" className="block h-40 w-40 rounded-full bg-primary md:h-48 md:w-48" />
+      <span aria-hidden="true" className="block h-28 w-28 rounded-full bg-primary sm:h-36 sm:w-36 md:h-48 md:w-48" />
     );
   }
 
   if (shape === "diamond") {
     return (
       <svg
-        className="h-40 w-40 fill-primary md:h-48 md:w-48"
+        className="h-28 w-28 fill-primary sm:h-36 sm:w-36 md:h-48 md:w-48"
         viewBox="0 0 200 200"
         aria-hidden="true"
       >
@@ -22,7 +22,7 @@ function MenuShape({ shape }: { shape: "circle" | "diamond" | "star" }) {
 
   return (
     <svg
-      className="h-40 w-40 fill-primary md:h-48 md:w-48"
+      className="h-28 w-28 fill-primary sm:h-36 sm:w-36 md:h-48 md:w-48"
       viewBox="0 0 200 216"
       aria-hidden="true"
     >
@@ -37,7 +37,7 @@ function MenuSection() {
   return (
     <section
       id="menu"
-      className="wine-surface relative overflow-hidden pb-16 pt-18 "
+      className="wine-surface relative overflow-hidden pb-16 pt-12 sm:pt-18 "
     >
       <div className="w-full">
         <div className="flex items-start justify-center gap-4 text-lg text-[#efe2d8]/88">
@@ -54,7 +54,7 @@ function MenuSection() {
           </div>
         </div>
 
-        <div className="mt-10 overflow-hidden py-2">
+        <div className="mt-10 overflow-hidden overflow-x-hidden py-2">
           <p aria-hidden="true" className="pointer-events-none overflow-hidden font-display-face text-[clamp(68px,11vw,150px)]  text-[#f5e9df]">
             <span data-marquee-loop className="marquee-track block">
               Menu of the day • Menu of the day • Menu of the day • Menu of the day • Menu of the day •
@@ -67,11 +67,11 @@ function MenuSection() {
             {featureItems.map((item, index) => (
               <article
                 key={item.title}
-                className="mask-card relative px-2 pb-5 pt-4"
+                className="mask-card relative border-b border-[#ecd8ca]/30 px-4 pb-5 pt-4 last:border-b-0 sm:px-2 md:border-b-0"
                 data-mask-card
                 data-menu-card
               >
-                <div className="flex min-h-56 items-center justify-center">
+                <div className="flex min-h-36 items-center justify-center sm:min-h-44 md:min-h-56">
                   <MenuShape shape={item.shape} />
                 </div>
 
@@ -93,7 +93,7 @@ function MenuSection() {
                 </div>
 
                 <p
-                  className="mt-5 max-w-[35ch] text-lg leading-[1.15] text-[#e9d8ca]/92 font-mono"
+                  className="mt-5 max-w-none text-lg leading-[1.15] text-[#e9d8ca]/92 font-mono sm:max-w-[35ch]"
                   
                 >
                   {item.copy}
@@ -102,6 +102,7 @@ function MenuSection() {
                 <a
                   href="#visit"
                   aria-label={`Discover ${item.title}`}
+                  data-magnetic
                   className="mt-6 inline-flex items-center gap-2 text-2xl font-semibold text-[#f7ede4] hover:underline"
                 >
                   <span >Discover</span>
@@ -117,7 +118,7 @@ function MenuSection() {
           </div>
 
           <div className="mt-12 pt-3" data-fade-up>
-            <p className="flex items-center gap-2 text-sm uppercase tracking-[0.12em] text-[#eedfd4]">
+            <p className="flex flex-col items-center gap-1 text-sm uppercase tracking-[0.12em] text-[#eedfd4] sm:flex-row sm:gap-2">
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#ecd8ca]">
                 {"->"}
               </span>

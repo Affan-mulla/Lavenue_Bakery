@@ -52,6 +52,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+@media (hover: hover) {
+  body {
+    cursor: none;
+  }
+}
+
 a {
   color: inherit;
   text-decoration: none;
@@ -84,7 +90,7 @@ a {
 }
 
 .wine-surface {
-  background-color: var(--wine-900);
+  background-color: var(--wine-850);
   background-image: none;
 }
 
@@ -100,6 +106,15 @@ a {
 
 .mask-card {
   clip-path: inset(50% 0 50% 0 round 4px);
+}
+
+.no-js .mask-card {
+  clip-path: inset(0%);
+}
+
+[data-review-initial] {
+  opacity: 1;
+  visibility: visible;
 }
 
 .hero-outline path,

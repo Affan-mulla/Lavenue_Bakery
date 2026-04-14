@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Cormorant_Garamond, Great_Vibes, Quintessential } from "next/font/google";
 import JsonLd from "./components/JsonLd";
+import MagneticCursor from "./components/MagneticCursor";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -81,8 +82,9 @@ export default function RootLayout({
       lang="en"
       className={`${cormorant.variable} ${quintessential.variable} ${greatVibes.variable} ${bricolageGrotesque.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="no-js min-h-full flex flex-col">
         <JsonLd />
+        <MagneticCursor />
         {children}
       </body>
     </html>

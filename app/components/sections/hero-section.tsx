@@ -4,11 +4,11 @@ import { heroImages } from "../landing-data";
 
 function HeroSection() {
   return (
-    <section className="wine-surface relative overflow-hidden pb-16 pt-28  md:pt-36" id="home">
+    <section className="wine-surface relative overflow-hidden pb-16 pt-20  md:pt-36" id="home">
       <div className="w-full">
         <h1
           aria-label="Where inspiration rises, where craft and comfort meet, they merge and come alive."
-          className="mx-auto my-16 text-center font-display-face text-[clamp(44px,8.2vw,88px)] leading-[0.86] text-[#f3e8de]"
+          className="mx-auto my-8 text-center font-display-face text-[clamp(44px,8.2vw,88px)] leading-[0.86] text-[#f3e8de] sm:my-16"
         >
           <span className="block overflow-hidden">
             <span data-text-line className="block">
@@ -28,17 +28,17 @@ function HeroSection() {
         <div className="relative  ">
           <p
             aria-hidden="true"
-            className="pointer-events-none absolute left-0 right-0 top-1/2 -translate-y-1/2 overflow-hidden font-display-face text-[clamp(58px,9.5vw,142px)] leading-[0.78] "
+            className="pointer-events-none my-4 overflow-hidden font-display-face text-[clamp(42px,9.5vw,142px)] leading-[0.78] md:absolute md:left-0 md:right-0 md:top-1/2 md:my-0 md:-translate-y-1/2"
           >
             <span data-marquee-loop className="marquee-track block">
               Where craft and comfort meet • Where craft and comfort meet • Where craft and comfort meet •
             </span>
           </p>
 
-          <div className="relative z-10 mx-auto mt-6 grid w-[92%] max-w-6xl gap-2 md:mt-40 md:w-[88%] md:grid-cols-[minmax(0,1fr)_minmax(280px,0.52fr)] md:items-center md:gap-10">
+          <div className="relative z-10 mx-auto mt-6 flex w-full max-w-6xl flex-col items-center gap-4 px-4 md:mt-40 md:w-[88%] md:grid md:grid-cols-[minmax(0,1fr)_minmax(280px,0.52fr)] md:items-center md:gap-10 md:px-0">
             <div className="flex flex-col gap-2">
               <figure
-                className="mask-card relative mx-auto aspect-16/10 w-[80%] overflow-hidden will-change-transform md:mx-0  "
+                className="mask-card relative mx-auto aspect-video w-full overflow-hidden rounded-sm will-change-transform md:mx-0 md:aspect-16/10 md:w-[80%] md:rounded-none"
                 data-mask-card
                 data-hero-mask="left"
               >
@@ -52,14 +52,14 @@ function HeroSection() {
                 />
               </figure>
 
-              <p className="mx-auto max-w-xl font-script text-md  font-light tracking-wider  md:mx-0" data-fade-up>
+              <p className="mx-auto max-w-sm font-script text-md  font-light tracking-wider md:max-w-xl  md:mx-0" data-fade-up>
                The quality of the ingredients, along with the wide selection of beers, makes the Nidaba a one-of-a-kind place. We want to give you always different emotions with each visit. It's not just a place, it's not just a beer house, it's not just a pub. It's all this and much more. A refuge away from the disturbances of the city, a place where everyone can find their own well-being.
               </p>
             </div>
 
-            <div className="flex justify-end md:justify-center md:pb-4">
+            <div className="flex w-full justify-center md:justify-center md:pb-4">
               <figure
-                className="mask-card relative aspect-9/16 w-[62%] max-w-80 overflow-hidden rounded-t-full will-change-transform md:mt-0 md:w-full md:max-w-80"
+                className="mask-card relative mx-auto aspect-3/4 w-[72%] max-w-80 overflow-hidden rounded-t-full will-change-transform md:mt-0 md:aspect-9/16 md:w-full md:max-w-80"
                 data-mask-card
                 data-hero-mask="right"
               >
@@ -75,7 +75,7 @@ function HeroSection() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-wrap items-center gap-4 text-sm tracking-[0.04em] text-[#e9d7c8]">
+        <div className="mt-12 flex flex-col items-center gap-1 text-sm tracking-[0.04em] text-[#e9d7c8] sm:flex-row sm:flex-wrap sm:gap-4">
           <span aria-hidden="true" className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-[#f5e4d6]/40">
             ⦿
           </span>

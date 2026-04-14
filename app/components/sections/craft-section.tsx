@@ -4,13 +4,13 @@ import { galleryImages } from "../landing-data";
 
 function CraftSection() {
   return (
-    <section className="paper-surface px-4 py-22 sm:px-8">
+    <section className="paper-surface px-4 py-12 sm:px-8 sm:py-22">
       <div className="mx-auto w-full max-w-7xl">
         <p aria-hidden="true" className="mx-auto mb-12 h-6 w-6 text-center text-4xl leading-none text-[#f53345]" data-spin>
           ✦
         </p>
 
-        <div className="text-5xl sm:text-6xl" data-fade-up>
+        <div className="text-4xl leading-tight sm:text-5xl md:text-6xl" data-fade-up>
           <h1 className="font-display">Follow us on Instagram</h1>
           <a
             href="https://www.instagram.com/lavenuebakery"
@@ -23,7 +23,7 @@ function CraftSection() {
           </a>
         </div>
 
-        <div className="relative mt-8 grid auto-rows-[8rem] grid-cols-2 gap-3 sm:auto-rows-[9.5rem] sm:grid-cols-3 sm:gap-4 md:block md:h-168 lg:h-176">
+        <div className="relative mt-8 grid auto-rows-[10rem] grid-cols-2 gap-2 sm:auto-rows-[9.5rem] sm:grid-cols-3 sm:gap-4 md:block md:h-168 lg:h-176">
           <figure className="mask-card relative col-span-1 row-span-1 overflow-hidden sm:col-start-1 sm:row-start-1 md:absolute md:left-[12%] md:top-[10%] md:h-48 md:w-42 lg:left-[12.5%] lg:top-[11%] lg:h-51 lg:w-46" data-mask-card>
             <Image src={galleryImages[0].src} alt={galleryImages[0].alt} fill sizes="26vw" className="object-cover" />
           </figure>

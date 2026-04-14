@@ -118,7 +118,8 @@ function AtelierSection() {
                   ref={(node) => {
                     reviewRefs.current[index] = node;
                   }}
-                  className="absolute inset-0 flex flex-col items-center justify-center px-2 md:px-8"
+                  className="absolute inset-0 flex flex-col items-center justify-center px-2 md:px-8 opacity-0 invisible"
+                  data-review-initial={index === 0 ? "true" : undefined}
                   aria-hidden={!isActive}
                 >
                   <p className="text-[clamp(30px,4.8vw,52px)] leading-[1.02] text-[#413035] font-display-face">
