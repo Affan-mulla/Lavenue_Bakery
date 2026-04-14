@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
-import LandingHeader from "./sections/landing-header";
+import SiteHeader from "./layout/SiteHeader";
 import HeroSection from "./sections/hero-section";
 import AtelierSection from "./sections/atelier-section";
 import MenuSection from "./sections/menu-section";
@@ -653,11 +653,11 @@ export default function BakeryExperience() {
   }, []);
 
   return (
-    <div ref={rootRef} className="relative min-h-screen overflow-x-clip bg-wine text-[#f3e8de]">
+    <div ref={rootRef} className="wine-surface relative min-h-screen overflow-x-clip text-[#f3e8de]">
       {isLoading ? <PageLoader onComplete={handleLoaderComplete} /> : null}
 
       {/* Pass shell ref so compact-header class toggling actually applies to DOM. */}
-      <LandingHeader headerRef={headerShellRef} />
+      <SiteHeader variant="home" headerRef={headerShellRef} />
 
       <main ref={mainRef}>
           <div

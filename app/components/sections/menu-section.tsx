@@ -1,4 +1,5 @@
 import { memo } from "react";
+import Link from "next/link";
 import { featureItems } from "../landing-data";
 
 function MenuShape({ shape }: { shape: "circle" | "diamond" | "star" }) {
@@ -99,9 +100,9 @@ function MenuSection() {
                   {item.copy}
                 </p>
 
-                <a
-                  href="#visit"
-                  aria-label={`Discover ${item.title}`}
+                <Link
+                  href="/menu"
+                  aria-label="Explore full menu"
                   data-magnetic
                   className="mt-6 inline-flex items-center gap-2 text-2xl font-semibold text-[#f7ede4] hover:underline"
                 >
@@ -112,7 +113,7 @@ function MenuSection() {
                   >
                     {"->"}
                   </span>
-                </a>
+                </Link>
               </article>
             ))}
           </div>

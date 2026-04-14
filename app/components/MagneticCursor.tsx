@@ -8,10 +8,26 @@ export default function MagneticCursor() {
   const ringRef = useRef<HTMLDivElement>(null);
   const [isEnabled, setIsEnabled] = useState(false);
 
+  const INTERACTIVE_SELECTOR =
+    "a, button, [data-magnetic], [role='button'], input, select, textarea, label[for], summary";
+
   useEffect(() => {
-    const canHover = window.matchMedia("(hover: hover)").matches;
-    const isDesktop = window.innerWidth >= 768;
-    setIsEnabled(canHover && isDesktop);
+    const hoverQuery = window.matchMedia("(hover: hover)");
+
+    const updateEnabledState = () => {
+      const canHover = hoverQuery.matches;
+      const isDesktop = window.innerWidth >= 768;
+      setIsEnabled(canHover && isDesktop);
+    };
+
+    updateEnabledState();
+    hoverQuery.addEventListener("change", updateEnabledState);
+    window.addEventListener("resize", updateEnabledState);
+
+    return () => {
+      hoverQuery.removeEventListener("change", updateEnabledState);
+      window.removeEventListener("resize", updateEnabledState);
+    };
   }, []);
 
   useEffect(() => {
@@ -42,34 +58,116 @@ export default function MagneticCursor() {
 
     window.addEventListener("mousemove", onPointerMove);
 
-    const interactiveElements = Array.from(
-      document.querySelectorAll<HTMLElement>("a, button, [data-magnetic]")
-    );
-    const magneticElements = Array.from(document.querySelectorAll<HTMLElement>("[data-magnetic]"));
+    const onMouseDown = () => {
+      gsap.to(dot, {
+        scale: 0.6,
+        duration: 0.1,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    };
 
-    const interactiveCleanup: Array<() => void> = [];
-    interactiveElements.forEach((element) => {
+    const onMouseUp = () => {
+      gsap.to(dot, {
+        scale: 1,
+        duration: 0.2,
+        ease: "elastic.out(1,0.4)",
+        overwrite: "auto",
+      });
+    };
+
+    window.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("mouseup", onMouseUp);
+
+    const getHoverState = (element: HTMLElement) => {
+      if (element.matches("[data-cursor-expand]")) {
+        return { scale: 3.5, ringBorderColor: "rgba(243,232,222,0.3)" };
+      }
+
+      if (element.matches("[data-magnetic]")) {
+        return { scale: 2.8, ringBorderColor: "#f63143" };
+      }
+
+      if (element.tagName === "BUTTON") {
+        return { scale: 2.5, ringBorderColor: "#f63143" };
+      }
+
+      if (element.tagName === "A") {
+        return { scale: 2.2, ringBorderColor: "#f63143" };
+      }
+
+      return { scale: 2.3, ringBorderColor: "#f63143" };
+    };
+
+    const interactiveHandlers = new Map<
+      HTMLElement,
+      { onEnter: () => void; onLeave: () => void }
+    >();
+    const magneticHandlers = new Map<
+      HTMLElement,
+      { onMove: (event: MouseEvent) => void; onLeave: () => void }
+    >();
+
+    const bindInteractiveElement = (element: HTMLElement) => {
+      if (interactiveHandlers.has(element)) {
+        return;
+      }
+
       const onEnter = () => {
-        gsap.to(ring, { scale: 2.5, duration: 0.3, ease: "power2.out", overwrite: "auto" });
-        gsap.to(dot, { autoAlpha: 0, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+        const hoverState = getHoverState(element);
+        gsap.to(ring, {
+          scale: hoverState.scale,
+          borderColor: hoverState.ringBorderColor,
+          duration: 0.25,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+        gsap.to(dot, {
+          backgroundColor: "rgba(246,49,67,0)",
+          duration: 0.25,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
       };
 
       const onLeave = () => {
-        gsap.to(ring, { scale: 1, duration: 0.3, ease: "power2.out", overwrite: "auto" });
-        gsap.to(dot, { autoAlpha: 1, duration: 0.3, ease: "power2.out", overwrite: "auto" });
+        gsap.to(ring, {
+          scale: 1,
+          borderColor: "rgba(243, 232, 222, 0.5)",
+          duration: 0.25,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
+        gsap.to(dot, {
+          backgroundColor: "#f63143",
+          duration: 0.25,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
       };
 
       element.addEventListener("mouseenter", onEnter);
       element.addEventListener("mouseleave", onLeave);
 
-      interactiveCleanup.push(() => {
-        element.removeEventListener("mouseenter", onEnter);
-        element.removeEventListener("mouseleave", onLeave);
-      });
-    });
+      interactiveHandlers.set(element, { onEnter, onLeave });
+    };
 
-    const magneticCleanup: Array<() => void> = [];
-    magneticElements.forEach((element) => {
+    const unbindInteractiveElement = (element: HTMLElement) => {
+      const handlers = interactiveHandlers.get(element);
+      if (!handlers) {
+        return;
+      }
+
+      element.removeEventListener("mouseenter", handlers.onEnter);
+      element.removeEventListener("mouseleave", handlers.onLeave);
+      interactiveHandlers.delete(element);
+    };
+
+    const bindMagneticElement = (element: HTMLElement) => {
+      if (magneticHandlers.has(element)) {
+        return;
+      }
+
       const onMove = (event: MouseEvent) => {
         const bounds = element.getBoundingClientRect();
         const centerX = bounds.left + bounds.width / 2;
@@ -103,18 +201,66 @@ export default function MagneticCursor() {
       element.addEventListener("mousemove", onMove);
       element.addEventListener("mouseleave", onLeave);
 
-      magneticCleanup.push(() => {
-        element.removeEventListener("mousemove", onMove);
-        element.removeEventListener("mouseleave", onLeave);
+      magneticHandlers.set(element, { onMove, onLeave });
+    };
+
+    const unbindMagneticElement = (element: HTMLElement) => {
+      const handlers = magneticHandlers.get(element);
+      if (!handlers) {
+        return;
+      }
+
+      element.removeEventListener("mousemove", handlers.onMove);
+      element.removeEventListener("mouseleave", handlers.onLeave);
+      magneticHandlers.delete(element);
+    };
+
+    const syncInteractiveElements = () => {
+      const nextInteractive = new Set(document.querySelectorAll<HTMLElement>(INTERACTIVE_SELECTOR));
+
+      nextInteractive.forEach((element) => bindInteractiveElement(element));
+      Array.from(interactiveHandlers.keys()).forEach((element) => {
+        if (!nextInteractive.has(element) || !element.isConnected) {
+          unbindInteractiveElement(element);
+        }
       });
+    };
+
+    const syncMagneticElements = () => {
+      const nextMagnetic = new Set(document.querySelectorAll<HTMLElement>("[data-magnetic]"));
+
+      nextMagnetic.forEach((element) => bindMagneticElement(element));
+      Array.from(magneticHandlers.keys()).forEach((element) => {
+        if (!nextMagnetic.has(element) || !element.isConnected) {
+          unbindMagneticElement(element);
+        }
+      });
+    };
+
+    syncInteractiveElements();
+    syncMagneticElements();
+
+    const observer = new MutationObserver(() => {
+      syncInteractiveElements();
+      syncMagneticElements();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["data-magnetic", "data-cursor-expand", "role", "for"],
     });
 
     return () => {
       window.removeEventListener("mousemove", onPointerMove);
-      interactiveCleanup.forEach((cleanup) => cleanup());
-      magneticCleanup.forEach((cleanup) => cleanup());
+      window.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("mouseup", onMouseUp);
+      observer.disconnect();
+      Array.from(interactiveHandlers.keys()).forEach((element) => unbindInteractiveElement(element));
+      Array.from(magneticHandlers.keys()).forEach((element) => unbindMagneticElement(element));
     };
-  }, [isEnabled]);
+  }, [isEnabled, INTERACTIVE_SELECTOR]);
 
   if (!isEnabled) {
     return null;
