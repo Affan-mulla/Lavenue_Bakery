@@ -65,8 +65,7 @@ export default function BakeryExperience() {
   }, [isLoading]);
 
   useEffect(() => {
-    // Remove no-js fallback class as soon as client code is running.
-    document.body.classList.remove("no-js");
+    document.body.classList.remove('no-js');
 
     if (!rootRef.current) {
       return;
@@ -495,29 +494,6 @@ export default function BakeryExperience() {
         }
       }
 
-      gsap.utils.toArray<SVGElement>("[data-svg-path]").forEach((path) => {
-        const drawable = path as unknown as SVGGeometryElement;
-        const length = drawable.getTotalLength();
-
-        gsap.set(path, {
-          strokeDasharray: length,
-          strokeDashoffset: length,
-          opacity: 0.3,
-        });
-
-        gsap.to(path, {
-          strokeDashoffset: 0,
-          opacity: 1,
-          duration: 1.5,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: path,
-            start: "top 85%",
-            once: true,
-          },
-        });
-      });
-
       gsap.utils.toArray<HTMLElement>("[data-spin]").forEach((item) => {
         gsap.fromTo(
           item,
@@ -557,67 +533,6 @@ export default function BakeryExperience() {
         });
       });
 
-      if (!prefersReducedMotion) {
-        gsap.utils.toArray<HTMLElement>("[data-menu-card]").forEach((card) => {
-          const textNodes = card.querySelectorAll<HTMLElement>("[data-menu-hover-text]");
-          const baseColors = Array.from(textNodes, (node) => getComputedStyle(node).color);
-          const hoverColor = "#f63143";
-
-          const onPointerEnter = () => {
-            
-            gsap.killTweensOf(textNodes);
-            gsap.to(textNodes, {
-              keyframes: [
-                { yPercent: -180, duration: 0.2, ease: "power2.in" },
-                { yPercent: 180, duration: 0 },
-                { yPercent: 0, duration: 0.26, ease: "power2.out" },
-              ],
-              stagger: 0.04,
-              overwrite: "auto",
-            });
-
-            gsap.to(textNodes, {
-              color: hoverColor,
-              duration: 0.22,
-              delay: 0.2,
-              ease: "power2.out",
-              stagger: 0.04,
-              overwrite: "auto",
-            });
-          };
-
-          const onPointerLeave = () => {
-            gsap.killTweensOf(textNodes);
-            gsap.to(textNodes, {
-              keyframes: [
-                { yPercent: 180, duration: 0.2, ease: "power2.in" },
-                { yPercent: -180, duration: 0 },
-                { yPercent: 0, duration: 0.26, ease: "power2.out" },
-              ],
-              stagger: 0.04,
-              overwrite: "auto",
-            });
-
-            gsap.to(textNodes, {
-              color: (index: number) => baseColors[index],
-              duration: 0.24,
-              delay: 0.2,
-              ease: "power2.out",
-              stagger: 0.04,
-              overwrite: "auto",
-            });
-          };
-
-          card.addEventListener("pointerenter", onPointerEnter);
-          card.addEventListener("pointerleave", onPointerLeave);
-
-          cleanups.push(() => {
-            card.removeEventListener("pointerenter", onPointerEnter);
-            card.removeEventListener("pointerleave", onPointerLeave);
-          });
-        });
-      }
-
       const reservationTitle = rootRef.current?.querySelector("#visit [data-marquee-loop]");
       if (reservationTitle) {
         const reservationTitleShell = reservationTitle.closest("p");
@@ -656,6 +571,68 @@ export default function BakeryExperience() {
         });
       }
     }, rootRef);
+
+    if (!prefersReducedMotion) {
+      const menuCards = Array.from(rootRef.current.querySelectorAll<HTMLElement>("[data-menu-card]"));
+
+      menuCards.forEach((card) => {
+        const textNodes = card.querySelectorAll<HTMLElement>("[data-menu-hover-text]");
+        const baseColors = Array.from(textNodes, (node) => getComputedStyle(node).color);
+        const hoverColor = "#f63143";
+
+        const onPointerEnter = () => {
+          gsap.killTweensOf(textNodes);
+          gsap.to(textNodes, {
+            keyframes: [
+              { yPercent: -180, duration: 0.2, ease: "power2.in" },
+              { yPercent: 180, duration: 0 },
+              { yPercent: 0, duration: 0.26, ease: "power2.out" },
+            ],
+            stagger: 0.04,
+            overwrite: "auto",
+          });
+
+          gsap.to(textNodes, {
+            color: hoverColor,
+            duration: 0.22,
+            delay: 0.2,
+            ease: "power2.out",
+            stagger: 0.04,
+            overwrite: "auto",
+          });
+        };
+
+        const onPointerLeave = () => {
+          gsap.killTweensOf(textNodes);
+          gsap.to(textNodes, {
+            keyframes: [
+              { yPercent: 180, duration: 0.2, ease: "power2.in" },
+              { yPercent: -180, duration: 0 },
+              { yPercent: 0, duration: 0.26, ease: "power2.out" },
+            ],
+            stagger: 0.04,
+            overwrite: "auto",
+          });
+
+          gsap.to(textNodes, {
+            color: (index: number) => baseColors[index],
+            duration: 0.24,
+            delay: 0.2,
+            ease: "power2.out",
+            stagger: 0.04,
+            overwrite: "auto",
+          });
+        };
+
+        card.addEventListener("pointerenter", onPointerEnter);
+        card.addEventListener("pointerleave", onPointerLeave);
+
+        cleanups.push(() => {
+          card.removeEventListener("pointerenter", onPointerEnter);
+          card.removeEventListener("pointerleave", onPointerLeave);
+        });
+      });
+    }
 
     const refreshId = window.requestAnimationFrame(() => ScrollTrigger.refresh());
     cleanups.push(() => window.cancelAnimationFrame(refreshId));

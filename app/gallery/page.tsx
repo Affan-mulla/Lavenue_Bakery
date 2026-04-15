@@ -11,6 +11,7 @@ export default function GalleryPage() {
   const pageRef = useRef<HTMLDivElement>(null);
   const [activeCategory, setActiveCategory] = useState<(typeof galleryCategories)[number]["id"]>("all");
   const [visibleCategory, setVisibleCategory] = useState<(typeof galleryCategories)[number]["id"]>("all");
+  const [isFilterTransitioning, setIsFilterTransitioning] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
   const touchStartXRef = useRef<number | null>(null);
   const lightboxOverlayRef = useRef<HTMLDivElement>(null);
@@ -30,6 +31,7 @@ export default function GalleryPage() {
     setActiveCategory(nextCategory);
 
     if (prefersReducedMotionRef.current) {
+      setIsFilterTransitioning(false);
       setVisibleCategory(nextCategory);
       return;
     }
@@ -37,11 +39,13 @@ export default function GalleryPage() {
     const currentItems = Array.from(document.querySelectorAll<HTMLElement>("[data-gallery-item]"));
 
     if (!currentItems.length) {
+      setIsFilterTransitioning(false);
       setVisibleCategory(nextCategory);
       return;
     }
 
     filterTransitioningRef.current = true;
+    setIsFilterTransitioning(true);
     gsap.to(currentItems, {
       autoAlpha: 0,
       scale: 0.96,
@@ -92,7 +96,13 @@ export default function GalleryPage() {
 
     if (prefersReducedMotionRef.current || !filteredImages.length) {
       filterTransitioningRef.current = false;
-      return;
+      const rafId = window.requestAnimationFrame(() => {
+        setIsFilterTransitioning(false);
+      });
+
+      return () => {
+        window.cancelAnimationFrame(rafId);
+      };
     }
 
     const incomingItems = Array.from(document.querySelectorAll<HTMLElement>("[data-gallery-item]"));
@@ -109,6 +119,7 @@ export default function GalleryPage() {
         overwrite: "auto",
         onComplete: () => {
           filterTransitioningRef.current = false;
+          setIsFilterTransitioning(false);
         },
       }
     );
@@ -460,8 +471,11 @@ export default function GalleryPage() {
                     key={category.id}
                     type="button"
                     data-magnetic
+                    aria-disabled={isFilterTransitioning}
                     onClick={() => setCategoryWithAnimation(category.id)}
-                    className={`relative pb-2 font-mono text-sm uppercase tracking-widest transition-colors duration-300 after:absolute after:-bottom-px after:left-0 after:h-0.5 after:w-full after:origin-left after:transition-transform after:duration-300 ${
+                    className={`relative pb-2 font-mono text-sm uppercase tracking-widest transition-all duration-300 after:absolute after:-bottom-px after:left-0 after:h-0.5 after:w-full after:origin-left after:transition-transform after:duration-300 ${
+                      isFilterTransitioning ? "opacity-50" : "opacity-100"
+                    } ${
                       isActive
                         ? "text-[#f3e8de] after:scale-x-100 after:bg-[#f63143]"
                         : "text-[#f2dfd2]/40 after:scale-x-0 after:bg-[#f63143]"
@@ -495,7 +509,11 @@ export default function GalleryPage() {
                       src={image.src}
                       alt={image.alt}
                       fill
-                      sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                      sizes={
+                        isLandscape
+                          ? "(max-width: 640px) 100vw, (max-width: 768px) 100vw, 66vw"
+                          : "(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                      }
                       className="object-cover will-change-transform"
                     />
 
@@ -589,8 +607,8 @@ export default function GalleryPage() {
               width={1600}
               height={1200}
               className="h-auto max-h-[90vh] w-full max-w-[90vw] object-contain"
-              sizes="90vw"
-              priority
+              sizes="(max-width: 768px) 100vw, 90vw"
+              priority={false}
             />
             <p className="mt-4 text-center font-mono text-sm text-white/60">
               {lightboxImage.caption ?? lightboxImage.alt}

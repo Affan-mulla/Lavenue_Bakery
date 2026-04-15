@@ -3,7 +3,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Menu | L'Avenue Boulangerie",
   description:
-    "Explore the L'Avenue Boulangerie menu with artisan breads, pastries, seasonal plates, and curated drinks.",
+    "Explore L'Avenue Boulangerie's full menu. Artisan breads, laminated pastries, seasonal items, coffee and drinks. 1850 Avenue Road, Toronto.",
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: {
     canonical: "/menu",
   },

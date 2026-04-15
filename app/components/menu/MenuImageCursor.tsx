@@ -10,6 +10,7 @@ export default function MenuImageCursor() {
   const currentSrcRef = useRef<string | null>(null);
   const lastClientYRef = useRef<number | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [isImageLoading, setIsImageLoading] = useState(false);
   const [canHover, setCanHover] = useState(false);
 
   useEffect(() => {
@@ -46,16 +47,20 @@ export default function MenuImageCursor() {
     });
 
     let activeRow: HTMLElement | null = null;
+    let rafPending = false;
+    let moveRafId: number | null = null;
 
     const setImageSource = (nextSrc: string, direction: "up" | "down") => {
       if (!imageLayer) {
         currentSrcRef.current = nextSrc;
+        setIsImageLoading(true);
         setImageSrc(nextSrc);
         return;
       }
 
       if (currentSrcRef.current === null) {
         currentSrcRef.current = nextSrc;
+        setIsImageLoading(true);
         setImageSrc(nextSrc);
         gsap.set(imageLayer, { autoAlpha: 1, y: 0, filter: "blur(0px)" });
         return;
@@ -77,6 +82,7 @@ export default function MenuImageCursor() {
         overwrite: "auto",
         onComplete: () => {
           currentSrcRef.current = nextSrc;
+          setIsImageLoading(true);
           setImageSrc(nextSrc);
 
           gsap.set(imageLayer, {
@@ -117,10 +123,10 @@ export default function MenuImageCursor() {
       });
     };
 
-    const moveToCursor = (event: MouseEvent) => {
+    const moveToCursor = (clientX: number, clientY: number) => {
       gsap.to(imageContainer, {
-        x: event.clientX + 24,
-        y: event.clientY - 80,
+        x: clientX + 24,
+        y: clientY - 80,
         duration: 0.5,
         ease: "power2.out",
         overwrite: "auto",
@@ -153,7 +159,7 @@ export default function MenuImageCursor() {
       }
 
       reveal();
-      moveToCursor(event);
+      moveToCursor(event.clientX, event.clientY);
     };
 
     const onMouseMove = (event: MouseEvent) => {
@@ -162,7 +168,18 @@ export default function MenuImageCursor() {
       }
 
       lastClientYRef.current = event.clientY;
-      moveToCursor(event);
+
+      if (rafPending) {
+        return;
+      }
+
+      rafPending = true;
+      const { clientX, clientY } = event;
+      moveRafId = window.requestAnimationFrame(() => {
+        moveToCursor(clientX, clientY);
+        rafPending = false;
+        moveRafId = null;
+      });
     };
 
     const onMouseOut = (event: MouseEvent) => {
@@ -200,6 +217,10 @@ export default function MenuImageCursor() {
       document.removeEventListener("mousemove", onMouseMove);
       document.removeEventListener("mouseout", onMouseOut);
 
+      if (moveRafId !== null) {
+        window.cancelAnimationFrame(moveRafId);
+      }
+
       gsap.killTweensOf(imageContainer);
       if (imageLayer) {
         gsap.killTweensOf(imageLayer);
@@ -218,7 +239,25 @@ export default function MenuImageCursor() {
       className="pointer-events-none fixed left-0 top-0 z-80 h-50 w-70 overflow-hidden rounded-xs border border-[#f2dfd2]/20"
     >
       <div ref={imageLayerRef} className="absolute inset-0">
-        {imageSrc ? <Image src={imageSrc} alt="" fill sizes="280px" className="object-cover" /> : null}
+        <div
+          className={`absolute inset-0 bg-[#2a0010] transition-opacity duration-200 ${
+            isImageLoading ? "opacity-100" : "opacity-0"
+          }`}
+        />
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            alt=""
+            fill
+            sizes="280px"
+            className="object-cover"
+            placeholder="blur"
+            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AJQAB/9k="
+            onLoadingComplete={() => {
+              setIsImageLoading(false);
+            }}
+          />
+        ) : null}
       </div>
       <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
     </div>

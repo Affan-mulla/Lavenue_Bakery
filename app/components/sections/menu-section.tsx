@@ -50,7 +50,7 @@ function MenuSection() {
               Discover the menu of the day.
             </p>
             <p className="text-base uppercase leading-[1.15] tracking-[0.08em]">
-              Beers, dishes and specials
+              Breads, pastries and specials
             </p>
           </div>
         </div>
@@ -124,7 +124,7 @@ function MenuSection() {
                 {"->"}
               </span>
               Discover the menu
-              <span className="text-primary">10 aprile, venerdi</span>
+              <span className="text-primary">Monday — Saturday</span>
             </p>
           </div>
         </div>

@@ -19,7 +19,7 @@ function VisitSection() {
 
         <p aria-hidden="true" className="my-18 overflow-hidden py-10 font-script-face text-6xl leading-[0.78] text-[#f4e7dd] sm:py-7 sm:text-7xl md:text-8xl">
           <span data-marquee-loop className="marquee-track -ml-18 block pr-18 tracking-[-0.012em]">
-            Reservation Request Reservation Request
+            Reservation Request • Reservation Request • Reservation Request
           </span>
         </p>
 
@@ -54,7 +54,7 @@ function VisitSection() {
             <span data-slide-up className="block">©2026 L&apos;Avenue Boulangerie</span>
           </p>
           <p className="overflow-hidden text-center sm:text-right">
-            <span data-slide-up className="block">Privacy - Cookie</span>
+            <span data-slide-up className="block">Toronto, Ontario • Since 2024</span>
           </p>
         </div>
 

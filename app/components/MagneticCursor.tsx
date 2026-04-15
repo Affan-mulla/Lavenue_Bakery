@@ -35,6 +35,8 @@ export default function MagneticCursor() {
       return;
     }
 
+    document.body.style.cursor = "none";
+
     const dot = dotRef.current;
     const ring = ringRef.current;
 
@@ -240,9 +242,17 @@ export default function MagneticCursor() {
     syncInteractiveElements();
     syncMagneticElements();
 
+    let syncTimeout: number | undefined;
+
     const observer = new MutationObserver(() => {
-      syncInteractiveElements();
-      syncMagneticElements();
+      if (syncTimeout !== undefined) {
+        window.clearTimeout(syncTimeout);
+      }
+
+      syncTimeout = window.setTimeout(() => {
+        syncInteractiveElements();
+        syncMagneticElements();
+      }, 100);
     });
 
     observer.observe(document.body, {
@@ -253,9 +263,13 @@ export default function MagneticCursor() {
     });
 
     return () => {
+      document.body.style.cursor = "";
       window.removeEventListener("mousemove", onPointerMove);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
+      if (syncTimeout !== undefined) {
+        window.clearTimeout(syncTimeout);
+      }
       observer.disconnect();
       Array.from(interactiveHandlers.keys()).forEach((element) => unbindInteractiveElement(element));
       Array.from(magneticHandlers.keys()).forEach((element) => unbindMagneticElement(element));
@@ -270,11 +284,13 @@ export default function MagneticCursor() {
     <>
       <div
         ref={dotRef}
+        data-cursor
         className="pointer-events-none fixed z-200 h-2 w-2 rounded-full bg-[#f63143]"
         style={{ top: -20, left: -20 }}
       />
       <div
         ref={ringRef}
+        data-cursor
         className="pointer-events-none fixed z-199 h-9 w-9 rounded-full border border-[rgba(243,232,222,0.5)] mix-blend-difference"
         style={{ top: -20, left: -20 }}
       />

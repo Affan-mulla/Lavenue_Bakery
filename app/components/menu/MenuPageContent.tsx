@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import menuData from "../menu-data";
 
 const tagLabels = {
@@ -13,21 +13,32 @@ const tagLabels = {
 type MenuPageContentProps = {
   activeCategory: string;
   onCategorySelect: (categoryId: string) => void;
+  heroSubtitle?: string;
 };
 
-export default function MenuPageContent({ activeCategory, onCategorySelect }: MenuPageContentProps) {
+export default function MenuPageContent({
+  activeCategory,
+  onCategorySelect,
+  heroSubtitle = "Monday — Saturday, 7:00 AM to 6:00 PM",
+}: MenuPageContentProps) {
 
   const groupedItems = useMemo(() => menuData, []);
+  const [expandedVariantItemIds, setExpandedVariantItemIds] = useState<Set<string>>(new Set());
 
-  const displayDate = new Intl.DateTimeFormat("en-CA", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date());
+  const expandVariantList = (itemId: string) => {
+    setExpandedVariantItemIds((current) => {
+      if (current.has(itemId)) {
+        return current;
+      }
+
+      const next = new Set(current);
+      next.add(itemId);
+      return next;
+    });
+  };
 
   return (
-    <main id="menu-page" data-page-content className="wine-surface relative pt-28 text-[#f3e8de] opacity-0 translate-y-5 md:pt-34">
+    <main id="menu-page" data-page-content className="wine-surface relative text-[#f3e8de] opacity-0 ">
       <section className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
         <h1
           data-text-line
@@ -43,7 +54,7 @@ export default function MenuPageContent({ activeCategory, onCategorySelect }: Me
         </p>
         <span data-menu-hero-line className="mt-6 h-px w-32 bg-[#f63143]" />
         <p data-text-line className="mt-7 font-display-face text-2xl italic text-[#f2dfd2]/60">
-          {displayDate}
+          {heroSubtitle}
         </p>
       </section>
 
@@ -100,57 +111,98 @@ export default function MenuPageContent({ activeCategory, onCategorySelect }: Me
             </header>
 
             <div className="mt-3">
-              {category.items.map((item) => (
-                <article
-                  key={item.id}
-                  data-fade-up
-                  data-menu-item
-                  data-item-image={item.image}
-                  className="border-b border-[#f2dfd2]/10 px-4 py-7 transition-colors duration-300 sm:px-8"
-                >
-                  <div className="grid items-start gap-5 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.42fr)] md:gap-8">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <h3 className="font-display-face text-[clamp(22px,2.5vw,34px)] leading-none text-[#f3e8de]">
-                          {item.name}
-                        </h3>
-                        {item.tag ? (
-                          <span className="rounded-full bg-[#f63143]/15 px-2.5 py-1 text-xs uppercase tracking-[0.08em] text-[#f63143]">
-                            {tagLabels[item.tag]}
-                          </span>
+              {category.items.map((item) => {
+                const variants = item.variants ?? [];
+                const hasExpandableVariants = variants.length > 4;
+                const isExpanded = expandedVariantItemIds.has(item.id);
+                const baseVariants = hasExpandableVariants ? variants.slice(0, 4) : variants;
+                const hiddenVariants = hasExpandableVariants ? variants.slice(4) : [];
+
+                return (
+                  <article
+                    key={item.id}
+                    data-fade-up
+                    data-menu-item
+                    data-item-image={item.image}
+                    className="border-b border-[#f2dfd2]/10 px-4 py-7 transition-colors duration-300 sm:px-8"
+                  >
+                    <div className="grid items-start gap-5 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.42fr)] md:gap-8">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <h3 className="font-display-face text-[clamp(22px,2.5vw,34px)] leading-none text-[#f3e8de]">
+                            {item.name}
+                          </h3>
+                          {item.tag ? (
+                            <span className="rounded-full bg-[#f63143]/15 px-2.5 py-1 text-xs uppercase tracking-[0.08em] text-[#f63143]">
+                              {tagLabels[item.tag]}
+                            </span>
+                          ) : null}
+                        </div>
+                        {item.description ? (
+                          <p className="mt-1 max-w-[55ch] font-mono text-sm text-[#f2dfd2]/60">
+                            {item.description}
+                          </p>
                         ) : null}
                       </div>
-                      {item.description ? (
-                        <p className="mt-1 max-w-[55ch] font-mono text-sm text-[#f2dfd2]/60">
-                          {item.description}
-                        </p>
-                      ) : null}
-                    </div>
 
-                    <div data-menu-price className="w-full md:justify-self-end md:text-right">
-                      {item.variants?.length ? (
-                        <div className="space-y-2 rounded-xs border border-[#f2dfd2]/12 bg-[#23000d]/30 p-3.5">
-                          {item.variants.map((variant) => (
-                            <div key={`${item.id}-${variant.label}`} className="flex items-center gap-3">
-                              <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#f2dfd2]/68">
-                                {variant.label}
-                              </span>
-                              <span className="h-px flex-1 bg-[#f2dfd2]/15" />
-                              <span className="font-display-face text-xl leading-none text-[#f3e8de]">
-                                {variant.price}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="font-display-face text-[clamp(28px,2.2vw,34px)] leading-none text-[#f3e8de]">
-                          {item.basePrice}
-                        </p>
-                      )}
+                      <div data-menu-price className="w-full md:justify-self-end md:text-right">
+                        {variants.length ? (
+                          <div className="space-y-2 rounded-xs border border-[#f2dfd2]/12 bg-[#23000d]/30 p-3.5">
+                            {baseVariants.map((variant) => (
+                              <div key={`${item.id}-${variant.label}`} className="flex items-center gap-3">
+                                <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#f2dfd2]/68">
+                                  {variant.label}
+                                </span>
+                                <span className="h-px flex-1 bg-[#f2dfd2]/15" />
+                                <span className="font-display-face text-xl leading-none text-[#f3e8de]">
+                                  {variant.price}
+                                </span>
+                              </div>
+                            ))}
+
+                            {hasExpandableVariants ? (
+                              <div
+                                className={`grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out ${
+                                  isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                                }`}
+                              >
+                                <div className="min-h-0 space-y-2 pt-2">
+                                  {hiddenVariants.map((variant) => (
+                                    <div key={`${item.id}-${variant.label}`} className="flex items-center gap-3">
+                                      <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#f2dfd2]/68">
+                                        {variant.label}
+                                      </span>
+                                      <span className="h-px flex-1 bg-[#f2dfd2]/15" />
+                                      <span className="font-display-face text-xl leading-none text-[#f3e8de]">
+                                        {variant.price}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : null}
+
+                            {hasExpandableVariants && !isExpanded ? (
+                              <button
+                                type="button"
+                                onClick={() => expandVariantList(item.id)}
+                                className="mt-2 font-mono text-sm text-[#f2dfd2]/50"
+                                aria-label={`Show all ${variants.length} options for ${item.name}`}
+                              >
+                                Show {hiddenVariants.length} more &rarr;
+                              </button>
+                            ) : null}
+                          </div>
+                        ) : (
+                          <p className="font-display-face text-[clamp(28px,2.2vw,34px)] leading-none text-[#f3e8de]">
+                            {item.basePrice}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </section>
         ))}

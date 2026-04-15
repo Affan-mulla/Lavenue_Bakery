@@ -8,9 +8,7 @@ export default function PageTransition() {
   const pathname = usePathname();
   const overlayRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
-  const isInitialRenderRef = useRef(true);
-  const hasPendingNavigationRef = useRef(false);
-  const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const hasMountedRef = useRef(false);
 
   const revealPageContent = () => {
     const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-page-content]"));
@@ -39,56 +37,6 @@ export default function PageTransition() {
     );
   };
 
-  const startProgress = () => {
-    if (!progressRef.current || hasPendingNavigationRef.current) {
-      return;
-    }
-
-    hasPendingNavigationRef.current = true;
-
-    gsap.killTweensOf(progressRef.current);
-    gsap.set(progressRef.current, {
-      autoAlpha: 1,
-      scaleX: 0,
-      transformOrigin: "left center",
-    });
-    gsap.to(progressRef.current, {
-      scaleX: 0.7,
-      duration: 0.32,
-      ease: "power2.out",
-      overwrite: "auto",
-    });
-  };
-
-  const completeProgress = () => {
-    if (!progressRef.current) {
-      hasPendingNavigationRef.current = false;
-      return;
-    }
-
-    gsap.killTweensOf(progressRef.current);
-    gsap.to(progressRef.current, {
-      scaleX: 1,
-      duration: 0.24,
-      ease: "power2.out",
-      overwrite: "auto",
-      onComplete: () => {
-        gsap.to(progressRef.current, {
-          autoAlpha: 0,
-          duration: 0.18,
-          ease: "power2.out",
-          overwrite: "auto",
-          onComplete: () => {
-            if (progressRef.current) {
-              gsap.set(progressRef.current, { scaleX: 0 });
-            }
-            hasPendingNavigationRef.current = false;
-          },
-        });
-      },
-    });
-  };
-
   useEffect(() => {
     const overlay = overlayRef.current;
     const progress = progressRef.current;
@@ -111,100 +59,61 @@ export default function PageTransition() {
       });
     }
 
-    const onDocumentClick = (event: MouseEvent) => {
-      if (event.defaultPrevented || event.button !== 0) {
-        return;
-      }
-
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
-        return;
-      }
-
-      const target = event.target;
-      if (!(target instanceof Element)) {
-        return;
-      }
-
-      const anchor = target.closest("a[href]");
-      if (!(anchor instanceof HTMLAnchorElement)) {
-        return;
-      }
-
-      if (anchor.target && anchor.target !== "_self") {
-        return;
-      }
-
-      const href = anchor.getAttribute("href");
-      if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:")) {
-        return;
-      }
-
-      const destination = new URL(anchor.href, window.location.href);
-      if (destination.origin !== window.location.origin) {
-        return;
-      }
-
-      if (destination.pathname === window.location.pathname && destination.search === window.location.search) {
-        return;
-      }
-
-      startProgress();
-    };
-
-    const originalPushState = window.history.pushState;
-    const originalReplaceState = window.history.replaceState;
-
-    window.history.pushState = function pushState(...args) {
-      startProgress();
-      return originalPushState.apply(this, args);
-    };
-
-    window.history.replaceState = function replaceState(...args) {
-      startProgress();
-      return originalReplaceState.apply(this, args);
-    };
-
-    const onPopState = () => {
-      startProgress();
-    };
-
-    window.addEventListener("click", onDocumentClick, true);
-    window.addEventListener("popstate", onPopState);
-
     return () => {
-      window.removeEventListener("click", onDocumentClick, true);
-      window.removeEventListener("popstate", onPopState);
-      window.history.pushState = originalPushState;
-      window.history.replaceState = originalReplaceState;
-      timelineRef.current?.kill();
       gsap.killTweensOf([overlay, progress]);
     };
   }, []);
 
   useEffect(() => {
-    if (!overlayRef.current) {
+    const overlay = overlayRef.current;
+    const progress = progressRef.current;
+
+    if (!overlay || !progress) {
       return;
     }
 
-    if (isInitialRenderRef.current) {
-      isInitialRenderRef.current = false;
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
       revealPageContent();
       return;
     }
 
-    timelineRef.current?.kill();
+    gsap.killTweensOf(progress);
 
-    timelineRef.current = gsap
+    gsap.set(progress, {
+      autoAlpha: 1,
+      scaleX: 0,
+      transformOrigin: "left center",
+    });
+
+    gsap.to(progress, {
+      scaleX: 1,
+      duration: 0.7,
+      ease: "power2.out",
+      overwrite: "auto",
+      onComplete: () => {
+        gsap.to(progress, {
+          autoAlpha: 0,
+          duration: 0.18,
+          ease: "power2.out",
+          overwrite: "auto",
+          onComplete: () => {
+            gsap.set(progress, { scaleX: 0 });
+          },
+        });
+      },
+    });
+
+    const timeline = gsap
       .timeline({
         defaults: { overwrite: "auto" },
         onComplete: () => {
-          completeProgress();
           revealPageContent();
         },
       })
-      .set(overlayRef.current, { autoAlpha: 1 })
+      .set(overlay, { autoAlpha: 1 })
       .fromTo(
-        overlayRef.current,
+        overlay,
         { scaleY: 0, transformOrigin: "bottom center" },
         {
           scaleY: 1,
@@ -212,13 +121,18 @@ export default function PageTransition() {
           ease: "power3.in",
         }
       )
-      .to(overlayRef.current, {
+      .to(overlay, {
         scaleY: 0,
         transformOrigin: "top center",
         duration: 0.4,
         delay: 0.1,
         ease: "power3.out",
       });
+
+    return () => {
+      timeline.kill();
+      gsap.killTweensOf(progress);
+    };
   }, [pathname]);
 
   return (

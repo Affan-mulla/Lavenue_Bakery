@@ -54,12 +54,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (hover: hover) {
-  body {
-    cursor: none;
-  }
-}
-
 a {
   color: inherit;
   text-decoration: none;
@@ -108,10 +102,26 @@ a {
 
 .mask-card {
   clip-path: inset(50% 0 50% 0 round 4px);
+  will-change: clip-path;
+}
+
+[data-cursor] {
+  will-change: transform;
+}
+
+@keyframes mobileNavLinkIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .no-js .mask-card {
-  clip-path: inset(0%);
+  clip-path: inset(0%) !important;
 }
 
 [data-review-initial] {

@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Gallery | L'Avenue Boulangerie",
-  description: "A visual journal of our craft - breads, pastries, and the art of the bakery.",
+  description:
+    "A visual journal of L'Avenue Boulangerie. Artisan breads, pastries, and the craft behind every bake. Toronto's premier artisan bakery.",
+  robots: {
+    index: true,
+    follow: true,
+  },
   alternates: {
     canonical: "/gallery",
   },

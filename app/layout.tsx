@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Cormorant_Garamond, Great_Vibes, Quintessential } from "next/font/google";
+import PreconnectHints from "./components/PreconnectHints";
 import JsonLd from "./components/JsonLd";
 import MagneticCursor from "./components/MagneticCursor";
 import PageTransition from "./components/layout/PageTransition";
@@ -9,7 +10,7 @@ const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
-  display: "swap",
+  display: "block",
 });
 
 const quintessential = Quintessential({
@@ -84,10 +85,10 @@ export const metadata: Metadata = {
     locale: "en_CA",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1200&auto=format&fit=crop",
+        url: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1200&h=630&auto=format&fit=crop",
         width: 1200,
         height: 630,
-        alt: "L'Avenue Boulangerie artisan bread and pastry display",
+        alt: "L'Avenue Boulangerie fresh croissant and pastry display",
       },
     ],
   },
@@ -96,8 +97,15 @@ export const metadata: Metadata = {
     title: "L'Avenue Boulangerie | Artisan Bakery Toronto",
     description:
       "L'Avenue Boulangerie on Avenue Road, Toronto. Handcrafted breads, pastries, and seasonal menus in the heart of the city.",
-    images: ["https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1200&auto=format&fit=crop"],
+    images: ["https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1200&h=630&auto=format&fit=crop"],
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#160007",
 };
 
 export default function RootLayout({
@@ -110,6 +118,9 @@ export default function RootLayout({
       lang="en"
       className={`${cormorant.variable} ${quintessential.variable} ${greatVibes.variable} ${bricolageGrotesque.variable} h-full antialiased`}
     >
+      <head>
+        <PreconnectHints />
+      </head>
       <body className="no-js min-h-full flex flex-col">
         <JsonLd />
         <MagneticCursor />

@@ -165,7 +165,7 @@ function SiteHeader({ variant, headerRef }: SiteHeaderProps) {
 
         <Link
           data-adaptive-ink
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-display-face text-2xl leading-none"
+          className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 font-display-face text-2xl leading-none md:block"
           href="/"
           onClick={handleWordmarkClick}
         >
@@ -242,18 +242,6 @@ function SiteHeader({ variant, headerRef }: SiteHeaderProps) {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes mobileNavLinkIn {
-          from {
-            opacity: 0;
-            transform: translateY(8px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
     </header>
   );
 }

@@ -1,5 +1,10 @@
 import Link from "next/link";
 
+export const metadata = {
+  title: "Page Not Found | L'Avenue Boulangerie",
+  robots: { index: false, follow: false },
+};
+
 export default function NotFound() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-(--wine-950) px-6 text-center text-(--ink-soft)">

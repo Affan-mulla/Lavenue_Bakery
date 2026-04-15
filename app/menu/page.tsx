@@ -248,7 +248,11 @@ export default function MenuPage() {
     <div ref={pageRef} className="wine-surface min-h-screen text-[#f3e8de]">
       <SiteHeader variant="inner" />
       <MenuImageCursor />
-      <MenuPageContent activeCategory={activeCategory} onCategorySelect={setActiveCategory} />
+      <MenuPageContent
+        activeCategory={activeCategory}
+        onCategorySelect={setActiveCategory}
+        heroSubtitle="Monday — Saturday, 7:00 AM to 6:00 PM"
+      />
     </div>
   );
 }

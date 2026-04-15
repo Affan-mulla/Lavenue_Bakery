@@ -25,17 +25,17 @@ export const heroImages = [
 export const featureItems: FeatureItem[] = [
   {
     title: "Breads",
-    copy: "We combine street-food instinct with premium ingredients and craft-driven cooking discipline.",
+    copy: "Naturally leavened loaves baked fresh each morning with premium ingredients and artisan technique.",
     shape: "circle",
   },
   {
     title: "Pastries",
-    copy: "15 craft beers from around the world in constant rotation with pairings for every plate.",
+    copy: "Laminated viennoiserie and seasonal pastries are prepared daily for delicate layers and balanced flavor.",
     shape: "diamond",
   },
   {
     title: "Meals",
-    copy: "From signature cocktails to spirit-free options, the bar list is designed for all tastes.",
+    copy: "Savory bakes, sandwiches, and light plates are crafted for a warm neighborhood bakery experience.",
     shape: "star",
   },
 ];
@@ -43,27 +43,27 @@ export const featureItems: FeatureItem[] = [
 export const reviewItems: ReviewItem[] = [
   {
     quote:
-      "Great food, location and service. Fried dishes were crisp and light, absolutely recommended.",
-    author: "Giulia M.",
-    city: "Treviso",
+      "Lovely cafe. Their staff are friendly. The raspberry pistachio croissant is great.",
+    author: "Diana Lam",
+    city: "Midtown Toronto",
   },
   {
     quote:
-      "The pairing idea is brilliant: artisan bakes and rotating craft beers in one warm atmosphere.",
-    author: "Lorenzo R.",
-    city: "Padova",
+      "Charming little cafe serving incredibly delicious and fresh sandwiches and pastries. The staff is amazing as well. We look forward to going back.",
+    author: "Ellie P.",
+    city: "Forest Hill",
   },
   {
     quote:
-      "Impeccable hospitality and memorable flavors. You feel the kitchen precision in every plate.",
-    author: "Chiara B.",
-    city: "Venezia",
+      "Delicate, unique, and tasty pastries and fine coffee! The owner has put their heart into keeping the quality of their food and service high. ",
+    author: "Tikta",
+    city: "Lawrence Park",
   },
   {
     quote:
-      "A place with identity. Refined but never cold, with real personality from service to dessert.",
-    author: "Marco T.",
-    city: "Montebelluna",
+      "The best place for pistachio croissants in the city. Great lattes too. Owner is super friendly and loves to chat. Great spot in midtown, don't miss it.",
+    author: "Michael Law",
+    city: "Rosedale",
   },
 ];
 
