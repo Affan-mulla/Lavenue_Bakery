@@ -34,7 +34,13 @@ const bricolageGrotesque = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
+  applicationName: "L'Avenue Boulangerie",
   metadataBase: new URL("https://lavenuebakery.com"),
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   alternates: {
     canonical: "/",
   },
@@ -56,6 +62,18 @@ export const metadata: Metadata = {
     { name: "L'Avenue Bakery Team" },
   ],
   creator: "L'Avenue Boulangerie",
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
     title: "L'Avenue Boulangerie | Artisan Bakery Toronto",
     description:
@@ -64,12 +82,21 @@ export const metadata: Metadata = {
     url: "https://lavenuebakery.com",
     siteName: "L'Avenue Boulangerie",
     locale: "en_CA",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1200&auto=format&fit=crop",
+        width: 1200,
+        height: 630,
+        alt: "L'Avenue Boulangerie artisan bread and pastry display",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "L'Avenue Boulangerie | Artisan Bakery Toronto",
     description:
       "L'Avenue Boulangerie on Avenue Road, Toronto. Handcrafted breads, pastries, and seasonal menus in the heart of the city.",
+    images: ["https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=1200&auto=format&fit=crop"],
   },
 };
 

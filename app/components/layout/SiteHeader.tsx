@@ -25,13 +25,22 @@ function SiteHeader({ variant, headerRef }: SiteHeaderProps) {
   };
 
   useEffect(() => {
-    closeMenu();
+    const rafId = window.requestAnimationFrame(() => {
+      setIsMenuOpen(false);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+    };
   }, [pathname]);
 
   useEffect(() => {
     lastScrollYRef.current = window.scrollY;
-    setIsHeaderVisible(true);
     headerVisibleRef.current = true;
+
+    const resetHeaderVisibilityRafId = window.requestAnimationFrame(() => {
+      setIsHeaderVisible(true);
+    });
 
     const onScroll = () => {
       if (isMenuOpen) {
@@ -69,6 +78,7 @@ function SiteHeader({ variant, headerRef }: SiteHeaderProps) {
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
+      window.cancelAnimationFrame(resetHeaderVisibilityRafId);
       window.removeEventListener("scroll", onScroll);
     };
   }, [isMenuOpen]);

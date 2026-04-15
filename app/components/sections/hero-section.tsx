@@ -53,7 +53,7 @@ function HeroSection() {
               </figure>
 
               <p className="mx-auto max-w-sm font-script text-md  font-light tracking-wider md:max-w-xl  md:mx-0" data-fade-up>
-               The quality of the ingredients, along with the wide selection of beers, makes the Nidaba a one-of-a-kind place. We want to give you always different emotions with each visit. It's not just a place, it's not just a beer house, it's not just a pub. It's all this and much more. A refuge away from the disturbances of the city, a place where everyone can find their own well-being.
+               The quality of the ingredients, along with the wide selection of beers, makes the Nidaba a one-of-a-kind place. We want to give you always different emotions with each visit. It&apos;s not just a place, it&apos;s not just a beer house, it&apos;s not just a pub. It&apos;s all this and much more. A refuge away from the disturbances of the city, a place where everyone can find their own well-being.
               </p>
             </div>
 

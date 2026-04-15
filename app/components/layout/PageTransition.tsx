@@ -90,18 +90,21 @@ export default function PageTransition() {
   };
 
   useEffect(() => {
-    if (!overlayRef.current) {
+    const overlay = overlayRef.current;
+    const progress = progressRef.current;
+
+    if (!overlay) {
       return;
     }
 
-    gsap.set(overlayRef.current, {
+    gsap.set(overlay, {
       scaleY: 0,
       transformOrigin: "top center",
       autoAlpha: 1,
     });
 
-    if (progressRef.current) {
-      gsap.set(progressRef.current, {
+    if (progress) {
+      gsap.set(progress, {
         autoAlpha: 0,
         scaleX: 0,
         transformOrigin: "left center",
@@ -174,7 +177,7 @@ export default function PageTransition() {
       window.history.pushState = originalPushState;
       window.history.replaceState = originalReplaceState;
       timelineRef.current?.kill();
-      gsap.killTweensOf([overlayRef.current, progressRef.current]);
+      gsap.killTweensOf([overlay, progress]);
     };
   }, []);
 

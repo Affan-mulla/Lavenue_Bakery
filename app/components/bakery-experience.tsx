@@ -30,9 +30,17 @@ export default function BakeryExperience() {
   useEffect(() => {
     const hasVisited = window.sessionStorage.getItem("lavenue-visited") === "1";
 
-    if (hasVisited) {
-      setIsLoading(false);
+    if (!hasVisited) {
+      return;
     }
+
+    const rafId = window.requestAnimationFrame(() => {
+      setIsLoading(false);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {
@@ -76,10 +84,15 @@ export default function BakeryExperience() {
         smoothWheel: true,
         wheelMultiplier: 0.9,
         touchMultiplier: 1.2,
+        overscroll: false,
       });
 
       const onLenisScroll = () => ScrollTrigger.update();
       lenis.on("scroll", onLenisScroll);
+
+      const refreshTimeoutId = window.setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 100);
 
       const onRaf = (time: number) => {
         lenis?.raf(time);
@@ -89,6 +102,7 @@ export default function BakeryExperience() {
       rafId = window.requestAnimationFrame(onRaf);
 
       cleanups.push(() => {
+        window.clearTimeout(refreshTimeoutId);
         window.cancelAnimationFrame(rafId);
         lenis?.destroy();
       });
@@ -653,13 +667,13 @@ export default function BakeryExperience() {
   }, []);
 
   return (
-    <div ref={rootRef} className="wine-surface relative min-h-screen overflow-x-clip text-[#f3e8de]">
+    <div ref={rootRef} className="wine-surface relative min-h-screen overflow-hidden text-[#f3e8de]">
       {isLoading ? <PageLoader onComplete={handleLoaderComplete} /> : null}
 
       {/* Pass shell ref so compact-header class toggling actually applies to DOM. */}
       <SiteHeader variant="home" headerRef={headerShellRef} />
 
-      <main ref={mainRef}>
+      <main ref={mainRef} className="pb-0">
           <div
         data-bg-parallax
         className="pointer-events-none fixed -z-10 inset-0 flex  overflow-hidden -translate-3 scale-[1.2] "

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { menuCategories, menuItems } from "../menu-data";
+import menuData from "../menu-data";
 
 const tagLabels = {
   seasonal: "Seasonal",
@@ -17,12 +17,7 @@ type MenuPageContentProps = {
 
 export default function MenuPageContent({ activeCategory, onCategorySelect }: MenuPageContentProps) {
 
-  const groupedItems = useMemo(() => {
-    return menuCategories.map((category) => ({
-      category,
-      items: menuItems.filter((item) => item.category === category.id),
-    }));
-  }, []);
+  const groupedItems = useMemo(() => menuData, []);
 
   const displayDate = new Intl.DateTimeFormat("en-CA", {
     weekday: "long",
@@ -57,7 +52,7 @@ export default function MenuPageContent({ activeCategory, onCategorySelect }: Me
         style={{ top: "var(--category-sticky-top, 0px)" }}
       >
         <nav className="mx-auto flex max-w-7xl items-center gap-3 overflow-x-auto px-4 py-3 sm:px-8" aria-label="Menu categories">
-          {menuCategories.map((category) => {
+          {groupedItems.map((category) => {
             const isActive = activeCategory === category.id;
             return (
               <button
@@ -83,29 +78,37 @@ export default function MenuPageContent({ activeCategory, onCategorySelect }: Me
       </div>
 
       <div className="mx-auto flex w-full max-w-7xl flex-col px-0 pb-24 sm:px-0">
-        {groupedItems.map(({ category, items }) => (
+        {groupedItems.map((category) => (
           <section id={`menu-${category.id}`} key={category.id} data-menu-category className="w-full px-4 py-18 sm:px-8">
             <header>
-              <div className="overflow-hidden">
-                <h2 data-menu-title className="font-display-face text-[clamp(52px,8vw,96px)] leading-[0.9] text-[#f3e8de]">
-                  {category.title}
-                </h2>
+              <div className="flex items-end justify-between gap-4">
+                <div className="overflow-hidden">
+                  <h2 data-menu-title className="font-display-face text-[clamp(52px,8vw,96px)] leading-[0.9] text-[#f3e8de]">
+                    {category.title}
+                  </h2>
+                </div>
+                <p className="mb-3 hidden font-mono text-xs uppercase tracking-[0.18em] text-[#f2dfd2]/40 sm:block">
+                  {category.items.length} selections
+                </p>
               </div>
-              <p className="mt-4 font-mono text-sm uppercase tracking-[0.2em] text-[#f2dfd2]/50">
-                {category.subtitle}
-              </p>
+              {category.subtitle ? (
+                <p className="mt-4 font-mono text-sm uppercase tracking-[0.2em] text-[#f2dfd2]/50">
+                  {category.subtitle}
+                </p>
+              ) : null}
               <div className="mt-7 border-t border-[#f2dfd2]/15" />
             </header>
 
             <div className="mt-3">
-              {items.map((item) => (
+              {category.items.map((item) => (
                 <article
                   key={item.id}
                   data-fade-up
                   data-menu-item
-                  className="border-b border-[#f2dfd2]/10 px-4 py-6 sm:px-8"
+                  data-item-image={item.image}
+                  className="border-b border-[#f2dfd2]/10 px-4 py-7 transition-colors duration-300 sm:px-8"
                 >
-                  <div className="flex items-start gap-4">
+                  <div className="grid items-start gap-5 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.42fr)] md:gap-8">
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-3">
                         <h3 className="font-display-face text-[clamp(22px,2.5vw,34px)] leading-none text-[#f3e8de]">
@@ -117,11 +120,34 @@ export default function MenuPageContent({ activeCategory, onCategorySelect }: Me
                           </span>
                         ) : null}
                       </div>
-                      <p className="mt-1 max-w-[55ch] font-mono text-sm text-[#f2dfd2]/60">
-                        {item.description}
-                      </p>
+                      {item.description ? (
+                        <p className="mt-1 max-w-[55ch] font-mono text-sm text-[#f2dfd2]/60">
+                          {item.description}
+                        </p>
+                      ) : null}
                     </div>
-                    <p data-menu-price className="ml-auto shrink-0 font-display-face text-xl text-[#f3e8de]">{item.price}</p>
+
+                    <div data-menu-price className="w-full md:justify-self-end md:text-right">
+                      {item.variants?.length ? (
+                        <div className="space-y-2 rounded-xs border border-[#f2dfd2]/12 bg-[#23000d]/30 p-3.5">
+                          {item.variants.map((variant) => (
+                            <div key={`${item.id}-${variant.label}`} className="flex items-center gap-3">
+                              <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#f2dfd2]/68">
+                                {variant.label}
+                              </span>
+                              <span className="h-px flex-1 bg-[#f2dfd2]/15" />
+                              <span className="font-display-face text-xl leading-none text-[#f3e8de]">
+                                {variant.price}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="font-display-face text-[clamp(28px,2.2vw,34px)] leading-none text-[#f3e8de]">
+                          {item.basePrice}
+                        </p>
+                      )}
+                    </div>
                   </div>
                 </article>
               ))}

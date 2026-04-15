@@ -3,14 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import MagneticCursor from "../components/MagneticCursor";
 import SiteHeader from "../components/layout/SiteHeader";
 import MenuPageContent from "../components/menu/MenuPageContent";
-import { menuCategories } from "../components/menu-data";
+import MenuImageCursor from "../components/menu/MenuImageCursor";
+import menuData from "../components/menu-data";
 
 export default function MenuPage() {
   const pageRef = useRef<HTMLDivElement>(null);
-  const [activeCategory, setActiveCategory] = useState(menuCategories[0]?.id ?? "breads");
+  const [activeCategory, setActiveCategory] = useState(menuData[0]?.id ?? "breads");
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -30,7 +30,9 @@ export default function MenuPage() {
       if (prefersReducedMotion) {
         gsap.set(pageRef.current, { autoAlpha: 1 });
         gsap.set(textLines, { yPercent: 0, autoAlpha: 1 });
-        gsap.set(heroLine, { scaleX: 1, transformOrigin: "left center" });
+        if (heroLine) {
+          gsap.set(heroLine, { scaleX: 1, transformOrigin: "left center" });
+        }
         gsap.set("[data-menu-title]", { yPercent: 0, autoAlpha: 1 });
         gsap.set("[data-menu-item]", { autoAlpha: 1, y: 0, backgroundColor: "rgba(255,255,255,0)" });
         gsap.set("[data-menu-price]", { clipPath: "inset(0% 0% 0% 0%)", x: 0 });
@@ -187,7 +189,7 @@ export default function MenuPage() {
       });
     }, pageRef);
 
-    const targets = menuCategories
+    const targets = menuData
       .map((category) => document.getElementById(`menu-${category.id}`))
       .filter((element): element is HTMLElement => element !== null);
 
@@ -244,8 +246,8 @@ export default function MenuPage() {
 
   return (
     <div ref={pageRef} className="wine-surface min-h-screen text-[#f3e8de]">
-      <MagneticCursor />
       <SiteHeader variant="inner" />
+      <MenuImageCursor />
       <MenuPageContent activeCategory={activeCategory} onCategorySelect={setActiveCategory} />
     </div>
   );

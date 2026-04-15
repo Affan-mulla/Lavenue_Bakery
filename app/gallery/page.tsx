@@ -1,10 +1,9 @@
-    "use client";
+"use client";
 
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useMemo, useRef, useState } from "react";
-import MagneticCursor from "../components/MagneticCursor";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { galleryCategories, galleryImages, type GalleryImage } from "../components/gallery-data";
 import SiteHeader from "../components/layout/SiteHeader";
 
@@ -75,7 +74,13 @@ export default function GalleryPage() {
 
     const isStillVisible = filteredImages.some((image) => image.id === lightboxImage.id);
     if (!isStillVisible) {
-      setLightboxImage(null);
+      const rafId = window.requestAnimationFrame(() => {
+        setLightboxImage(null);
+      });
+
+      return () => {
+        window.cancelAnimationFrame(rafId);
+      };
     }
   }, [visibleCategory, filteredImages, lightboxImage]);
 
@@ -267,7 +272,7 @@ export default function GalleryPage() {
     };
   }, [filteredImages]);
 
-  const closeLightbox = () => {
+  const closeLightbox = useCallback(() => {
     if (!lightboxImage) {
       return;
     }
@@ -286,9 +291,9 @@ export default function GalleryPage() {
         setLightboxImage(null);
       },
     });
-  };
+  }, [lightboxImage]);
 
-  const changeLightboxImage = (direction: "next" | "prev") => {
+  const changeLightboxImage = useCallback((direction: "next" | "prev") => {
     if (!filteredImages.length || lightboxIndex < 0) {
       return;
     }
@@ -316,7 +321,7 @@ export default function GalleryPage() {
         setLightboxImage(nextImage);
       },
     });
-  };
+  }, [filteredImages, lightboxIndex]);
 
   useEffect(() => {
     if (!lightboxImage) {
@@ -343,7 +348,7 @@ export default function GalleryPage() {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [lightboxImage, lightboxIndex, filteredImages]);
+  }, [lightboxImage, closeLightbox, changeLightboxImage]);
 
   useEffect(() => {
     if (!lightboxImage || !lightboxOverlayRef.current || !lightboxMediaRef.current) {
@@ -418,7 +423,6 @@ export default function GalleryPage() {
 
   return (
     <div ref={pageRef} className="wine-surface min-h-screen text-[#f3e8de]">
-      <MagneticCursor />
       <SiteHeader variant="inner" />
 
       <main

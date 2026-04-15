@@ -3,7 +3,7 @@ import { reservationRows } from "../landing-data";
 
 function VisitSection() {
   return (
-    <section id="visit" className="wine-surface relative overflow-hidden pb-10 pt-12 sm:pb-6 sm:pt-10">
+    <section id="visit" className="wine-surface relative overflow-hidden pb-10 pt-12 sm:pt-10">
 
       <div className="relative z-10 w-full text-[#f0ddd0]">
         <p aria-hidden="true" className="mx-auto h-6 w-6 text-center text-4xl leading-none text-[#f53345]" data-spin>
@@ -51,7 +51,7 @@ function VisitSection() {
 
         <div className="flex flex-col items-center gap-2 border-b border-[#f0dac9]/18 px-4 py-5 font-mono text-center sm:flex-row sm:justify-between sm:px-8 sm:text-left">
           <p className="overflow-hidden text-center sm:text-left">
-            <span data-slide-up className="block">©2026 L'Avenue Boulangerie</span>
+            <span data-slide-up className="block">©2026 L&apos;Avenue Boulangerie</span>
           </p>
           <p className="overflow-hidden text-center sm:text-right">
             <span data-slide-up className="block">Privacy - Cookie</span>

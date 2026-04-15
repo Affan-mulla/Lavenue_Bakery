@@ -64,7 +64,7 @@ function CraftSection() {
           <p className="inline-flex items-center gap-3 font-display text-[1.2rem] tracking-tight">
             <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#7c6f72] text-sm leading-none">→</span>
             <span>
-              Join the L'Avenue community <span aria-hidden="true" className="text-[#f53345]">✦</span> Follow @lavenuebakery for daily bakes
+              Join the L&apos;Avenue community <span aria-hidden="true" className="text-[#f53345]">✦</span> Follow @lavenuebakery for daily bakes
             </span>
           </p>
         </div>

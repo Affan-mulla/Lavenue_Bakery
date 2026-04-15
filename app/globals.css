@@ -37,6 +37,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  overscroll-behavior: none;
 }
 
 html {
@@ -125,10 +126,10 @@ a {
 }
 
 .is-compact {
-  background: rgba(35, 0, 13, 0.42) !important;
+  /* background: rgba(35, 0, 13, 0.42) !important; */
   border-color: rgba(247, 228, 213, 0.32) !important;
   transform: translateY(-2px);
-  backdrop-filter: blur(4px);
+  /* backdrop-filter: blur(4px); */
 }
 
 ::selection {
