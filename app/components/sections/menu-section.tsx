@@ -41,7 +41,7 @@ function MenuSection() {
       className="wine-surface relative overflow-hidden pb-16 pt-12 sm:pt-18 "
     >
       <div className="w-full">
-        <div className="flex items-start justify-center gap-4 text-lg text-[#efe2d8]/88">
+        <div className="flex items-start justify-center gap-4 text-lg text-[#e0dbd3]/88">
           <div className="max-w-xs text-center" data-fade-up>
             <p aria-hidden="true" className="text-primary text-4xl leading-none" data-spin>
               ✦
@@ -56,7 +56,7 @@ function MenuSection() {
         </div>
 
         <div className="mt-10 overflow-hidden overflow-x-hidden py-2">
-          <p aria-hidden="true" className="pointer-events-none overflow-hidden font-display-face text-[clamp(68px,11vw,150px)]  text-[#f5e9df]">
+          <p aria-hidden="true" className="pointer-events-none overflow-hidden font-display-face text-[clamp(68px,11vw,150px)]  text-[#f3f0ea]">
             <span data-marquee-loop className="marquee-track block">
               Menu of the day • Menu of the day • Menu of the day • Menu of the day • Menu of the day •
             </span>
@@ -68,7 +68,7 @@ function MenuSection() {
             {featureItems.map((item, index) => (
               <article
                 key={item.title}
-                className="mask-card relative border-b border-[#ecd8ca]/30 px-4 pb-5 pt-4 last:border-b-0 sm:px-2 md:border-b-0"
+                className="mask-card relative border-b border-[#d0c9bf]/30 px-4 pb-5 pt-4 last:border-b-0 sm:px-2 md:border-b-0"
                 data-mask-card
                 data-menu-card
               >
@@ -76,25 +76,25 @@ function MenuSection() {
                   <MenuShape shape={item.shape} />
                 </div>
 
-                <div className="mt-3 overflow-hidden flex items-center justify-between border-y border-[#ecd8ca] py-2">
+                <div className="mt-3 overflow-hidden flex items-center justify-between border-y border-[#d0c9bf] py-2">
                   <p aria-hidden="true" className="text-4xl leading-none" data-spin>
                     ✦
                   </p>
                   <p
-                    className="font-display-face text-[clamp(30px,2.8vw,40px)] italic leading-none text-[#f7ede4] font-bold overflow-hidden whitespace-nowrap"
+                    className="font-display-face text-[clamp(30px,2.8vw,40px)] italic leading-none text-[#f3f0ea] font-bold overflow-hidden whitespace-nowrap"
                   data-menu-hover-text
                   >
                     {item.title}
                   </p>
                   <p
-                    className="font-display-face text-3xl text-[#f7ede4]/90"
+                    className="font-display-face text-3xl text-[#f3f0ea]/90"
                   >
                     ({String(index + 1).padStart(2, "0")})
                   </p>
                 </div>
 
                 <p
-                  className="mt-5 max-w-none text-lg leading-[1.15] text-[#e9d8ca]/92 font-mono sm:max-w-[35ch]"
+                  className="mt-5 max-w-none text-lg leading-[1.15] text-[#d1cbc2]/92 font-mono sm:max-w-[35ch]"
                   
                 >
                   {item.copy}
@@ -104,7 +104,7 @@ function MenuSection() {
                   href="/menu"
                   aria-label="Explore full menu"
                   data-magnetic
-                  className="mt-6 inline-flex items-center gap-2 text-2xl font-semibold text-[#f7ede4] hover:underline"
+                  className="mt-6 inline-flex items-center gap-2 text-2xl font-semibold text-[#f3f0ea] hover:underline"
                 >
                   <span >Discover</span>
                   <span
@@ -119,8 +119,8 @@ function MenuSection() {
           </div>
 
           <div className="mt-12 pt-3" data-fade-up>
-            <p className="flex flex-col items-center gap-1 text-sm uppercase tracking-[0.12em] text-[#eedfd4] sm:flex-row sm:gap-2">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#ecd8ca]">
+            <p className="flex flex-col items-center gap-1 text-sm uppercase tracking-[0.12em] text-[#d8d4cc] sm:flex-row sm:gap-2">
+              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#d0c9bf]">
                 {"->"}
               </span>
               Discover the menu

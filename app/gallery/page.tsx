@@ -433,7 +433,7 @@ export default function GalleryPage() {
   const displayCount = `${galleryImages.length} images`;
 
   return (
-    <div ref={pageRef} className="wine-surface min-h-screen text-[#f3e8de]">
+    <div ref={pageRef} className="wine-surface min-h-screen text-[#f3f0ea]">
       <SiteHeader variant="inner" />
 
       <main
@@ -444,22 +444,22 @@ export default function GalleryPage() {
         <section className="mx-auto flex min-h-[40vh] w-full max-w-7xl flex-col justify-center px-4 sm:px-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <h1 data-gallery-hero className="font-display-face leading-[0.88] text-[#f3e8de] text-[clamp(80px,14vw,160px)]">
+              <h1 data-gallery-hero className="font-display-face leading-[0.88] text-[#f3f0ea] text-[clamp(80px,14vw,160px)]">
                 <span data-text-line className="block">
                   Gallery
                 </span>
               </h1>
-              <p data-text-line className="font-display-face text-2xl italic text-[#f2dfd2]/50">A visual journal</p>
+              <p data-text-line className="font-display-face text-2xl italic text-[#d8d4cc]/50">A visual journal</p>
             </div>
 
-            <p data-gallery-count className="text-right font-mono text-sm uppercase tracking-widest text-[#f2dfd2]/40">
+            <p data-gallery-count className="text-right font-mono text-sm uppercase tracking-widest text-[#d8d4cc]/40">
               {displayCount}
             </p>
           </div>
         </section>
 
         <section
-          className="sticky top-0 z-30 border-y border-[#f2dfd2]/12 bg-(--wine-850)/88 backdrop-blur-md transition-[top] duration-300 ease-out"
+          className="sticky top-0 z-30 border-y border-[#d8d4cc]/12 bg-(--wine-850)/88 backdrop-blur-md transition-[top] duration-300 ease-out"
           style={{ top: "var(--category-sticky-top, 0px)" }}
         >
           <div className="mx-auto w-full max-w-7xl overflow-x-auto px-4 py-3 sm:px-8">
@@ -477,8 +477,8 @@ export default function GalleryPage() {
                       isFilterTransitioning ? "opacity-50" : "opacity-100"
                     } ${
                       isActive
-                        ? "text-[#f3e8de] after:scale-x-100 after:bg-[#f63143]"
-                        : "text-[#f2dfd2]/40 after:scale-x-0 after:bg-[#f63143]"
+                        ? "text-[#f3f0ea] after:scale-x-100 after:bg-[#8ea8ff]"
+                        : "text-[#d8d4cc]/40 after:scale-x-0 after:bg-[#8ea8ff]"
                     }`}
                   >
                     {category.label}
@@ -528,7 +528,7 @@ export default function GalleryPage() {
             </div>
           ) : (
             <div className="flex min-h-[30vh] items-center justify-center text-center">
-              <p className="font-mono text-[#f2dfd2]/40">No images in this category yet</p>
+              <p className="font-mono text-[#d8d4cc]/40">No images in this category yet</p>
             </div>
           )}
         </section>

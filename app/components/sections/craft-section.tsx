@@ -7,7 +7,7 @@ function CraftSection() {
   return (
     <section id="gallery" className="paper-surface px-4 py-12 sm:px-8 sm:py-22">
       <div className="mx-auto w-full max-w-7xl">
-        <p aria-hidden="true" className="mx-auto mb-12 h-6 w-6 text-center text-4xl leading-none text-[#f53345]" data-spin>
+        <p aria-hidden="true" className="mx-auto mb-12 h-6 w-6 text-center text-4xl leading-none text-[#8ea8ff]" data-spin>
           ✦
         </p>
 
@@ -52,19 +52,19 @@ function CraftSection() {
         </div>
 
         <div className="mt-6" data-fade-up>
-          <Link href="/gallery" data-magnetic className="inline-flex items-center gap-2 font-display-face text-xl text-[#413035]">
+          <Link href="/gallery" data-magnetic className="inline-flex items-center gap-2 font-display-face text-xl text-[#1a2738]">
             <span>View full gallery</span>
-            <span aria-hidden="true" className="text-[#f53345]">
+            <span aria-hidden="true" className="text-[#8ea8ff]">
               &rarr;
             </span>
           </Link>
         </div>
 
-        <div className="mt-8 flex justify-center text-sm text-[#49373a] lg:justify-end" data-fade-up>
+        <div className="mt-8 flex justify-center text-sm text-[#24364a] lg:justify-end" data-fade-up>
           <p className="inline-flex items-center gap-3 font-display text-[1.2rem] tracking-tight">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#7c6f72] text-sm leading-none">→</span>
+            <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#637386] text-sm leading-none">→</span>
             <span>
-              Join the L&apos;Avenue community <span aria-hidden="true" className="text-[#f53345]">✦</span> Follow @lavenuebakery for daily bakes
+              Join the L&apos;Avenue community <span aria-hidden="true" className="text-[#8ea8ff]">✦</span> Follow @lavenuebakery for daily bakes
             </span>
           </p>
         </div>

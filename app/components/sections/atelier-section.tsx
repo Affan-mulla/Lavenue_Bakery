@@ -193,14 +193,14 @@ function AtelierSection() {
                     }}
                     className="flex flex-col items-center"
                   >
-                    <p className=" text-[clamp(30px,4.8vw,52px)] leading-[1.06] text-[#413035] font-display-face">
+                    <p className=" text-[clamp(30px,4.8vw,52px)] leading-[1.06] text-[#1a2738] font-display-face">
                       <span className="block overflow-hidden">
                         <span data-review-line className="block">
                           &ldquo;{review.quote}&rdquo;
                         </span>
                       </span>
                     </p>
-                    <p className="mt-6 text-sm uppercase tracking-[0.16em] text-[#6f5259]" data-review-meta>
+                    <p className="mt-6 text-sm uppercase tracking-[0.16em] text-[#4e6178]" data-review-meta>
                       {review.author}
                     </p>
                   </div>
@@ -216,7 +216,7 @@ function AtelierSection() {
                 key={`${review.author}-dot`}
                 onClick={() => setActiveIndex(index)}
                 className={`h-2.5 rounded-full transition-all duration-300 ${
-                  activeIndex === index ? "w-8 bg-[#4f353d]" : "w-2.5 bg-[#b89ea4]"
+                  activeIndex === index ? "w-8 bg-[#32465e]" : "w-2.5 bg-[#7f90a5]"
                 }`}
                 aria-label={`Show review ${index + 1}`}
                 aria-pressed={activeIndex === index}

@@ -8,11 +8,11 @@ function HeroSection() {
       <div className="w-full">
         <h1
           aria-label="Where every morning begins, where flour, fire and craft make something alive."
-          className="mx-auto my-8 text-center font-display-face text-[clamp(48px,8vw,68px)] leading-20 text-[#f3e8de] sm:my-16"
+          className="mx-auto my-8 text-center font-display-face text-[clamp(48px,8vw,68px)] leading-20 text-[#f3f0ea] sm:my-16"
         >
           <span className="block overflow-hidden">
             <span data-text-line className="block">
-              Where every morning <span className="font-semibold italic  text-[#f3ddd2]">begins</span>,
+              Where every morning <span className="font-semibold italic  text-[#e4e0d8]">begins</span>,
             </span>
           </span>
           <span className="block overflow-hidden">

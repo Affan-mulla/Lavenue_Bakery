@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --wine-950: #160007;
-  --wine-850: #320014;
-  --wine-800: #3d0019;
+  --wine-950: #0a1220;
+  --wine-850: #12233b;
+  --wine-800: #1a2f4c;
   --category-sticky-top: 0px;
-  --paper-50: #ede6e1;
-  --paper-100: #e2d9d2;
-  --accent-rose: #f63143;
-  --ink-soft: #f2eae3;
-  --font-color: #ece2dc;
-  --line-soft: rgba(245, 231, 222, 0.18);
+  --paper-50: #e8e5df;
+  --paper-100: #d8d4cc;
+  --accent-rose: #8ea8ff;
+  --ink-soft: #f3f0ea;
+  --font-color: #e7e3dc;
+  --line-soft: rgba(232, 229, 223, 0.22);
   --background: var(--wine-950);
   --foreground: var(--ink-soft);
   --font-display: var(--font-cormorant);
@@ -60,7 +60,7 @@ a {
 }
 
 [data-adaptive-ink] {
-  color: #fff;
+  color: #f6f8ff;
   mix-blend-mode: difference;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
 }
@@ -92,7 +92,7 @@ a {
 
 .paper-surface {
   background-color: var(--paper-50);
-  color: #2c1a20;
+  color: #1a2738;
 }
 
 .marquee-track {
@@ -131,19 +131,19 @@ a {
 
 .hero-outline path,
 .hero-outline circle {
-  stroke: rgba(244, 226, 212, 0.5);
+  stroke: rgba(232, 229, 223, 0.5);
   fill: transparent;
 }
 
 .is-compact {
   /* background: rgba(35, 0, 13, 0.42) !important; */
-  border-color: rgba(247, 228, 213, 0.32) !important;
+  border-color: rgba(232, 229, 223, 0.34) !important;
   transform: translateY(-2px);
   /* backdrop-filter: blur(4px); */
 }
 
 ::selection {
-  background: rgba(246, 73, 89, 0.35);
+  background: rgba(142, 168, 255, 0.35);
   color: var(--paper-50);
 }
 

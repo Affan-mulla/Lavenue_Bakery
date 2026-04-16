@@ -43,11 +43,11 @@ export default function PageLoader({ onComplete }: PageLoaderProps) {
   return (
     <div ref={overlayRef} className="fixed inset-0 z-100 flex items-center justify-center bg-(--wine-950)">
       <div className="flex w-[min(82vw,28rem)] flex-col items-center gap-6">
-        <p ref={titleRef} className="font-display-face text-6xl leading-none text-[#f3e8de] sm:text-8xl">
+        <p ref={titleRef} className="font-display-face text-6xl leading-none text-[#f3f0ea] sm:text-8xl">
           L&apos;Avenue
         </p>
-        <div className="h-px w-full bg-[#f63143]/35">
-          <span ref={progressRef} className="block h-px w-0 bg-[#f63143]" />
+        <div className="h-px w-full bg-[#8ea8ff]/35">
+          <span ref={progressRef} className="block h-px w-0 bg-[#8ea8ff]" />
         </div>
       </div>
     </div>

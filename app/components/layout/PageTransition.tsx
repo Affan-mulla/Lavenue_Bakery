@@ -140,7 +140,7 @@ export default function PageTransition() {
       <div
         ref={progressRef}
         aria-hidden="true"
-        className="pointer-events-none fixed left-0 top-0 z-95 h-0.5 w-full origin-left bg-[#f63143]"
+        className="pointer-events-none fixed left-0 top-0 z-95 h-0.5 w-full origin-left bg-[#8ea8ff]"
       />
       <div
         ref={overlayRef}

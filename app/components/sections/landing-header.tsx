@@ -53,16 +53,16 @@ function LandingHeader({ headerRef }: LandingHeaderProps) {
         aria-expanded={isMenuOpen}
         aria-controls="mobile-nav-overlay"
         onClick={() => setIsMenuOpen((open) => !open)}
-        className="fixed right-5 top-5 z-50 inline-flex h-11 w-11 items-center justify-center text-[#f2dfd2] md:hidden"
+        className="fixed right-5 top-5 z-50 inline-flex h-11 w-11 items-center justify-center text-[#d8d4cc] md:hidden"
       >
         <span
-          className={`absolute h-0.5 w-7 bg-[#f2dfd2] transition-transform duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-2"}`}
+          className={`absolute h-0.5 w-7 bg-[#d8d4cc] transition-transform duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-2"}`}
         />
         <span
-          className={`absolute h-0.5 w-7 bg-[#f2dfd2] transition-opacity duration-300 ease-in-out ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
+          className={`absolute h-0.5 w-7 bg-[#d8d4cc] transition-opacity duration-300 ease-in-out ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
         />
         <span
-          className={`absolute h-0.5 w-7 bg-[#f2dfd2] transition-transform duration-300 ease-in-out ${isMenuOpen ? "-rotate-45" : "translate-y-2"}`}
+          className={`absolute h-0.5 w-7 bg-[#d8d4cc] transition-transform duration-300 ease-in-out ${isMenuOpen ? "-rotate-45" : "translate-y-2"}`}
         />
       </button>
 
@@ -72,7 +72,7 @@ function LandingHeader({ headerRef }: LandingHeaderProps) {
       >
         <div className="flex flex-col items-center gap-10 text-center">
           <a
-            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3e8de] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
+            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3f0ea] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
             href="#menu"
             onClick={closeMenu}
             style={{ animationDelay: isMenuOpen ? "60ms" : "0ms" }}
@@ -80,7 +80,7 @@ function LandingHeader({ headerRef }: LandingHeaderProps) {
             Menu
           </a>
           <a
-            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3e8de] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
+            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3f0ea] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
             href="#philosophy"
             onClick={closeMenu}
             style={{ animationDelay: isMenuOpen ? "140ms" : "0ms" }}
@@ -89,7 +89,7 @@ function LandingHeader({ headerRef }: LandingHeaderProps) {
           </a>
           <a
             data-magnetic
-            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3e8de] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
+            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3f0ea] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
             href="#visit"
             onClick={closeMenu}
             style={{ animationDelay: isMenuOpen ? "220ms" : "0ms" }}

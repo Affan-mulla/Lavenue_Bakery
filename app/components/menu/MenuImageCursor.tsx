@@ -8,9 +8,12 @@ export default function MenuImageCursor() {
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const imageLayerRef = useRef<HTMLDivElement>(null);
   const currentSrcRef = useRef<string | null>(null);
+  const requestedSrcRef = useRef<string | null>(null);
+  const lastLoadedSrcRef = useRef<string | null>(null);
   const lastClientYRef = useRef<number | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
+  const [hasImageError, setHasImageError] = useState(false);
   const [canHover, setCanHover] = useState(false);
 
   useEffect(() => {
@@ -26,6 +29,33 @@ export default function MenuImageCursor() {
       window.cancelAnimationFrame(rafId);
     };
   }, []);
+
+  useEffect(() => {
+    if (!canHover) {
+      return;
+    }
+
+    // Warm menu images in cache to reduce perceived lag and failed hover swaps.
+    const uniqueSources = Array.from(
+      new Set(
+        Array.from(document.querySelectorAll<HTMLElement>("[data-item-image]"))
+          .map((row) => row.dataset.itemImage)
+          .filter((src): src is string => Boolean(src))
+      )
+    );
+
+    const preloaders = uniqueSources.map((src) => {
+      const img = new window.Image();
+      img.src = src;
+      return img;
+    });
+
+    return () => {
+      preloaders.forEach((img) => {
+        img.src = "";
+      });
+    };
+  }, [canHover]);
 
   useEffect(() => {
     if (!canHover) {
@@ -49,18 +79,24 @@ export default function MenuImageCursor() {
     let activeRow: HTMLElement | null = null;
     let rafPending = false;
     let moveRafId: number | null = null;
+    const xTo = gsap.quickTo(imageContainer, "x", { duration: 0.28, ease: "power3.out" });
+    const yTo = gsap.quickTo(imageContainer, "y", { duration: 0.28, ease: "power3.out" });
 
     const setImageSource = (nextSrc: string, direction: "up" | "down") => {
       if (!imageLayer) {
+        requestedSrcRef.current = nextSrc;
         currentSrcRef.current = nextSrc;
         setIsImageLoading(true);
+        setHasImageError(false);
         setImageSrc(nextSrc);
         return;
       }
 
       if (currentSrcRef.current === null) {
+        requestedSrcRef.current = nextSrc;
         currentSrcRef.current = nextSrc;
         setIsImageLoading(true);
+        setHasImageError(false);
         setImageSrc(nextSrc);
         gsap.set(imageLayer, { autoAlpha: 1, y: 0, filter: "blur(0px)" });
         return;
@@ -81,8 +117,10 @@ export default function MenuImageCursor() {
         ease: "power2.in",
         overwrite: "auto",
         onComplete: () => {
+          requestedSrcRef.current = nextSrc;
           currentSrcRef.current = nextSrc;
           setIsImageLoading(true);
+          setHasImageError(false);
           setImageSrc(nextSrc);
 
           gsap.set(imageLayer, {
@@ -124,13 +162,8 @@ export default function MenuImageCursor() {
     };
 
     const moveToCursor = (clientX: number, clientY: number) => {
-      gsap.to(imageContainer, {
-        x: clientX + 24,
-        y: clientY - 80,
-        duration: 0.5,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
+      xTo(clientX + 24);
+      yTo(clientY - 80);
     };
 
     const getRowFromTarget = (target: EventTarget | null) => {
@@ -236,25 +269,51 @@ export default function MenuImageCursor() {
     <div
       ref={imageContainerRef}
       aria-hidden="true"
-      className="pointer-events-none fixed left-0 top-0 z-80 h-50 w-70 overflow-hidden rounded-xs border border-[#f2dfd2]/20"
+      className="pointer-events-none fixed left-0 top-0 z-80 h-50 w-70 overflow-hidden rounded-xs border border-[#d8d4cc]/20"
     >
       <div ref={imageLayerRef} className="absolute inset-0">
         <div
-          className={`absolute inset-0 bg-[#2a0010] transition-opacity duration-200 ${
-            isImageLoading ? "opacity-100" : "opacity-0"
+          className={`pointer-events-none absolute inset-0 z-10 bg-[#10213a] transition-opacity duration-200 ${
+            isImageLoading || hasImageError || !imageSrc ? "opacity-100" : "opacity-0"
           }`}
         />
         {imageSrc ? (
           <Image
+            key={imageSrc}
             src={imageSrc}
             alt=""
             fill
             sizes="280px"
-            className="object-cover"
+            className={`object-cover transition-opacity duration-200 ${hasImageError ? "opacity-0" : "opacity-100"}`}
             placeholder="blur"
             blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AJQAB/9k="
             onLoadingComplete={() => {
+              if (!imageSrc || requestedSrcRef.current !== imageSrc) {
+                return;
+              }
+
+              lastLoadedSrcRef.current = imageSrc;
               setIsImageLoading(false);
+              setHasImageError(false);
+            }}
+            onError={() => {
+              if (!imageSrc || requestedSrcRef.current !== imageSrc) {
+                return;
+              }
+
+              const fallbackSrc = lastLoadedSrcRef.current;
+
+              if (fallbackSrc && fallbackSrc !== imageSrc) {
+                requestedSrcRef.current = fallbackSrc;
+                currentSrcRef.current = fallbackSrc;
+                setHasImageError(false);
+                setIsImageLoading(false);
+                setImageSrc(fallbackSrc);
+                return;
+              }
+
+              setIsImageLoading(false);
+              setHasImageError(true);
             }}
           />
         ) : null}

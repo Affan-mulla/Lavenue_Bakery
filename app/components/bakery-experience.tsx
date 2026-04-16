@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
 import SiteHeader from "./layout/SiteHeader";
 import HeroSection from "./sections/hero-section";
 import AtelierSection from "./sections/atelier-section";
@@ -73,39 +72,6 @@ export default function BakeryExperience() {
 
     const cleanups: Array<() => void> = [];
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    let lenis: Lenis | null = null;
-    let rafId = 0;
-
-    if (!prefersReducedMotion) {
-      lenis = new Lenis({
-        duration: 1.1,
-        smoothWheel: true,
-        wheelMultiplier: 0.9,
-        touchMultiplier: 1.2,
-        overscroll: false,
-      });
-
-      const onLenisScroll = () => ScrollTrigger.update();
-      lenis.on("scroll", onLenisScroll);
-
-      const refreshTimeoutId = window.setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 100);
-
-      const onRaf = (time: number) => {
-        lenis?.raf(time);
-        rafId = window.requestAnimationFrame(onRaf);
-      };
-
-      rafId = window.requestAnimationFrame(onRaf);
-
-      cleanups.push(() => {
-        window.clearTimeout(refreshTimeoutId);
-        window.cancelAnimationFrame(rafId);
-        lenis?.destroy();
-      });
-    }
 
     const context = gsap.context(() => {
       const backgroundParallaxLayer = rootRef.current?.querySelector<HTMLElement>("[data-bg-parallax]");
@@ -578,7 +544,7 @@ export default function BakeryExperience() {
       menuCards.forEach((card) => {
         const textNodes = card.querySelectorAll<HTMLElement>("[data-menu-hover-text]");
         const baseColors = Array.from(textNodes, (node) => getComputedStyle(node).color);
-        const hoverColor = "#f63143";
+        const hoverColor = "#8ea8ff";
 
         const onPointerEnter = () => {
           gsap.killTweensOf(textNodes);
@@ -644,7 +610,7 @@ export default function BakeryExperience() {
   }, []);
 
   return (
-    <div ref={rootRef} className="wine-surface relative min-h-screen overflow-hidden text-[#f3e8de]">
+    <div ref={rootRef} className="wine-surface relative min-h-screen overflow-hidden text-[#f3f0ea]">
       {isLoading ? <PageLoader onComplete={handleLoaderComplete} /> : null}
 
       {/* Pass shell ref so compact-header class toggling actually applies to DOM. */}

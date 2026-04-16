@@ -87,18 +87,18 @@ export default function MagneticCursor() {
       }
 
       if (element.matches("[data-magnetic]")) {
-        return { scale: 2.8, ringBorderColor: "#f63143" };
+        return { scale: 2.8, ringBorderColor: "#8ea8ff" };
       }
 
       if (element.tagName === "BUTTON") {
-        return { scale: 2.5, ringBorderColor: "#f63143" };
+        return { scale: 2.5, ringBorderColor: "#8ea8ff" };
       }
 
       if (element.tagName === "A") {
-        return { scale: 2.2, ringBorderColor: "#f63143" };
+        return { scale: 2.2, ringBorderColor: "#8ea8ff" };
       }
 
-      return { scale: 2.3, ringBorderColor: "#f63143" };
+      return { scale: 2.3, ringBorderColor: "#8ea8ff" };
     };
 
     const interactiveHandlers = new Map<
@@ -125,7 +125,7 @@ export default function MagneticCursor() {
           overwrite: "auto",
         });
         gsap.to(dot, {
-          backgroundColor: "rgba(246,49,67,0)",
+          backgroundColor: "rgba(142,168,255,0)",
           duration: 0.25,
           ease: "power2.out",
           overwrite: "auto",
@@ -141,7 +141,7 @@ export default function MagneticCursor() {
           overwrite: "auto",
         });
         gsap.to(dot, {
-          backgroundColor: "#f63143",
+          backgroundColor: "#8ea8ff",
           duration: 0.25,
           ease: "power2.out",
           overwrite: "auto",
@@ -285,7 +285,7 @@ export default function MagneticCursor() {
       <div
         ref={dotRef}
         data-cursor
-        className="pointer-events-none fixed z-200 h-2 w-2 rounded-full bg-[#f63143]"
+        className="pointer-events-none fixed z-200 h-2 w-2 rounded-full bg-[#8ea8ff]"
         style={{ top: -20, left: -20 }}
       />
       <div

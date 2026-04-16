@@ -147,7 +147,7 @@ function SiteHeader({ variant, headerRef }: SiteHeaderProps) {
     >
       <nav
         ref={navRef}
-        className="relative mx-auto mt-4 flex w-full max-w-7xl items-center justify-between rounded-full border border-[#f2dfd2]/20 bg-(--wine-950)/62 px-5 py-4 backdrop-blur-md transition-all duration-300 sm:px-8"
+        className="relative mx-auto mt-4 flex w-full max-w-7xl items-center justify-between rounded-full border border-[#d8d4cc]/20 bg-(--wine-950)/62 px-5 py-4 backdrop-blur-md transition-all duration-300 sm:px-8"
       >
         <div data-adaptive-ink className="hidden items-center gap-6 md:flex md:gap-10">
           
@@ -193,16 +193,16 @@ function SiteHeader({ variant, headerRef }: SiteHeaderProps) {
         aria-expanded={isMenuOpen}
         aria-controls="mobile-nav-overlay"
         onClick={() => setIsMenuOpen((open) => !open)}
-        className="fixed right-5 top-5 z-50 inline-flex h-11 w-11 items-center justify-center text-[#f2dfd2] md:hidden"
+        className="fixed right-5 top-5 z-50 inline-flex h-11 w-11 items-center justify-center text-[#d8d4cc] md:hidden"
       >
         <span
-          className={`absolute h-0.5 w-7 bg-[#f2dfd2] transition-transform duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-2"}`}
+          className={`absolute h-0.5 w-7 bg-[#d8d4cc] transition-transform duration-300 ease-in-out ${isMenuOpen ? "rotate-45" : "-translate-y-2"}`}
         />
         <span
-          className={`absolute h-0.5 w-7 bg-[#f2dfd2] transition-opacity duration-300 ease-in-out ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
+          className={`absolute h-0.5 w-7 bg-[#d8d4cc] transition-opacity duration-300 ease-in-out ${isMenuOpen ? "opacity-0" : "opacity-100"}`}
         />
         <span
-          className={`absolute h-0.5 w-7 bg-[#f2dfd2] transition-transform duration-300 ease-in-out ${isMenuOpen ? "-rotate-45" : "translate-y-2"}`}
+          className={`absolute h-0.5 w-7 bg-[#d8d4cc] transition-transform duration-300 ease-in-out ${isMenuOpen ? "-rotate-45" : "translate-y-2"}`}
         />
       </button>
 
@@ -213,7 +213,7 @@ function SiteHeader({ variant, headerRef }: SiteHeaderProps) {
         <div className="flex flex-col items-center gap-10 text-center">
           <Link
             data-adaptive-ink
-            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3e8de] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
+            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3f0ea] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
             href="/menu"
             onClick={closeMenu}
             style={{ animationDelay: isMenuOpen ? "60ms" : "0ms" }}
@@ -222,7 +222,7 @@ function SiteHeader({ variant, headerRef }: SiteHeaderProps) {
           </Link>
           <Link
             data-adaptive-ink
-            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3e8de] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
+            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3f0ea] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
             href="/gallery"
             onClick={closeMenu}
             style={{ animationDelay: isMenuOpen ? "140ms" : "0ms" }}
@@ -232,7 +232,7 @@ function SiteHeader({ variant, headerRef }: SiteHeaderProps) {
           <Link
             data-adaptive-ink
             data-magnetic
-            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3e8de] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
+            className={`font-display-face text-[clamp(2.5rem,10vw,4rem)] leading-none text-[#f3f0ea] transition-all duration-300 ${isMenuOpen ? "translate-y-0 opacity-100 animate-[mobileNavLinkIn_340ms_ease-out_forwards]" : "translate-y-2 opacity-0"}`}
             href="/#visit"
             onClick={closeMenu}
             style={{ animationDelay: isMenuOpen ? "220ms" : "0ms" }}

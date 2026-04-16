@@ -3,6 +3,7 @@ import { Bricolage_Grotesque, Cormorant_Garamond, Great_Vibes, Quintessential } 
 import PreconnectHints from "./components/PreconnectHints";
 import JsonLd from "./components/JsonLd";
 import MagneticCursor from "./components/MagneticCursor";
+import SmoothScroll from "./components/SmoothScroll";
 import PageTransition from "./components/layout/PageTransition";
 import "./globals.css";
 
@@ -105,7 +106,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#160007",
+  themeColor: "#0a1220",
 };
 
 export default function RootLayout({
@@ -123,6 +124,7 @@ export default function RootLayout({
       </head>
       <body className="no-js min-h-full flex flex-col">
         <JsonLd />
+        <SmoothScroll />
         <MagneticCursor />
         <PageTransition />
         {children}

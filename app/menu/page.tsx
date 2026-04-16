@@ -234,9 +234,9 @@ export default function MenuPage() {
       const isActive = pillId === activeCategory;
 
       gsap.to(pill, {
-        backgroundColor: isActive ? "#f63143" : "rgba(246,49,67,0)",
-        borderColor: isActive ? "#f63143" : "rgba(242,223,210,0.3)",
-        color: isActive ? "#ffffff" : "rgba(242,223,210,0.7)",
+        backgroundColor: isActive ? "#8ea8ff" : "rgba(142,168,255,0)",
+        borderColor: isActive ? "#8ea8ff" : "rgba(216,212,204,0.34)",
+        color: isActive ? "#0a1220" : "rgba(216,212,204,0.78)",
         duration: prefersReducedMotion ? 0 : 0.3,
         ease: "power2.out",
         overwrite: "auto",
@@ -245,7 +245,7 @@ export default function MenuPage() {
   }, [activeCategory]);
 
   return (
-    <div ref={pageRef} className="wine-surface min-h-screen text-[#f3e8de]">
+    <div ref={pageRef} className="wine-surface min-h-screen text-[#f3f0ea]">
       <SiteHeader variant="inner" />
       <MenuImageCursor />
       <MenuPageContent
