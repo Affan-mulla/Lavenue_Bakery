@@ -21,13 +21,29 @@ export default function BakeryExperience() {
   const headerShellRef = useRef<HTMLElement>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const handleLoaderComplete = useCallback(() => {
-    window.sessionStorage.setItem("lavenue-visited", "1");
-    setIsLoading(false);
+  const getVisited = useCallback(() => {
+    try {
+      return window.sessionStorage.getItem("lavenue-visited") === "1";
+    } catch {
+      return false;
+    }
   }, []);
 
+  const setVisited = useCallback(() => {
+    try {
+      window.sessionStorage.setItem("lavenue-visited", "1");
+    } catch {
+      // Ignore storage failures in restricted contexts.
+    }
+  }, []);
+
+  const handleLoaderComplete = useCallback(() => {
+    setVisited();
+    setIsLoading(false);
+  }, [setVisited]);
+
   useEffect(() => {
-    const hasVisited = window.sessionStorage.getItem("lavenue-visited") === "1";
+    const hasVisited = getVisited();
 
     if (!hasVisited) {
       return;
@@ -40,7 +56,7 @@ export default function BakeryExperience() {
     return () => {
       window.cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [getVisited]);
 
   useEffect(() => {
     if (!mainRef.current) {
@@ -600,8 +616,17 @@ export default function BakeryExperience() {
       });
     }
 
-    const refreshId = window.requestAnimationFrame(() => ScrollTrigger.refresh());
-    cleanups.push(() => window.cancelAnimationFrame(refreshId));
+    let canRefresh = true;
+    document.fonts.ready.then(() => {
+      if (!canRefresh) {
+        return;
+      }
+
+      ScrollTrigger.refresh();
+    });
+    cleanups.push(() => {
+      canRefresh = false;
+    });
 
     return () => {
       cleanups.forEach((cleanup) => cleanup());

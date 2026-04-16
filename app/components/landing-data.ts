@@ -10,6 +10,12 @@ export type ReviewItem = {
   city: string;
 };
 
+export type ReservationRow = {
+  label: string;
+  value: string;
+  href?: string;
+};
+
 // Keep only media/content objects consumed by rendered sections.
 export const heroImages = [
   {
@@ -94,7 +100,7 @@ export const galleryImages = [
   },
 ];
 
-export const reservationRows = [
+export const reservationRows: ReservationRow[] = [
   {
     label: "Address",
     value: "1850 Avenue Road, Toronto, Ontario M5M 3Z5",
@@ -102,9 +108,11 @@ export const reservationRows = [
   {
     label: "Telephone",
     value: "(416) 333-4455",
+    href: "tel:+14163334455",
   },
   {
     label: "Mail",
     value: "info@lavenuebakery.com",
+    href: "mailto:info@lavenuebakery.com",
   },
 ];

@@ -14,6 +14,7 @@ export default function GalleryPage() {
   const [isFilterTransitioning, setIsFilterTransitioning] = useState(false);
   const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
   const touchStartXRef = useRef<number | null>(null);
+  const touchStartYRef = useRef<number | null>(null);
   const lightboxOverlayRef = useRef<HTMLDivElement>(null);
   const lightboxMediaRef = useRef<HTMLDivElement>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
@@ -22,16 +23,17 @@ export default function GalleryPage() {
   const hasCompletedInitialFilterRenderRef = useRef(false);
   const lightboxDirectionRef = useRef<"next" | "prev" | null>(null);
   const previousLightboxIdRef = useRef<string | null>(null);
+  const changeLightboxImageRef = useRef<(direction: "next" | "prev") => void>(() => {});
 
   const setCategoryWithAnimation = (nextCategory: (typeof galleryCategories)[number]["id"]) => {
     if (nextCategory === activeCategory || filterTransitioningRef.current) {
       return;
     }
 
-    setActiveCategory(nextCategory);
-
     if (prefersReducedMotionRef.current) {
+      filterTransitioningRef.current = false;
       setIsFilterTransitioning(false);
+      setActiveCategory(nextCategory);
       setVisibleCategory(nextCategory);
       return;
     }
@@ -39,13 +41,16 @@ export default function GalleryPage() {
     const currentItems = Array.from(document.querySelectorAll<HTMLElement>("[data-gallery-item]"));
 
     if (!currentItems.length) {
+      filterTransitioningRef.current = false;
       setIsFilterTransitioning(false);
+      setActiveCategory(nextCategory);
       setVisibleCategory(nextCategory);
       return;
     }
 
     filterTransitioningRef.current = true;
     setIsFilterTransitioning(true);
+    setActiveCategory(nextCategory);
     gsap.to(currentItems, {
       autoAlpha: 0,
       scale: 0.96,
@@ -94,7 +99,13 @@ export default function GalleryPage() {
       return;
     }
 
-    if (prefersReducedMotionRef.current || !filteredImages.length) {
+    if (!filteredImages.length) {
+      filterTransitioningRef.current = false;
+      setIsFilterTransitioning(false);
+      return;
+    }
+
+    if (prefersReducedMotionRef.current) {
       filterTransitioningRef.current = false;
       const rafId = window.requestAnimationFrame(() => {
         setIsFilterTransitioning(false);
@@ -335,6 +346,10 @@ export default function GalleryPage() {
   }, [filteredImages, lightboxIndex]);
 
   useEffect(() => {
+    changeLightboxImageRef.current = changeLightboxImage;
+  }, [changeLightboxImage]);
+
+  useEffect(() => {
     if (!lightboxImage) {
       previousLightboxIdRef.current = null;
       return;
@@ -347,11 +362,11 @@ export default function GalleryPage() {
       }
 
       if (event.key === "ArrowRight") {
-        changeLightboxImage("next");
+        changeLightboxImageRef.current("next");
       }
 
       if (event.key === "ArrowLeft") {
-        changeLightboxImage("prev");
+        changeLightboxImageRef.current("prev");
       }
     };
 
@@ -359,7 +374,7 @@ export default function GalleryPage() {
     return () => {
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [lightboxImage, closeLightbox, changeLightboxImage]);
+  }, [lightboxImage, closeLightbox]);
 
   useEffect(() => {
     if (!lightboxImage || !lightboxOverlayRef.current || !lightboxMediaRef.current) {
@@ -492,8 +507,9 @@ export default function GalleryPage() {
         <section className="mx-auto w-full max-w-7xl px-4 pt-6 sm:px-8">
           {filteredImages.length ? (
             <div data-gallery-grid className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 md:grid-cols-3">
-              {filteredImages.map((image) => {
+              {filteredImages.map((image, index) => {
                 const isLandscape = image.width === 2;
+                const shouldEagerLoad = index < 2;
 
                 return (
                   <figure
@@ -509,6 +525,8 @@ export default function GalleryPage() {
                       src={image.src}
                       alt={image.alt}
                       fill
+                      priority={false}
+                      loading={shouldEagerLoad ? "eager" : "lazy"}
                       sizes={
                         isLandscape
                           ? "(max-width: 640px) 100vw, (max-width: 768px) 100vw, 66vw"
@@ -541,17 +559,27 @@ export default function GalleryPage() {
           onClick={closeLightbox}
           onTouchStart={(event) => {
             touchStartXRef.current = event.changedTouches[0]?.clientX ?? null;
+            touchStartYRef.current = event.changedTouches[0]?.clientY ?? null;
           }}
           onTouchEnd={(event) => {
             const startX = touchStartXRef.current;
+            const startY = touchStartYRef.current;
             const endX = event.changedTouches[0]?.clientX;
+            const endY = event.changedTouches[0]?.clientY;
             touchStartXRef.current = null;
+            touchStartYRef.current = null;
 
-            if (startX === null || endX === undefined) {
+            if (startX === null || endX === undefined || endY === undefined) {
               return;
             }
 
             const deltaX = endX - startX;
+            const deltaY = endY - (startY ?? endY);
+
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
+              return;
+            }
+
             if (Math.abs(deltaX) < 45) {
               return;
             }

@@ -1,7 +1,8 @@
 "use client";
 
+import gsap from "gsap";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import menuData from "../menu-data";
 
 const tagLabels = {
@@ -23,10 +24,12 @@ export default function MenuPageContent({
 }: MenuPageContentProps) {
 
   const groupedItems = useMemo(() => menuData, []);
-  const [expandedVariantItemIds, setExpandedVariantItemIds] = useState<Set<string>>(new Set());
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
+  const expandedVariantContainersRef = useRef<Map<string, HTMLDivElement>>(new Map());
+  const previousExpandedItemsRef = useRef<Set<string>>(new Set());
 
-  const expandVariantList = (itemId: string) => {
-    setExpandedVariantItemIds((current) => {
+  const expandItemVariants = (itemId: string) => {
+    setExpandedItems((current) => {
       if (current.has(itemId)) {
         return current;
       }
@@ -36,6 +39,39 @@ export default function MenuPageContent({
       return next;
     });
   };
+
+  useEffect(() => {
+    const previousExpanded = previousExpandedItemsRef.current;
+    const newlyExpandedIds = Array.from(expandedItems).filter((itemId) => !previousExpanded.has(itemId));
+
+    newlyExpandedIds.forEach((itemId) => {
+      const container = expandedVariantContainersRef.current.get(itemId);
+      if (!container) {
+        return;
+      }
+
+      const variantRows = Array.from(container.querySelectorAll<HTMLElement>("[data-variant-item]"));
+      if (!variantRows.length) {
+        return;
+      }
+
+      gsap.killTweensOf(variantRows);
+      gsap.fromTo(
+        variantRows,
+        { autoAlpha: 0, y: -8 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.3,
+          stagger: 0.04,
+          ease: "power2.out",
+          overwrite: "auto",
+        }
+      );
+    });
+
+    previousExpandedItemsRef.current = new Set(expandedItems);
+  }, [expandedItems]);
 
   return (
     <main id="menu-page" data-page-content className="wine-surface relative text-[#f3f0ea] opacity-0 ">
@@ -114,7 +150,7 @@ export default function MenuPageContent({
               {category.items.map((item) => {
                 const variants = item.variants ?? [];
                 const hasExpandableVariants = variants.length > 4;
-                const isExpanded = expandedVariantItemIds.has(item.id);
+                const isExpanded = expandedItems.has(item.id);
                 const baseVariants = hasExpandableVariants ? variants.slice(0, 4) : variants;
                 const hiddenVariants = hasExpandableVariants ? variants.slice(4) : [];
 
@@ -149,7 +185,7 @@ export default function MenuPageContent({
                         {variants.length ? (
                           <div className="space-y-2 rounded-xs border border-[#d8d4cc]/12 bg-[#0f1d30]/30 p-3.5">
                             {baseVariants.map((variant) => (
-                              <div key={`${item.id}-${variant.label}`} className="flex items-center gap-3">
+                              <div key={`${item.id}-${variant.label}`} data-variant-item className="flex items-center gap-3">
                                 <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#d8d4cc]/68">
                                   {variant.label}
                                 </span>
@@ -161,14 +197,20 @@ export default function MenuPageContent({
                             ))}
 
                             {hasExpandableVariants ? (
-                              <div
-                                className={`grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out ${
-                                  isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                                }`}
-                              >
-                                <div className="min-h-0 space-y-2 pt-2">
+                              isExpanded ? (
+                                <div
+                                  ref={(node) => {
+                                    if (!node) {
+                                      expandedVariantContainersRef.current.delete(item.id);
+                                      return;
+                                    }
+
+                                    expandedVariantContainersRef.current.set(item.id, node);
+                                  }}
+                                  className="space-y-2 pt-2"
+                                >
                                   {hiddenVariants.map((variant) => (
-                                    <div key={`${item.id}-${variant.label}`} className="flex items-center gap-3">
+                                    <div key={`${item.id}-${variant.label}`} data-variant-item className="flex items-center gap-3">
                                       <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#d8d4cc]/68">
                                         {variant.label}
                                       </span>
@@ -179,17 +221,17 @@ export default function MenuPageContent({
                                     </div>
                                   ))}
                                 </div>
-                              </div>
+                              ) : null
                             ) : null}
 
                             {hasExpandableVariants && !isExpanded ? (
                               <button
                                 type="button"
-                                onClick={() => expandVariantList(item.id)}
+                                onClick={() => expandItemVariants(item.id)}
                                 className="mt-2 font-mono text-sm text-[#d8d4cc]/50"
                                 aria-label={`Show all ${variants.length} options for ${item.name}`}
                               >
-                                Show {hiddenVariants.length} more &rarr;
+                                Show all {variants.length} options &rarr;
                               </button>
                             ) : null}
                           </div>

@@ -6,6 +6,7 @@ import gsap from "gsap";
 export default function MagneticCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+  const syncTimeoutRef = useRef<number | undefined>(undefined);
   const [isEnabled, setIsEnabled] = useState(false);
 
   const INTERACTIVE_SELECTOR =
@@ -17,7 +18,8 @@ export default function MagneticCursor() {
     const updateEnabledState = () => {
       const canHover = hoverQuery.matches;
       const isDesktop = window.innerWidth >= 768;
-      setIsEnabled(canHover && isDesktop);
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setIsEnabled(canHover && isDesktop && !prefersReducedMotion);
     };
 
     updateEnabledState();
@@ -82,11 +84,11 @@ export default function MagneticCursor() {
     window.addEventListener("mouseup", onMouseUp);
 
     const getHoverState = (element: HTMLElement) => {
-      if (element.matches("[data-cursor-expand]")) {
+      if (element.closest("[data-cursor-expand]")) {
         return { scale: 3.5, ringBorderColor: "rgba(243,232,222,0.3)" };
       }
 
-      if (element.matches("[data-magnetic]")) {
+      if (element.matches("[data-magnetic]") || element.closest("[data-magnetic]")) {
         return { scale: 2.8, ringBorderColor: "#8ea8ff" };
       }
 
@@ -160,8 +162,13 @@ export default function MagneticCursor() {
         return;
       }
 
-      element.removeEventListener("mouseenter", handlers.onEnter);
-      element.removeEventListener("mouseleave", handlers.onLeave);
+      try {
+        element.removeEventListener("mouseenter", handlers.onEnter);
+        element.removeEventListener("mouseleave", handlers.onLeave);
+      } catch {
+        // Element may already be gone.
+      }
+
       interactiveHandlers.delete(element);
     };
 
@@ -212,8 +219,13 @@ export default function MagneticCursor() {
         return;
       }
 
-      element.removeEventListener("mousemove", handlers.onMove);
-      element.removeEventListener("mouseleave", handlers.onLeave);
+      try {
+        element.removeEventListener("mousemove", handlers.onMove);
+        element.removeEventListener("mouseleave", handlers.onLeave);
+      } catch {
+        // Element may already be gone.
+      }
+
       magneticHandlers.delete(element);
     };
 
@@ -242,14 +254,9 @@ export default function MagneticCursor() {
     syncInteractiveElements();
     syncMagneticElements();
 
-    let syncTimeout: number | undefined;
-
     const observer = new MutationObserver(() => {
-      if (syncTimeout !== undefined) {
-        window.clearTimeout(syncTimeout);
-      }
-
-      syncTimeout = window.setTimeout(() => {
+      window.clearTimeout(syncTimeoutRef.current);
+      syncTimeoutRef.current = window.setTimeout(() => {
         syncInteractiveElements();
         syncMagneticElements();
       }, 100);
@@ -267,9 +274,8 @@ export default function MagneticCursor() {
       window.removeEventListener("mousemove", onPointerMove);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
-      if (syncTimeout !== undefined) {
-        window.clearTimeout(syncTimeout);
-      }
+      window.clearTimeout(syncTimeoutRef.current);
+      syncTimeoutRef.current = undefined;
       observer.disconnect();
       Array.from(interactiveHandlers.keys()).forEach((element) => unbindInteractiveElement(element));
       Array.from(magneticHandlers.keys()).forEach((element) => unbindMagneticElement(element));

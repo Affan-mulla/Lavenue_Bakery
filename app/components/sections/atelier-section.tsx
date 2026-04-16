@@ -30,12 +30,36 @@ function AtelierSection() {
       setReviewStageHeight((current) => (current === nextHeight ? current : nextHeight));
     };
 
-    const initialRafId = window.requestAnimationFrame(() => {
-      measureStageHeight();
+    let isActive = true;
+    let measureRafId: number | null = null;
+
+    const runMeasure = () => {
+      if (!isActive) {
+        return;
+      }
+
+      if (measureRafId !== null) {
+        window.cancelAnimationFrame(measureRafId);
+      }
+
+      measureRafId = window.requestAnimationFrame(() => {
+        measureRafId = null;
+
+        if (!isActive) {
+          return;
+        }
+
+        measureStageHeight();
+      });
+    };
+
+    runMeasure();
+    document.fonts.ready.then(() => {
+      runMeasure();
     });
 
     const resizeObserver = new ResizeObserver(() => {
-      measureStageHeight();
+      runMeasure();
     });
 
     reviewContentRefs.current.forEach((content) => {
@@ -44,11 +68,14 @@ function AtelierSection() {
       }
     });
 
-    window.addEventListener("resize", measureStageHeight);
+    window.addEventListener("resize", runMeasure);
 
     return () => {
-      window.cancelAnimationFrame(initialRafId);
-      window.removeEventListener("resize", measureStageHeight);
+      isActive = false;
+      if (measureRafId !== null) {
+        window.cancelAnimationFrame(measureRafId);
+      }
+      window.removeEventListener("resize", runMeasure);
       resizeObserver.disconnect();
     };
   }, []);

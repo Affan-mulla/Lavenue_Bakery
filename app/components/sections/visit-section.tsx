@@ -42,7 +42,18 @@ function VisitSection() {
                 <span data-slide-up className="block">{row.label}</span>
               </p>
               <p className="mt-5 overflow-hidden leading-6">
-                <span data-slide-up className="block whitespace-pre-line">{row.value}</span>
+                <span data-slide-up className="block whitespace-pre-line">
+                  {row.href ? (
+                    <a
+                      href={row.href}
+                      className="underline-offset-4 transition-colors duration-200 hover:text-[#8ea8ff] hover:underline"
+                    >
+                      {row.value}
+                    </a>
+                  ) : (
+                    row.value
+                  )}
+                </span>
               </p>
             </article>
           ))}

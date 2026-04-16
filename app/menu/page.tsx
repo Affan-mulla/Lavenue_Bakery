@@ -196,7 +196,7 @@ export default function MenuPage() {
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
-          .filter((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.4)
+          .filter((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.1)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
 
         if (!visible.length) {
@@ -207,7 +207,7 @@ export default function MenuPage() {
         setActiveCategory(nextId);
       },
       {
-        threshold: [0.4, 0.6, 0.8],
+        threshold: [0, 0.1, 0.4],
       }
     );
 

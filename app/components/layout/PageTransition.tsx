@@ -9,32 +9,58 @@ export default function PageTransition() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const hasMountedRef = useRef(false);
+  const revealTimeoutRef = useRef<number | undefined>(undefined);
+  const revealRafRef = useRef<number | undefined>(undefined);
 
   const revealPageContent = () => {
-    const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-page-content]"));
-    if (!targets.length) {
-      return;
-    }
+    window.clearTimeout(revealTimeoutRef.current);
+    revealTimeoutRef.current = window.setTimeout(() => {
+      const targets = document.querySelectorAll<HTMLElement>("[data-page-content]");
+      targets.forEach((element) => {
+        element.style.opacity = "1";
+      });
+    }, 500);
 
-    gsap.killTweensOf(targets);
+    const tryReveal = (attemptsLeft: number) => {
+      const targets = Array.from(document.querySelectorAll<HTMLElement>("[data-page-content]"));
 
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedMotion) {
-      gsap.set(targets, { autoAlpha: 1, y: 0 });
-      return;
-    }
-
-    gsap.fromTo(
-      targets,
-      { autoAlpha: 0, y: 20 },
-      {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.5,
-        ease: "power3.out",
-        overwrite: "auto",
+      if (!targets.length && attemptsLeft > 0) {
+        revealRafRef.current = window.requestAnimationFrame(() => {
+          revealRafRef.current = undefined;
+          tryReveal(attemptsLeft - 1);
+        });
+        return;
       }
-    );
+
+      if (!targets.length) {
+        return;
+      }
+
+      window.clearTimeout(revealTimeoutRef.current);
+      revealTimeoutRef.current = undefined;
+
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (prefersReducedMotion) {
+        gsap.set(targets, { autoAlpha: 1, y: 0 });
+        return;
+      }
+
+      gsap.killTweensOf(targets);
+      gsap.fromTo(
+        targets,
+        { autoAlpha: 0, y: 20 },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power3.out",
+          overwrite: "auto",
+        }
+      );
+    };
+
+    tryReveal(5);
   };
 
   useEffect(() => {
@@ -61,6 +87,12 @@ export default function PageTransition() {
 
     return () => {
       gsap.killTweensOf([overlay, progress]);
+      window.clearTimeout(revealTimeoutRef.current);
+      revealTimeoutRef.current = undefined;
+      if (revealRafRef.current !== undefined) {
+        window.cancelAnimationFrame(revealRafRef.current);
+      }
+      revealRafRef.current = undefined;
     };
   }, []);
 
@@ -132,6 +164,12 @@ export default function PageTransition() {
     return () => {
       timeline.kill();
       gsap.killTweensOf(progress);
+      window.clearTimeout(revealTimeoutRef.current);
+      revealTimeoutRef.current = undefined;
+      if (revealRafRef.current !== undefined) {
+        window.cancelAnimationFrame(revealRafRef.current);
+      }
+      revealRafRef.current = undefined;
     };
   }, [pathname]);
 

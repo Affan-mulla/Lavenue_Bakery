@@ -1,16 +1,15 @@
 "use client";
 
 import gsap from "gsap";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 export default function MenuImageCursor() {
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const imageLayerRef = useRef<HTMLDivElement>(null);
-  const currentSrcRef = useRef<string | null>(null);
   const requestedSrcRef = useRef<string | null>(null);
-  const lastLoadedSrcRef = useRef<string | null>(null);
   const lastClientYRef = useRef<number | null>(null);
+  const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
+  const imageSrcRef = useRef<string | null>(null);
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [hasImageError, setHasImageError] = useState(false);
@@ -31,6 +30,10 @@ export default function MenuImageCursor() {
   }, []);
 
   useEffect(() => {
+    imageSrcRef.current = imageSrc;
+  }, [imageSrc]);
+
+  useEffect(() => {
     if (!canHover) {
       return;
     }
@@ -40,19 +43,25 @@ export default function MenuImageCursor() {
       new Set(
         Array.from(document.querySelectorAll<HTMLElement>("[data-item-image]"))
           .map((row) => row.dataset.itemImage)
-          .filter((src): src is string => Boolean(src))
+          .filter(Boolean)
       )
     );
 
-    const preloaders = uniqueSources.map((src) => {
+    const preloaders: Array<HTMLImageElement | null> = [];
+    uniqueSources.forEach((src) => {
       const img = new window.Image();
-      img.src = src;
-      return img;
+      img.src = src as string;
+      preloaders.push(img);
     });
 
     return () => {
-      preloaders.forEach((img) => {
+      preloaders.forEach((img, index) => {
+        if (!img) {
+          return;
+        }
+
         img.src = "";
+        preloaders[index] = null;
       });
     };
   }, [canHover]);
@@ -83,26 +92,40 @@ export default function MenuImageCursor() {
     const yTo = gsap.quickTo(imageContainer, "y", { duration: 0.28, ease: "power3.out" });
 
     const setImageSource = (nextSrc: string, direction: "up" | "down") => {
+      // Single source of truth for what should be displayed right now.
+      requestedSrcRef.current = nextSrc;
+
       if (!imageLayer) {
-        requestedSrcRef.current = nextSrc;
-        currentSrcRef.current = nextSrc;
+        imageSrcRef.current = nextSrc;
+        setImageSrc(nextSrc);
         setIsImageLoading(true);
         setHasImageError(false);
-        setImageSrc(nextSrc);
         return;
       }
 
-      if (currentSrcRef.current === null) {
-        requestedSrcRef.current = nextSrc;
-        currentSrcRef.current = nextSrc;
+      // Cancel stale callbacks from previous transitions.
+      gsap.killTweensOf(imageLayer);
+
+      if (!imageSrcRef.current) {
+        imageSrcRef.current = nextSrc;
+        setImageSrc(nextSrc);
         setIsImageLoading(true);
         setHasImageError(false);
-        setImageSrc(nextSrc);
         gsap.set(imageLayer, { autoAlpha: 1, y: 0, filter: "blur(0px)" });
         return;
       }
 
-      if (currentSrcRef.current === nextSrc) {
+      if (imageSrcRef.current === nextSrc) {
+        // A fast hover change can interrupt a blur tween mid-flight.
+        // Normalize the layer immediately when source does not actually change.
+        gsap.to(imageLayer, {
+          autoAlpha: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.16,
+          ease: "power2.out",
+          overwrite: "auto",
+        });
         return;
       }
 
@@ -117,11 +140,15 @@ export default function MenuImageCursor() {
         ease: "power2.in",
         overwrite: "auto",
         onComplete: () => {
-          requestedSrcRef.current = nextSrc;
-          currentSrcRef.current = nextSrc;
+          const srcToShow = requestedSrcRef.current;
+          if (!srcToShow) {
+            return;
+          }
+
+          imageSrcRef.current = srcToShow;
+          setImageSrc(srcToShow);
           setIsImageLoading(true);
           setHasImageError(false);
-          setImageSrc(nextSrc);
 
           gsap.set(imageLayer, {
             y: inY,
@@ -142,6 +169,9 @@ export default function MenuImageCursor() {
     };
 
     const reveal = () => {
+      // Keep x/y quickTo tweens alive so cursor following never stalls.
+      gsap.killTweensOf(imageContainer, "autoAlpha,scale");
+
       gsap.to(imageContainer, {
         autoAlpha: 1,
         scale: 1,
@@ -152,6 +182,7 @@ export default function MenuImageCursor() {
     };
 
     const hide = () => {
+      gsap.killTweensOf(imageContainer, "autoAlpha,scale");
       gsap.to(imageContainer, {
         autoAlpha: 0,
         scale: 0.85,
@@ -174,13 +205,15 @@ export default function MenuImageCursor() {
       return target.closest<HTMLElement>("[data-item-image]");
     };
 
-    const onMouseOver = (event: MouseEvent) => {
+    const onPointerOver = (event: PointerEvent) => {
       const row = getRowFromTarget(event.target);
       const nextSrc = row?.dataset.itemImage;
 
       if (!row || !nextSrc) {
         return;
       }
+
+      lastPointerRef.current = { x: event.clientX, y: event.clientY };
 
       const previousY = lastClientYRef.current;
       const direction: "up" | "down" = previousY !== null && event.clientY < previousY ? "up" : "down";
@@ -195,11 +228,12 @@ export default function MenuImageCursor() {
       moveToCursor(event.clientX, event.clientY);
     };
 
-    const onMouseMove = (event: MouseEvent) => {
+    const onPointerMove = (event: PointerEvent) => {
       if (!activeRow) {
         return;
       }
 
+      lastPointerRef.current = { x: event.clientX, y: event.clientY };
       lastClientYRef.current = event.clientY;
 
       if (rafPending) {
@@ -215,7 +249,7 @@ export default function MenuImageCursor() {
       });
     };
 
-    const onMouseOut = (event: MouseEvent) => {
+    const onPointerOut = (event: PointerEvent) => {
       if (!activeRow) {
         return;
       }
@@ -233,6 +267,13 @@ export default function MenuImageCursor() {
         lastClientYRef.current = event.clientY;
         activeRow = toRow;
         setImageSource(toRow.dataset.itemImage, direction);
+
+        const lastPointer = lastPointerRef.current;
+        if (lastPointer) {
+          moveToCursor(lastPointer.x, lastPointer.y);
+        }
+
+        reveal();
         return;
       }
 
@@ -241,14 +282,26 @@ export default function MenuImageCursor() {
       hide();
     };
 
-    document.addEventListener("mouseover", onMouseOver);
-    document.addEventListener("mousemove", onMouseMove);
-    document.addEventListener("mouseout", onMouseOut);
+    const onWindowPointerLeave = () => {
+      if (!activeRow) {
+        return;
+      }
+
+      activeRow = null;
+      lastClientYRef.current = null;
+      hide();
+    };
+
+    document.addEventListener("pointerover", onPointerOver);
+    document.addEventListener("pointermove", onPointerMove);
+    document.addEventListener("pointerout", onPointerOut);
+    window.addEventListener("pointerleave", onWindowPointerLeave);
 
     return () => {
-      document.removeEventListener("mouseover", onMouseOver);
-      document.removeEventListener("mousemove", onMouseMove);
-      document.removeEventListener("mouseout", onMouseOut);
+      document.removeEventListener("pointerover", onPointerOver);
+      document.removeEventListener("pointermove", onPointerMove);
+      document.removeEventListener("pointerout", onPointerOut);
+      window.removeEventListener("pointerleave", onWindowPointerLeave);
 
       if (moveRafId !== null) {
         window.cancelAnimationFrame(moveRafId);
@@ -277,46 +330,29 @@ export default function MenuImageCursor() {
             isImageLoading || hasImageError || !imageSrc ? "opacity-100" : "opacity-0"
           }`}
         />
-        {imageSrc ? (
-          <Image
-            key={imageSrc}
-            src={imageSrc}
-            alt=""
-            fill
-            sizes="280px"
-            className={`object-cover transition-opacity duration-200 ${hasImageError ? "opacity-0" : "opacity-100"}`}
-            placeholder="blur"
-            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACf/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AJQAB/9k="
-            onLoadingComplete={() => {
-              if (!imageSrc || requestedSrcRef.current !== imageSrc) {
-                return;
-              }
+        <img
+          src={imageSrc || "https://images.unsplash.com/photo-1623334044303-241021148842?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
+          alt=""
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-200"
+          style={{ opacity: isImageLoading || hasImageError ? 0 : 1 }}
+          onLoad={() => {
+            if (!imageSrc || imageSrc !== requestedSrcRef.current) {
+              return;
+            }
 
-              lastLoadedSrcRef.current = imageSrc;
-              setIsImageLoading(false);
-              setHasImageError(false);
-            }}
-            onError={() => {
-              if (!imageSrc || requestedSrcRef.current !== imageSrc) {
-                return;
-              }
+            setIsImageLoading(false);
+            setHasImageError(false);
+          }}
+          onError={() => {
+            if (!imageSrc || imageSrc !== requestedSrcRef.current) {
+              return;
+            }
 
-              const fallbackSrc = lastLoadedSrcRef.current;
-
-              if (fallbackSrc && fallbackSrc !== imageSrc) {
-                requestedSrcRef.current = fallbackSrc;
-                currentSrcRef.current = fallbackSrc;
-                setHasImageError(false);
-                setIsImageLoading(false);
-                setImageSrc(fallbackSrc);
-                return;
-              }
-
-              setIsImageLoading(false);
-              setHasImageError(true);
-            }}
-          />
-        ) : null}
+            setIsImageLoading(false);
+            setHasImageError(true);
+          }}
+        />
       </div>
       <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
     </div>

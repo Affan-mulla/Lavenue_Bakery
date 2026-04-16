@@ -34,13 +34,18 @@ export default function SmoothScroll() {
 
     rafId = window.requestAnimationFrame(onRaf);
 
-    const refreshTimeoutId = window.setTimeout(() => {
+    let canRefresh = true;
+    document.fonts.ready.then(() => {
+      if (!canRefresh) {
+        return;
+      }
+
       lenis.resize();
       ScrollTrigger.refresh();
-    }, 120);
+    });
 
     return () => {
-      window.clearTimeout(refreshTimeoutId);
+      canRefresh = false;
       window.cancelAnimationFrame(rafId);
       lenis.destroy();
     };
