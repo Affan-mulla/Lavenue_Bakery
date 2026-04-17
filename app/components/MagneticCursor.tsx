@@ -6,6 +6,8 @@ import gsap from "gsap";
 export default function MagneticCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
+  const ringSizeRef = useRef(36);
+  const lastPointerRef = useRef<{ x: number; y: number } | null>(null);
   const syncTimeoutRef = useRef<number | undefined>(undefined);
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -41,23 +43,83 @@ export default function MagneticCursor() {
 
     const dot = dotRef.current;
     const ring = ringRef.current;
+    const ringSizeProxy = { value: ringSizeRef.current };
+    const RING_MOVE_DURATION = 0.22;
+    const RING_SIZE_DURATION = 0.38;
+
+    const ringLeftTo = gsap.quickTo(ring, "left", {
+      duration: RING_MOVE_DURATION,
+      ease: "power3.out",
+    });
+    const ringTopTo = gsap.quickTo(ring, "top", {
+      duration: RING_MOVE_DURATION,
+      ease: "power3.out",
+    });
+
+    const placeRingAtPointer = (x: number, y: number, immediate = false) => {
+      const size = ringSizeRef.current;
+      const left = Math.round(x - size / 2);
+      const top = Math.round(y - size / 2);
+
+      if (immediate) {
+        gsap.set(ring, { left, top });
+        return;
+      }
+
+      ringLeftTo(left);
+      ringTopTo(top);
+    };
+
+    const animateRingSize = (targetSize: number, borderColor: string) => {
+      const snappedTarget = Math.max(12, Math.round(targetSize / 2) * 2);
+
+      gsap.killTweensOf(ringSizeProxy);
+      gsap.to(ringSizeProxy, {
+        value: snappedTarget,
+        duration: RING_SIZE_DURATION,
+        ease: "power3.out",
+        overwrite: "auto",
+        onUpdate: () => {
+          const nextSize = Math.max(12, Math.round(ringSizeProxy.value / 2) * 2);
+          ringSizeRef.current = nextSize;
+
+          gsap.set(ring, {
+            width: nextSize,
+            height: nextSize,
+          });
+
+          const lastPointer = lastPointerRef.current;
+          if (lastPointer) {
+            placeRingAtPointer(lastPointer.x, lastPointer.y, true);
+          }
+        },
+      });
+
+      gsap.to(ring, {
+        borderColor,
+        duration: 0.3,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    };
+
+    gsap.set(ring, {
+      width: ringSizeRef.current,
+      height: ringSizeRef.current,
+    });
 
     const onPointerMove = (event: MouseEvent) => {
+      lastPointerRef.current = { x: event.clientX, y: event.clientY };
+
       gsap.to(dot, {
-        left: event.clientX - 4,
-        top: event.clientY - 4,
+        left: Math.round(event.clientX - 4),
+        top: Math.round(event.clientY - 4),
         duration: 0.05,
         ease: "none",
         overwrite: "auto",
       });
 
-      gsap.to(ring, {
-        left: event.clientX - 18,
-        top: event.clientY - 18,
-        duration: 0.18,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
+      placeRingAtPointer(event.clientX, event.clientY);
     };
 
     window.addEventListener("mousemove", onPointerMove);
@@ -85,22 +147,22 @@ export default function MagneticCursor() {
 
     const getHoverState = (element: HTMLElement) => {
       if (element.closest("[data-cursor-expand]")) {
-        return { scale: 3.5, ringBorderColor: "rgba(243,232,222,0.3)" };
+        return { scale: 3.5, ringBorderColor: "rgba(243,232,222,0.85)", mixBlendMode: "normal" as const };
       }
 
       if (element.matches("[data-magnetic]") || element.closest("[data-magnetic]")) {
-        return { scale: 2.8, ringBorderColor: "#8ea8ff" };
+        return { scale: 2.8, ringBorderColor: "#8ea8ff", mixBlendMode: "difference" as const };
       }
 
       if (element.tagName === "BUTTON") {
-        return { scale: 2.5, ringBorderColor: "#8ea8ff" };
+        return { scale: 2.5, ringBorderColor: "#8ea8ff", mixBlendMode: "difference" as const };
       }
 
       if (element.tagName === "A") {
-        return { scale: 2.2, ringBorderColor: "#8ea8ff" };
+        return { scale: 2.2, ringBorderColor: "#8ea8ff", mixBlendMode: "difference" as const };
       }
 
-      return { scale: 2.3, ringBorderColor: "#8ea8ff" };
+      return { scale: 2.3, ringBorderColor: "#8ea8ff", mixBlendMode: "difference" as const };
     };
 
     const interactiveHandlers = new Map<
@@ -119,32 +181,22 @@ export default function MagneticCursor() {
 
       const onEnter = () => {
         const hoverState = getHoverState(element);
-        gsap.to(ring, {
-          scale: hoverState.scale,
-          borderColor: hoverState.ringBorderColor,
-          duration: 0.25,
-          ease: "power2.out",
-          overwrite: "auto",
-        });
+        gsap.set(ring, { mixBlendMode: hoverState.mixBlendMode });
+        animateRingSize(hoverState.scale * 32, hoverState.ringBorderColor);
         gsap.to(dot, {
           backgroundColor: "rgba(142,168,255,0)",
-          duration: 0.25,
+          duration: 0.3,
           ease: "power2.out",
           overwrite: "auto",
         });
       };
 
       const onLeave = () => {
-        gsap.to(ring, {
-          scale: 1,
-          borderColor: "rgba(243, 232, 222, 0.5)",
-          duration: 0.25,
-          ease: "power2.out",
-          overwrite: "auto",
-        });
+        gsap.set(ring, { mixBlendMode: "difference" });
+        animateRingSize(36, "rgba(243, 232, 222, 0.5)");
         gsap.to(dot, {
           backgroundColor: "#8ea8ff",
-          duration: 0.25,
+          duration: 0.3,
           ease: "power2.out",
           overwrite: "auto",
         });
